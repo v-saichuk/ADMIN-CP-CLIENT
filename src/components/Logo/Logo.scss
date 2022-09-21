@@ -1,0 +1,38 @@
+@import '../../assets/styles/mixins.scss';
+
+.logo {
+    display: flex;
+    align-items: center;
+
+    &__icon {
+        @include width(30px, 46px, 320px, 1920px);
+    }
+
+    &__title {
+        @include font-size(18px, 25px, 320px, 1920px);
+        margin-left: 10px;
+        text-transform: uppercase;
+        font-weight: bold;
+
+    }
+
+    &__sub_title {
+        color: #F59337;
+    }
+
+}
+
+.logo__auth {
+    @include top(10px, 35px, 320px, 1920px);
+    position: absolute;
+    width: 100%;
+    justify-content: center;
+}
+
+.logo__authorized-icon {
+    @include width(20px, 25px, 320px, 1920px);
+}
+
+.logo__authorized-text {
+    @include font-size(11px, 17px, 320px, 1920px);
+}

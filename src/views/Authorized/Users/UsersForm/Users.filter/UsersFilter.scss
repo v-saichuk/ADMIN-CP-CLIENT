@@ -1,0 +1,46 @@
+.user_page__filter {
+    display: flex;
+    flex-direction: column;
+    padding-right: 16px;
+
+    &-button {
+        width: 100%;
+        border-radius: 0 50px 50px 0 !important;
+        border-color: transparent !important;
+    }
+
+
+    &-role {
+        padding: 16px;
+
+        &_title {
+            margin-bottom: 10px;
+        }
+
+        &_container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        &_mark {
+            width: 8px;
+            height: 8px;
+            border-radius: 100%;
+            background-color: #fff;
+            margin-right: 10px;
+        }
+
+        &_name {}
+    }
+}
+
+// .ant-radio-button-checked {
+//     background-color: #F59337;
+//     color: #fff !important;
+//     border-radius: 0 50px 50px 0 !important;
+// }
+
+// .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
+//     color: #fff !important;
+// }

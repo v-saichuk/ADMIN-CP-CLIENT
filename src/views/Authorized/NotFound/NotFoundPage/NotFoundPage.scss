@@ -1,0 +1,17 @@
+@import '../../../../assets/styles/mixins.scss';
+
+.not-found-authorization {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100%;
+
+    &__icon {
+        @include width(150px, 250px, 320px, 1920px);
+    }
+
+    &__description {
+        text-align: center;
+    }
+}

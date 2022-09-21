@@ -1,0 +1,20 @@
+@import '../../assets/styles/mixins.scss';
+
+.header {
+    display: flex;
+    justify-content: space-between;
+
+    &__wrapper {
+        display: flex;
+    }
+
+    &__user {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+    }
+
+    &__fullname {
+        @include margin-right(5px, 10px, 320px, 400px);
+    }
+}

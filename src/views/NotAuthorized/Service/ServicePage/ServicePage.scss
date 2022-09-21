@@ -1,0 +1,12 @@
+.maintenance {
+    grid-template-columns: repeat(1, 1fr);
+    background-color: #ff000000;
+    box-shadow: none;
+    gap: 0;
+
+    &__form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+}

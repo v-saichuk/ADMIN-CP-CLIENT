@@ -1,0 +1,76 @@
+.user_page {
+
+    &__wrap {
+        display: flex;
+    }
+
+    &__sidebar {
+        background-color: #323541;
+        width: 280px;
+        margin-right: 16px;
+        height: calc(100vh - 144px);
+    }
+
+    &__content {
+        background-color: #323541;
+        width: 100%;
+    }
+
+    &__content-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px 20px;
+        border-bottom: 1px solid #56565F;
+    }
+
+    &__main {
+        padding: 20px;
+    }
+
+    &__card {
+        background-color: #383B46 !important;
+        border: none !important;
+
+        &>.ant-card-body {
+            padding: 15px;
+        }
+
+        &>ul>li {
+            margin: 7px 0;
+        }
+
+    }
+
+    &__avatar-box {
+        text-align: center;
+        margin-bottom: 5px;
+    }
+
+    &__fullname-box {
+        text-align: center;
+    }
+
+    &__email-box {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        text-align: center;
+        color: #8e8f94;
+    }
+}
+
+
+.user_page__sidebar {
+    &_button-box {
+        padding: 16px
+    }
+
+    &_button {
+        width: 100%;
+    }
+}
+
+
+.user_page__card-social:not(:last-child) {
+    margin-right: 5px;
+}

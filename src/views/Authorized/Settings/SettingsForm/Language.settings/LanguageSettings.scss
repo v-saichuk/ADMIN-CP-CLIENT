@@ -1,0 +1,20 @@
+.language__item {
+    background-color: #383B46;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.language__box {
+    display: flex;
+    align-items: center;
+}
+
+.language__flag {
+    display: flex;
+}
+
+.language__country {
+    margin-left: 10px;
+}

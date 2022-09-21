@@ -1,0 +1,19 @@
+.settings_users_role_edit_modal__button {
+    border-radius: 100% !important;
+    border: none;
+    border-left-width: thin !important;
+
+    &::before {
+        display: none !important;
+    }
+
+}
+
+.settings_users_role_edit_modal__swich {
+    display: flex !important;
+    align-items: center;
+
+    &>span {
+        margin-left: 14px;
+    }
+}

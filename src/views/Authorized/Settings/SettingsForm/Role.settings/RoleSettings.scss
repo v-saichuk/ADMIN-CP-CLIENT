@@ -1,0 +1,16 @@
+.settings_users_form {
+
+    &__row {
+        padding: 10px 20px;
+        background-color: #383B46;
+    }
+
+    &__dot {
+        display: block;
+        width: 10px;
+        height: 10px;
+        background-color: rgb(68, 68, 68);
+        border-radius: 100%;
+        margin-right: 15px;
+    }
+}
