@@ -1,11 +1,12 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { ReactNode } from 'react';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import axios from '../../axios';
 
 export const getCountry = createAsyncThunk('language/country', async (_, { rejectWithValue }) => {
     try {
-        const responce = await fetch('http://localhost:4000/api/language', { method: 'GET' });
+        const { data } = await axios.get('/api/language');
 
-        return await responce.json();
+        return data;
     } catch (err) {
         console.log('Error language =>>>', err);
         return rejectWithValue(err);
@@ -13,6 +14,7 @@ export const getCountry = createAsyncThunk('language/country', async (_, { rejec
 });
 
 interface ILanguage {
+    _id: string;
     code: string;
     title: string;
     icon: ReactNode;
@@ -20,7 +22,7 @@ interface ILanguage {
 }
 
 interface IInitialState {
-    isLoading: Boolean;
+    isLoading: boolean;
     lang: ILanguage[];
 }
 
@@ -32,12 +34,7 @@ const initialState: IInitialState = {
 const language = createSlice({
     name: 'language',
     initialState,
-    reducers: {
-        handleLanguage: (state, action) => {
-            const [enabled, code] = action.payload;
-            state.lang.map((el) => (el.code === code ? (el.enabled = enabled) : { ...state.lang }));
-        },
-    },
+    reducers: {},
     extraReducers: (build) => {
         build
             .addCase(getCountry.pending, (state, action) => {
@@ -55,4 +52,3 @@ const language = createSlice({
 });
 
 export default language.reducer;
-export const { handleLanguage } = language.actions;

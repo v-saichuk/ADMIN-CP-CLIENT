@@ -1,10 +1,10 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Checkbox, Col, Form, Input, Row } from 'antd';
+import { Button, Checkbox, Col, Form, Input, message, Row } from 'antd';
 import { IconLogin } from '../../../../assets/images/svg/svg';
 import { Logo } from '../../../../components/Logo/Logo';
-import { useAppDispatch } from '../../../../store/hooks/useRedux';
-import { handlerAuth } from '../../../../store/authentication/authentication.slice';
+import { useAppDispatch, useAppSelector } from '../../../../store/hooks/useRedux';
+import { fetchAuth } from '../../../../store/auth/auth.slice';
 
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 
@@ -13,15 +13,21 @@ import './LoginPage.scss';
 
 export const LoginPage: FC = () => {
     const dispatch = useAppDispatch();
-    const [isLoad, setLoad] = useState(false);
+    const { isLoading } = useAppSelector((state) => state.auth);
 
-    const onFinish = (values: any) => {
-        console.log('Success:', values);
-        setLoad(true);
-        setTimeout(() => {
-            setLoad(false);
-            dispatch(handlerAuth(true));
-        }, 1000);
+    const onFinishSuccess = async (values: any) => {
+        // console.log('Login =>>:', values);
+        const data = await dispatch(fetchAuth(values));
+
+        if (!data.payload) {
+            message.error('Невдалось авторизуватися');
+        }
+
+        if ('token' in data.payload) {
+            window.localStorage.setItem('token', data.payload.token);
+        }
+
+        console.log('data =>>', data);
     };
 
     const onFinishFailed = (errorInfo: any) => {
@@ -42,13 +48,13 @@ export const LoginPage: FC = () => {
                             name="basic"
                             wrapperCol={{ span: 24 }}
                             initialValues={{ remember: true }}
-                            onFinish={onFinish}
+                            onFinish={onFinishSuccess}
                             onFinishFailed={onFinishFailed}
                             size="middle"
                             autoComplete="off">
                             <Form.Item
                                 className="auth__form-item"
-                                name="username"
+                                name="email"
                                 rules={[
                                     { required: true, message: 'Please input your email!' },
                                     { type: 'email', message: 'Please enter a valid E-mail' },
@@ -79,7 +85,7 @@ export const LoginPage: FC = () => {
 
                             <Form.Item className="auth__button">
                                 <Button
-                                    loading={isLoad}
+                                    loading={isLoading}
                                     type="primary"
                                     htmlType="submit"
                                     size="middle"

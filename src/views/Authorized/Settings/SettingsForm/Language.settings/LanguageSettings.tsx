@@ -1,9 +1,10 @@
 import { FC, useEffect } from 'react';
-import { Col, List, Row, Switch, Skeleton } from 'antd';
+import axios from '../../../../../axios';
+import { Col, List, Row, Switch, Skeleton, message } from 'antd';
 import { useAppDispatch, useAppSelector } from '../../../../../store/hooks/useRedux';
-import { handleLanguage } from '../../../../../store/settings/language.slice';
 import { getCountry } from '../../../../../store/settings/language.slice';
 import { FlagIcon } from '../../../../../components/FlagIcon/FlagIcon';
+import NoAccess from '../../../../../components/NoAccess/NoAccess';
 
 import './LanguageSettings.scss';
 
@@ -14,6 +15,21 @@ export const LanguageSettings: FC = () => {
     useEffect(() => {
         dispatch(getCountry());
     }, [dispatch]);
+
+    const handleCountry = async ([enabled, id]: [boolean, string]) => {
+        await axios
+            .patch(`/api/language/${id}`, { enabled })
+            .then(() => {
+                message.success('Saved!');
+            })
+            .catch(() => {
+                message.error('Error!');
+            });
+    };
+
+    if (!lang.length) {
+        return <NoAccess />;
+    }
 
     return (
         <Row gutter={[16, 24]}>
@@ -63,7 +79,7 @@ export const LanguageSettings: FC = () => {
                                                 size="small"
                                                 defaultChecked={item.enabled}
                                                 onChange={(checked: boolean) =>
-                                                    dispatch(handleLanguage([checked, item.code]))
+                                                    handleCountry([checked, item._id])
                                                 }
                                             />
                                         </div>

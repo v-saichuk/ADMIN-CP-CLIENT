@@ -1,17 +1,19 @@
 import { FC } from 'react';
-import { Avatar, Layout, Modal } from 'antd';
+import { Link, useNavigate } from 'react-router-dom';
+import { Avatar, Layout, Modal, Dropdown, Menu, Space } from 'antd';
+import { useAppDispatch, useAppSelector } from '../../store/hooks/useRedux';
+import { Logo } from '../../components/Logo/Logo';
+import { logout } from '../../store/auth/auth.slice';
 import { ExclamationCircleOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons';
 
-import { Logo } from '../../components/Logo/Logo';
-
-import { Dropdown, Menu, Space } from 'antd';
-
 import './Header.scss';
-import { Link } from 'react-router-dom';
 
 export const Header: FC = () => {
     const { Header } = Layout;
     const { confirm } = Modal;
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+    const myProfile = useAppSelector((state) => state.auth.data);
 
     const menu = (
         <Menu
@@ -43,7 +45,9 @@ export const Header: FC = () => {
             okType: 'danger',
             cancelText: 'No',
             onOk() {
-                console.log('OK');
+                dispatch(logout());
+                navigate('/');
+                window.localStorage.removeItem('token');
             },
             onCancel() {
                 console.log('Cancel');
@@ -64,7 +68,9 @@ export const Header: FC = () => {
                 <div className="header__user">
                     <Dropdown overlay={menu}>
                         <Space>
-                            <span className="header__fullname">John Dou</span>
+                            <span className="header__fullname">
+                                {myProfile?.firstName} {myProfile?.lastName}
+                            </span>
                             <Avatar size={{ xs: 24, sm: 28 }} icon={<UserOutlined />} />
                         </Space>
                     </Dropdown>
