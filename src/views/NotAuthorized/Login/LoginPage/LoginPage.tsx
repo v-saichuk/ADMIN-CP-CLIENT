@@ -16,22 +16,22 @@ export const LoginPage: FC = () => {
     const { isLoading } = useAppSelector((state) => state.auth);
 
     const onFinishSuccess = async (values: any) => {
-        // console.log('Login =>>:', values);
         const data = await dispatch(fetchAuth(values));
 
         if (!data.payload) {
-            message.error('Невдалось авторизуватися');
+            return message.error('Невдалось авторизуватися');
         }
 
         if ('token' in data.payload) {
-            window.localStorage.setItem('token', data.payload.token);
+            return window.localStorage.setItem('token', data.payload.token);
         }
 
-        console.log('data =>>', data);
-    };
-
-    const onFinishFailed = (errorInfo: any) => {
-        console.log('Failed:', errorInfo);
+        if (data.meta.requestStatus === 'rejected') {
+            if (data.payload.message === 'Network Error') {
+                return message.error('Network Error');
+            }
+            return message.error(data.payload.response.data.message);
+        }
     };
 
     return (
@@ -49,7 +49,6 @@ export const LoginPage: FC = () => {
                             wrapperCol={{ span: 24 }}
                             initialValues={{ remember: true }}
                             onFinish={onFinishSuccess}
-                            onFinishFailed={onFinishFailed}
                             size="middle"
                             autoComplete="off">
                             <Form.Item
