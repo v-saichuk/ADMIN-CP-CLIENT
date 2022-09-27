@@ -14,13 +14,13 @@ export const SettingsPage: FC = () => {
         {
             key: '1',
             icon: <TeamOutlined />,
-            buttonText: 'Users',
+            buttonText: 'Roles',
             content: <RoleSettings />,
         },
         {
             key: '2',
             icon: <GlobalOutlined />,
-            buttonText: 'Language',
+            buttonText: 'Languages',
             content: <LanguageSettings />,
         },
     ];

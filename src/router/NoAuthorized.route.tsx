@@ -1,6 +1,8 @@
 import { FC } from 'react';
 import { Routes, Route } from 'react-router-dom';
+// import { useAppSelector } from '../store/hooks/useRedux';
 import { LoginPage, NotFoundPage, ResetPasswordPage, ServicePage } from '../views/NotAuthorized';
+// import { Preloader } from '../components/Preloader/Preloader';
 
 const ROUTE = [
     {
@@ -25,10 +27,17 @@ const ROUTE = [
     },
 ];
 
-export const NoAuthorized: FC = () => (
-    <Routes>
-        {ROUTE.map((el) => (
-            <Route key={el.id} {...el} />
-        ))}
-    </Routes>
-);
+export const NoAuthorized: FC = () => {
+    // const { isLoading } = useAppSelector((state) => state.auth);
+
+    return (
+        <>
+            {/* {isLoading && <Preloader />} */}
+            <Routes>
+                {ROUTE.map((el) => (
+                    <Route key={el.id} {...el} />
+                ))}
+            </Routes>
+        </>
+    );
+};

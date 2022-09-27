@@ -2,7 +2,7 @@ import { FC, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import confirm from 'antd/lib/modal/confirm';
 import { Content } from 'antd/lib/layout/layout';
-import { UsersFilter } from '../UsersForm/Users.filter/UsersFilter';
+// import { UsersFilter } from '../UsersForm/Users.filter/UsersFilter';
 import { useAppDispatch, useAppSelector } from '../../../../store/hooks/useRedux';
 import { deleteUser } from '../../../../store/users/users.slice';
 import { Avatar, Badge, Breadcrumb, Button, Card, Col, Layout, List, Popover, Row } from 'antd';
@@ -97,13 +97,13 @@ export const UsersPage: FC = () => {
                                 }}
                                 dataSource={search}
                                 renderItem={(item) => {
-                                    const role = roles.filter((el) => el.id === item.roleId && el);
+                                    const role = roles.find((el) => el._id === item.roleId && el);
 
                                     return (
                                         <List.Item>
                                             <Badge.Ribbon
-                                                text={role[0].title}
-                                                style={{ background: role[0].color }}>
+                                                text={role?.title}
+                                                style={{ background: role?.color }}>
                                                 <Card
                                                     className="user_page__card"
                                                     size="small"

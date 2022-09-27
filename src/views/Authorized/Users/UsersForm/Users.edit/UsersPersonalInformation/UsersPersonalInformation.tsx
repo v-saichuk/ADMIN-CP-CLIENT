@@ -12,8 +12,8 @@ export const UsersPersonalInformation: FC = () => {
     const { Option } = Select;
     const { roles } = useAppSelector((state) => state.usersRole);
     const user = useAppSelector((state) => state.users.users.find((el) => el.id === userId));
-    const userRole = roles.find((el) => el.id === user?.roleId);
-    const [selectRole, setSelectRole] = useState(userRole?.id);
+    const userRole = roles.find((el) => el._id === user?.roleId);
+    const [selectRole, setSelectRole] = useState(userRole?._id);
     const [isLoad, setLoad] = useState(false);
 
     // SELECT ROLE
@@ -168,7 +168,7 @@ export const UsersPersonalInformation: FC = () => {
                                             .includes(input.toLowerCase())
                                     }>
                                     {roles.map((el) => (
-                                        <Option key={el.id} value={el.id}>
+                                        <Option key={el._id} value={el._id}>
                                             {el.title}
                                         </Option>
                                     ))}

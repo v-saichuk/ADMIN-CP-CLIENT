@@ -1,10 +1,10 @@
 import { FC, useEffect } from 'react';
 import axios from '../../../../../axios';
-import { Col, List, Row, Switch, Skeleton, message } from 'antd';
+import { ILanguage } from '../../../../../types';
 import { useAppDispatch, useAppSelector } from '../../../../../store/hooks/useRedux';
+import { Col, List, Row, Switch, Skeleton, message } from 'antd';
 import { getCountry } from '../../../../../store/settings/language.slice';
 import { FlagIcon } from '../../../../../components/FlagIcon/FlagIcon';
-import NoAccess from '../../../../../components/NoAccess/NoAccess';
 
 import './LanguageSettings.scss';
 
@@ -27,15 +27,21 @@ export const LanguageSettings: FC = () => {
             });
     };
 
-    if (!lang.length) {
-        return <NoAccess />;
-    }
+    const fakeDataLang = Array.from({ length: 55 }).map(
+        (_, i): ILanguage => ({
+            _id: String(i),
+            code: '',
+            title: '',
+            icon: <></>,
+            enabled: false,
+        }),
+    );
 
     return (
         <Row gutter={[16, 24]}>
             <Col span={24}>
                 <Row gutter={[16, 24]}>
-                    <Col>Language</Col>
+                    <Col>Languages</Col>
                 </Row>
             </Col>
             <Col span={24} style={{ height: 'calc(100vh - 230px)', overflow: 'scroll' }}>
@@ -49,12 +55,11 @@ export const LanguageSettings: FC = () => {
                         xl: 4,
                         xxl: 5,
                     }}
-                    dataSource={lang}
+                    dataSource={isLoading ? fakeDataLang : lang}
                     renderItem={(item) => (
                         <List.Item style={{ marginBottom: '10px' }}>
                             <div className="language__item">
                                 {isLoading ? (
-                                    // TODO: Зробити автоматичне додавання кількості блоків щоб не було скачків перед першим рендером
                                     <div className="language__skeleton">
                                         <div style={{ marginRight: 10 }}>
                                             <Skeleton.Avatar size={'small'} shape={'square'} />

@@ -24,7 +24,7 @@ export const UsersFilter: FC = () => {
             <div className="user_page__filter-role">
                 <div className="user_page__filter-role_title">Role</div>
                 {roles.map((el) => (
-                    <div key={el.id} className="user_page__filter-role_container">
+                    <div key={el._id} className="user_page__filter-role_container">
                         <span
                             className="user_page__filter-role_mark"
                             style={{ backgroundColor: el.color }}></span>

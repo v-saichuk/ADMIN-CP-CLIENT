@@ -1,6 +1,6 @@
-import { ReactNode } from 'react';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from '../../axios';
+import { ILanguage } from '../../types';
 
 export const getCountry = createAsyncThunk('language/country', async (_, { rejectWithValue }) => {
     try {
@@ -12,14 +12,6 @@ export const getCountry = createAsyncThunk('language/country', async (_, { rejec
         return rejectWithValue(err);
     }
 });
-
-interface ILanguage {
-    _id: string;
-    code: string;
-    title: string;
-    icon: ReactNode;
-    enabled: boolean;
-}
 
 interface IInitialState {
     isLoading: boolean;
@@ -37,15 +29,14 @@ const language = createSlice({
     reducers: {},
     extraReducers: (build) => {
         build
-            .addCase(getCountry.pending, (state, action) => {
+            .addCase(getCountry.pending, (state) => {
                 state.isLoading = true;
             })
             .addCase(getCountry.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.lang = action.payload;
-                console.log('Language =>', action.payload);
             })
-            .addCase(getCountry.rejected, (state, action) => {
+            .addCase(getCountry.rejected, (state) => {
                 state.isLoading = false;
             });
     },

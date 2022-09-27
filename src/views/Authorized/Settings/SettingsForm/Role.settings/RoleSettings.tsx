@@ -1,65 +1,29 @@
-import { FC, useState } from 'react';
-import { Button, Col, Modal, notification, Row, Tooltip } from 'antd';
+import { FC, useEffect } from 'react';
+import { Col, Row, Skeleton } from 'antd';
 import { useAppDispatch, useAppSelector } from '../../../../../store/hooks/useRedux';
-import { deleteRole } from '../../../../../store/settings/usersRole.slice';
 import { RoleCreate } from './Role.create/RoleCreate';
 import { RoleEdit } from './Role.edit/RoleEdit';
-import { DeleteOutlined, EditOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { getRoles } from '../../../../../store/settings/usersRole.slice';
+import { RoleDelete } from './Role.delete/Role.delete';
 
 import './RoleSettings.scss';
 
 export const RoleSettings: FC = () => {
-    const { confirm } = Modal;
-    const { roles } = useAppSelector((state) => state.usersRole);
-    const { users } = useAppSelector((state) => state.users);
-    const [isModalEditVisible, setIsModalEditVisible] = useState(false);
-    const [roleId, setRoleId] = useState('');
+    const { roles, isLoading } = useAppSelector((state) => state.usersRole);
     const dispatch = useAppDispatch();
 
-    const editUser = (id: string) => {
-        setIsModalEditVisible(true);
-        setRoleId(id);
-    };
+    useEffect(() => {
+        dispatch(getRoles());
+    }, [dispatch]);
 
-    const handleShowNotDeleteRole = (userArr: any[]) => {
-        notification.error({
-            message: 'Deletion error',
-            description: `You cannot delete a role because it contains users: (${userArr
-                .map((el) => el.firstname)
-                .join(', ')})`,
-        });
-    };
-
-    const handleShowDeleteRole = (id: string, titleRole: string) => {
-        confirm({
-            title: 'Do you really want to delete?',
-            content: `Once deleted, you will not be able to restore role (${titleRole})`,
-            icon: <ExclamationCircleOutlined />,
-            okText: 'Yes',
-            okType: 'danger',
-            cancelText: 'No',
-            onOk() {
-                dispatch(deleteRole(id));
-            },
-        });
-    };
-
-    const handleDeleteRole = (id: string, title: string) => {
-        const activeUserRole = users.filter((el) => el.roleId === id);
-        activeUserRole.length > 0
-            ? handleShowNotDeleteRole(activeUserRole)
-            : handleShowDeleteRole(id, title);
-    };
+    const fakeDataRole = Array.from({ length: 5 }).map((el) => <></>);
 
     return (
         <Row gutter={[16, 24]}>
             <Col span={24}>
                 <Row gutter={[16, 24]} justify="space-between" align="middle">
-                    <Col>User Role</Col>
+                    <Col>User Roles</Col>
                     <Col>
-                        {isModalEditVisible && (
-                            <RoleEdit isModal={setIsModalEditVisible} roleId={roleId} />
-                        )}
                         <RoleCreate />
                     </Col>
                 </Row>
@@ -67,48 +31,59 @@ export const RoleSettings: FC = () => {
 
             <Col span={24} style={{ height: 'calc(100vh - 240px)', overflow: 'scroll' }}>
                 <Row gutter={[16, 10]}>
-                    {roles.map((el) => (
-                        <Col span={24} key={el.id}>
-                            <Row className="settings_users_form__row" justify="space-between">
-                                <Row align="middle">
-                                    <Col>
-                                        <span
-                                            className={'settings_users_form__dot'}
-                                            style={{ backgroundColor: el.color }}></span>
-                                    </Col>
-                                    <Col>{el.title}</Col>
+                    {isLoading &&
+                        fakeDataRole.map((_, ind) => (
+                            <Col span={24} key={ind}>
+                                <Row className="settings_users_form__row" justify="space-between">
+                                    <Row align="middle">
+                                        <Col>
+                                            <Skeleton.Avatar
+                                                size={'small'}
+                                                shape="square"
+                                                style={{ marginRight: 10 }}
+                                            />
+                                            <Skeleton.Input size="small" />
+                                        </Col>
+                                    </Row>
+                                    <Row gutter={3}>
+                                        <Col>
+                                            <Skeleton.Avatar
+                                                size={'small'}
+                                                shape="square"
+                                                style={{ marginRight: 3 }}
+                                            />
+                                        </Col>
+                                        <Col>
+                                            <Skeleton.Avatar size={'small'} shape="square" />
+                                        </Col>
+                                    </Row>
                                 </Row>
-                                <Row gutter={3}>
-                                    <Col>
-                                        <Tooltip
-                                            placement="topLeft"
-                                            title={'Edit'}
-                                            mouseEnterDelay={0.5}>
-                                            <Button
-                                                size="small"
-                                                type="text"
-                                                onClick={() => editUser(el.id)}>
-                                                <EditOutlined />
-                                            </Button>
-                                        </Tooltip>
-                                    </Col>
-                                    <Col>
-                                        <Tooltip
-                                            placement="topLeft"
-                                            title={'Delete'}
-                                            mouseEnterDelay={0.5}>
-                                            <Button
-                                                size="small"
-                                                type="text"
-                                                onClick={() => handleDeleteRole(el.id, el.title)}>
-                                                <DeleteOutlined />
-                                            </Button>
-                                        </Tooltip>
-                                    </Col>
+                            </Col>
+                        ))}
+
+                    {!isLoading &&
+                        roles.map((el) => (
+                            <Col span={24} key={el._id}>
+                                <Row className="settings_users_form__row" justify="space-between">
+                                    <Row align="middle">
+                                        <Col>
+                                            <span
+                                                className={'settings_users_form__dot'}
+                                                style={{ backgroundColor: el.color }}></span>
+                                        </Col>
+                                        <Col>{el.title}</Col>
+                                    </Row>
+                                    <Row gutter={3}>
+                                        <Col>
+                                            <RoleEdit roleId={el._id} />
+                                        </Col>
+                                        <Col>
+                                            <RoleDelete roleId={el._id} />
+                                        </Col>
+                                    </Row>
                                 </Row>
-                            </Row>
-                        </Col>
-                    ))}
+                            </Col>
+                        ))}
                 </Row>
             </Col>
         </Row>

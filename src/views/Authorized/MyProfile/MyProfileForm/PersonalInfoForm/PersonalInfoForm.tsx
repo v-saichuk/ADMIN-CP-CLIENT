@@ -152,7 +152,7 @@ export const PersonalInfoForm: FC = () => {
                                             .includes(input.toLowerCase())
                                     }>
                                     {roles.map((el) => (
-                                        <Option key={el.id} value={el.id}>
+                                        <Option key={el._id} value={el._id}>
                                             {el.title}
                                         </Option>
                                     ))}

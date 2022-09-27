@@ -1,12 +1,18 @@
-import { FC } from 'react';
-import { Col, Form, Input, Modal, Radio, Row, Switch } from 'antd';
-import { v4 as uuid } from 'uuid';
+import { FC, useState } from 'react';
+import { Button, Col, Form, Input, message, Modal, Radio, Row, Switch } from 'antd';
+import axios from '../../../../../../axios';
 import { useAppDispatch, useAppSelector } from '../../../../../../store/hooks/useRedux';
-import { editRole, handleIsActive } from '../../../../../../store/settings/usersRole.slice';
+import { updateRole } from '../../../../../../store/settings/usersRole.slice';
+import { IRoles, IRoleColor, IRolesForm } from '../../../../../../types/';
+import { EditOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 
 import './RoleEdit.scss';
 
-const COLOR_BUTTON = [
+interface IProps {
+    roleId: string;
+}
+
+const COLOR_BUTTON: IRoleColor[] = [
     {
         id: '1',
         color: '#66D986',
@@ -53,173 +59,210 @@ const COLOR_BUTTON = [
     },
 ];
 
-interface IRoleEdit {
-    roleId: string;
-    isModal: (isActive: boolean) => any;
-}
-
-interface IFinish {
-    title: string;
-    color: string;
-    isSetting: boolean;
-    createUsers: boolean;
-    editUsers: boolean;
-    deleteUsers: boolean;
-    createProjects: boolean;
-    editProjects: boolean;
-    deleteProjects: boolean;
-}
-
-export const RoleEdit: FC<IRoleEdit> = ({ roleId, isModal }) => {
-    const [form] = Form.useForm();
-    const { isLoading, roles } = useAppSelector((state) => state.usersRole);
+export const RoleEdit: FC<IProps> = ({ roleId }) => {
     const dispatch = useAppDispatch();
+    const [form] = Form.useForm();
+    const { roles } = useAppSelector((state) => state.usersRole);
+    const role = roles.find((el) => el._id === roleId);
+    const [isModal, setIsModal] = useState(false);
+    const [isLoadingForm, setIsLoadingForm] = useState(false);
 
-    const role = roles.filter((el) => el.id === roleId)[0];
-
-    const onFinish = (props: IFinish) => {
-        setTimeout(() => {
-            dispatch(editRole({ id: roleId, ...props }));
-            form.resetFields();
-            dispatch(handleIsActive(false));
-            isModal(false);
-        }, 1000);
+    const handlePatchRole = async (props: IRolesForm) => {
+        setIsLoadingForm(true);
+        try {
+            const updatedRole: IRoles = {
+                _id: roleId,
+                title: props.title,
+                color: props.color,
+                isSetting: props.isSetting,
+                users: {
+                    createUsers: props.createUsers,
+                    editUsers: props.editUsers,
+                    deleteUsers: props.deleteUsers,
+                },
+                projects: {
+                    createProjects: props.createProjects,
+                    editProjects: props.editProjects,
+                    deleteProjects: props.deleteProjects,
+                },
+            };
+            const { data } = await axios.patch(`/api/roles/${roleId}`, updatedRole);
+            if (data.success) {
+                setIsLoadingForm(false);
+                dispatch(updateRole(updatedRole));
+                message.success(data.message);
+                setIsModal(false);
+                return;
+            } else {
+                setIsLoadingForm(false);
+                message.error(data.message);
+            }
+        } catch (e) {
+            setIsLoadingForm(false);
+            message.error('Виникла помилка в оновлені ролі');
+            console.log('Error =>', e);
+        } finally {
+            setIsLoadingForm(false);
+        }
     };
 
-    const onOk = () => {
-        form.submit();
-        dispatch(handleIsActive(true));
+    const onCancel = () => {
+        Modal.confirm({
+            title: 'Do you really want to close?',
+            content: `All your changes will not be saved`,
+            icon: <ExclamationCircleOutlined />,
+            okText: 'Yes',
+            okType: 'danger',
+            cancelText: 'No',
+            onOk() {
+                setIsModal(false);
+                form.resetFields();
+            },
+        });
     };
-    const onCancel = () => isModal(false);
 
     return (
-        <Modal
-            okText="Save"
-            title={`Edit Role "${role?.title}"`}
-            visible={true}
-            onOk={onOk}
-            confirmLoading={isLoading}
-            onCancel={onCancel}>
-            <Form
-                name="basic"
-                form={form}
-                initialValues={{ remember: true }}
-                onFinish={onFinish}
-                size="middle"
-                autoComplete="off">
-                <Row gutter={[16, 16]}>
-                    <Col span={24}>
-                        <Form.Item
-                            name="title"
-                            initialValue={role?.title}
-                            rules={[{ required: true, message: 'Please input role title!' }]}>
-                            <Input placeholder="Title" size="middle" />
-                        </Form.Item>
-                    </Col>
-                    <Col span={24}>
-                        <Form.Item
-                            name="color"
-                            rules={[{ required: true, message: 'Please select a color!' }]}>
-                            <Row justify="space-between">
-                                <Radio.Group
-                                    style={{
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
-                                        width: '100%',
-                                    }}>
-                                    {COLOR_BUTTON.map((el) => (
-                                        <Radio.Button
-                                            key={el.id}
-                                            value={el.color}
-                                            autoFocus={el.color === role.color}
-                                            style={{ backgroundColor: el.color }}
-                                            className="settings_users_role_create_modal__button"
-                                        />
-                                    ))}
-                                </Radio.Group>
+        <>
+            <Button
+                size="small"
+                loading={isLoadingForm}
+                type="text"
+                onClick={() => setIsModal(!isModal)}>
+                <EditOutlined />
+            </Button>
+            <Modal
+                okText="Save"
+                title={`Edit Role "${role?.title}"`}
+                visible={isModal}
+                onOk={() => form.submit()}
+                confirmLoading={isLoadingForm}
+                onCancel={onCancel}>
+                <Form
+                    name="basic"
+                    form={form}
+                    initialValues={{ remember: true }}
+                    onFinish={handlePatchRole}
+                    size="middle"
+                    autoComplete="off">
+                    <Row gutter={[16, 16]}>
+                        <Col span={24}>
+                            <Form.Item
+                                name="title"
+                                initialValue={role?.title}
+                                rules={[
+                                    { required: true, message: 'Please input role title!' },
+                                    { min: 3, message: 'Minimum length 3 characters' },
+                                    { type: 'string', message: 'Role name cannot be a number' },
+                                ]}>
+                                <Input placeholder="Title" size="middle" />
+                            </Form.Item>
+                        </Col>
+                        <Col span={24}>
+                            <Form.Item
+                                initialValue={role?.color}
+                                name="color"
+                                rules={[{ required: true, message: 'Please select a color!' }]}>
+                                <Row justify="space-between">
+                                    <Radio.Group
+                                        style={{
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            width: '100%',
+                                        }}>
+                                        {COLOR_BUTTON.map((el) => (
+                                            <Radio.Button
+                                                key={el.id}
+                                                value={el.color}
+                                                autoFocus={el.color === role?.color}
+                                                style={{ backgroundColor: el.color }}
+                                                className="settings_users_role_create_modal__button"
+                                            />
+                                        ))}
+                                    </Radio.Group>
+                                </Row>
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Row>
+                                <Col span={24}>Users</Col>
+                                <Col span={24} className="settings_users_role_create_modal__swich">
+                                    <Form.Item
+                                        name="createUsers"
+                                        initialValue={role?.users?.createUsers}
+                                        valuePropName="checked">
+                                        <Switch size="small" />
+                                    </Form.Item>
+                                    <span>Create Users</span>
+                                </Col>
+                                <Col span={24} className="settings_users_role_create_modal__swich">
+                                    <Form.Item
+                                        name="editUsers"
+                                        initialValue={role?.users?.editUsers}
+                                        valuePropName="checked">
+                                        <Switch size="small" />
+                                    </Form.Item>
+                                    <span>Edit users</span>
+                                </Col>
+                                <Col span={24} className="settings_users_role_create_modal__swich">
+                                    <Form.Item
+                                        name="deleteUsers"
+                                        initialValue={role?.users?.deleteUsers}
+                                        valuePropName="checked">
+                                        <Switch size="small" />
+                                    </Form.Item>
+                                    <span>Delete users</span>
+                                </Col>
                             </Row>
-                        </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                        <Row>
-                            <Col span={24}>Users</Col>
-                            <Col span={24} className="settings_users_role_create_modal__swich">
-                                <Form.Item
-                                    name="createUsers"
-                                    initialValue={role?.users?.createUsers}
-                                    valuePropName="checked">
-                                    <Switch size="small" />
-                                </Form.Item>
-                                <span>Create Users</span>
-                            </Col>
-                            <Col span={24} className="settings_users_role_create_modal__swich">
-                                <Form.Item
-                                    name="editUsers"
-                                    initialValue={role?.users?.editUsers}
-                                    valuePropName="checked">
-                                    <Switch size="small" />
-                                </Form.Item>
-                                <span>Edit users</span>
-                            </Col>
-                            <Col span={24} className="settings_users_role_create_modal__swich">
-                                <Form.Item
-                                    name="deleteUsers"
-                                    initialValue={role?.users?.deleteUsers}
-                                    valuePropName="checked">
-                                    <Switch size="small" />
-                                </Form.Item>
-                                <span>Delete users</span>
-                            </Col>
-                        </Row>
-                    </Col>
-                    <Col span={12}>
-                        <Row>
-                            <Col span={24}>Projects</Col>
-                            <Col span={24} className="settings_users_role_create_modal__swich">
-                                <Form.Item
-                                    name="createProjects"
-                                    initialValue={role?.projects?.createProjects}
-                                    valuePropName="checked">
-                                    <Switch size="small" />
-                                </Form.Item>
-                                <span>Create Projects</span>
-                            </Col>
-                            <Col span={24} className="settings_users_role_create_modal__swich">
-                                <Form.Item
-                                    name="editProjects"
-                                    initialValue={role?.projects?.editProjects}
-                                    valuePropName="checked">
-                                    <Switch size="small" />
-                                </Form.Item>
-                                <span>Edit Projects</span>
-                            </Col>
-                            <Col span={24} className="settings_users_role_create_modal__swich">
-                                <Form.Item
-                                    name="deleteProjects"
-                                    initialValue={role?.projects?.deleteProjects}
-                                    valuePropName="checked">
-                                    <Switch size="small" />
-                                </Form.Item>
-                                <span>Delete Projects</span>
-                            </Col>
-                        </Row>
-                    </Col>
-                    <Col span={24}>
-                        <Row>
-                            <Col span={24}>Settings</Col>
-                            <Col span={24} className="settings_users_role_create_modal__swich">
-                                <Form.Item
-                                    name="isSetting"
-                                    initialValue={role?.isSetting}
-                                    valuePropName="checked">
-                                    <Switch size="small" />
-                                </Form.Item>
-                                <span>Access to settings</span>
-                            </Col>
-                        </Row>
-                    </Col>
-                </Row>
-            </Form>
-        </Modal>
+                        </Col>
+                        <Col span={12}>
+                            <Row>
+                                <Col span={24}>Projects</Col>
+                                <Col span={24} className="settings_users_role_create_modal__swich">
+                                    <Form.Item
+                                        name="createProjects"
+                                        initialValue={role?.projects?.createProjects}
+                                        valuePropName="checked">
+                                        <Switch size="small" />
+                                    </Form.Item>
+                                    <span>Create Projects</span>
+                                </Col>
+                                <Col span={24} className="settings_users_role_create_modal__swich">
+                                    <Form.Item
+                                        name="editProjects"
+                                        initialValue={role?.projects?.editProjects}
+                                        valuePropName="checked">
+                                        <Switch size="small" />
+                                    </Form.Item>
+                                    <span>Edit Projects</span>
+                                </Col>
+                                <Col span={24} className="settings_users_role_create_modal__swich">
+                                    <Form.Item
+                                        name="deleteProjects"
+                                        initialValue={role?.projects?.deleteProjects}
+                                        valuePropName="checked">
+                                        <Switch size="small" />
+                                    </Form.Item>
+                                    <span>Delete Projects</span>
+                                </Col>
+                            </Row>
+                        </Col>
+                        <Col span={24}>
+                            <Row>
+                                <Col span={24}>Settings</Col>
+                                <Col span={24} className="settings_users_role_create_modal__swich">
+                                    <Form.Item
+                                        name="isSetting"
+                                        initialValue={role?.isSetting}
+                                        valuePropName="checked">
+                                        <Switch size="small" />
+                                    </Form.Item>
+                                    <span>Access to settings</span>
+                                </Col>
+                            </Row>
+                        </Col>
+                    </Row>
+                </Form>
+            </Modal>
+        </>
     );
 };

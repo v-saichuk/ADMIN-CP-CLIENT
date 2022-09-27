@@ -38,9 +38,9 @@ export const SearchUser: FC<ISearchUser> = ({ search, setSearch }) => {
                     <div className="search_user">
                         {roles.map(
                             (elm) =>
-                                elm.id === el.roleId && (
+                                elm._id === el.roleId && (
                                     <span
-                                        key={elm.id}
+                                        key={elm._id}
                                         className="search_dot"
                                         style={{ backgroundColor: elm.color }}></span>
                                 ),
