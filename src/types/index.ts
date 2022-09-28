@@ -42,3 +42,19 @@ export interface IRoleColor {
     id: string;
     color: string;
 }
+
+export interface IUsers {
+    _id: string;
+    avatar: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    roleId: string;
+    social: {
+        facebook: string;
+        twitter: string;
+        telegram: string;
+        linkedin: string;
+    };
+    passwordHash: string;
+}

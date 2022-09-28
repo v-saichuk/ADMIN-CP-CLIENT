@@ -1,24 +1,34 @@
 import { FC, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Button, Col, Form, Input, Row } from 'antd';
+import { Button, Col, Form, Input, message, Row } from 'antd';
 import { useAppDispatch, useAppSelector } from '../../../../../../store/hooks/useRedux';
 import { editUser } from '../../../../../../store/users/users.slice';
+import axios from '../../../../../../axios';
 
 export const UsersSocial: FC = () => {
     const dispatch = useAppDispatch();
     const { userId } = useParams();
-    const [isLoad, setLoad] = useState(false);
+    const [isLoading, setLoading] = useState(false);
     const user = useAppSelector((state) =>
-        state.users.users.find((el) => userId && el.id === userId),
+        state.users.users.find((el) => userId && el._id === userId),
     );
 
-    const onFinish = (values: any) => {
-        setLoad(true);
-        setTimeout(() => {
-            setLoad(false);
+    const fetchUserUpdate = async (values: any) => {
+        setLoading(true);
+        try {
+            const { data } = await axios.patch(`/api/user/${userId}`, {
+                social: {
+                    facebook: values.facebook,
+                    twitter: values.twitter,
+                    telegram: values.telegram,
+                    linkedin: values.linkedin,
+                },
+            });
+            message.success(data.message);
+            setLoading(false);
             dispatch(
                 editUser({
-                    id: userId,
+                    _id: userId,
                     social: {
                         facebook: values.facebook,
                         twitter: values.twitter,
@@ -27,14 +37,19 @@ export const UsersSocial: FC = () => {
                     },
                 }),
             );
-        }, 1000);
+            return data;
+        } catch (e: any) {
+            message.error(e.response.data.message);
+            setLoading(false);
+            return;
+        }
     };
 
     return (
         <Form
             name="basic"
             initialValues={{ remember: true }}
-            onFinish={onFinish}
+            onFinish={fetchUserUpdate}
             size="middle"
             autoComplete="off">
             <Row gutter={[16, 24]}>
@@ -69,7 +84,7 @@ export const UsersSocial: FC = () => {
                 </Col>
                 <Col className="gutter-row" span={24}>
                     <Form.Item>
-                        <Button htmlType="submit" loading={isLoad} type="primary">
+                        <Button htmlType="submit" loading={isLoading} type="primary">
                             Save Change
                         </Button>
                     </Form.Item>

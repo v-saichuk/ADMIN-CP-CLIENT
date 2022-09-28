@@ -2,15 +2,13 @@ import { FC, useState } from 'react';
 import { Select } from 'antd';
 import { useAppSelector } from '../../../../../store/hooks/useRedux';
 
-import './SearchUser.scss';
+import './UsersSearch.scss';
 
 interface ISearchUser {
-    search: any[];
     setSearch: (obj: any) => any;
 }
 
-export const SearchUser: FC<ISearchUser> = ({ search, setSearch }) => {
-    const { Option } = Select;
+export const SearchUser: FC<ISearchUser> = ({ setSearch }) => {
     const { users } = useAppSelector((state) => state.users);
     const { roles } = useAppSelector((state) => state.usersRole);
     const [inputSize, setInputSize] = useState('300px');
@@ -18,7 +16,7 @@ export const SearchUser: FC<ISearchUser> = ({ search, setSearch }) => {
     const handleChange = (value: any) => {
         setSearch(
             value.length
-                ? value.map((el: { key: any }) => users.filter((elm) => el.key === elm.id)[0])
+                ? value.map((el: { key: any }) => users.find((elm) => el.key === elm._id))
                 : users,
         );
     };
@@ -33,21 +31,21 @@ export const SearchUser: FC<ISearchUser> = ({ search, setSearch }) => {
             onFocus={() => setInputSize('400px')}
             onBlur={() => setInputSize('300px')}
             style={{ minWidth: inputSize, transition: '0.3s' }}>
-            {users.map((el) => (
-                <Option key={el.id} value={el.firstname + el.lastname}>
+            {users.map((user) => (
+                <Select.Option key={user._id} value={user.firstName + user.lastName}>
                     <div className="search_user">
                         {roles.map(
-                            (elm) =>
-                                elm._id === el.roleId && (
+                            (role) =>
+                                role._id === user.roleId && (
                                     <span
-                                        key={elm._id}
+                                        key={role._id}
                                         className="search_dot"
-                                        style={{ backgroundColor: elm.color }}></span>
+                                        style={{ backgroundColor: role.color }}></span>
                                 ),
                         )}
-                        {el.firstname} {el.lastname}
+                        {user.firstName} {user.lastName}
                     </div>
-                </Option>
+                </Select.Option>
             ))}
         </Select>
     );

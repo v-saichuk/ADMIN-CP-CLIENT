@@ -13,11 +13,10 @@ import { NotFoundPage } from '../../../NotFound/NotFoundPage/NotFoundPage';
 import './UsersEdit.scss';
 
 export const UsersEdit: FC = () => {
-    const { TabPane } = Tabs;
     const { userId } = useParams();
 
     const { users } = useAppSelector((state) => state.users);
-    const user = users.filter((el) => userId && el.id === userId)[0];
+    const user = users.filter((el) => userId && el._id === userId)[0];
 
     const TABCONTENT = [
         {
@@ -52,7 +51,7 @@ export const UsersEdit: FC = () => {
                     <Content className="site-layout-background">
                         <Tabs tabPosition="left" type="card">
                             {TABCONTENT.map((el) => (
-                                <TabPane
+                                <Tabs.TabPane
                                     key={el.key}
                                     tab={
                                         <span>
@@ -61,7 +60,7 @@ export const UsersEdit: FC = () => {
                                         </span>
                                     }>
                                     {el.content}
-                                </TabPane>
+                                </Tabs.TabPane>
                             ))}
                         </Tabs>
                     </Content>

@@ -1,30 +1,29 @@
 import { FC, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import confirm from 'antd/lib/modal/confirm';
 import { Content } from 'antd/lib/layout/layout';
 // import { UsersFilter } from '../UsersForm/Users.filter/UsersFilter';
-import { useAppDispatch, useAppSelector } from '../../../../store/hooks/useRedux';
-import { deleteUser } from '../../../../store/users/users.slice';
-import { Avatar, Badge, Breadcrumb, Button, Card, Col, Layout, List, Popover, Row } from 'antd';
-import { SearchUser } from '../UsersForm/SearchUser/SearchUser';
+import { useAppSelector } from '../../../../store/hooks/useRedux';
 import {
-    DeleteOutlined,
-    EditOutlined,
-    ShareAltOutlined,
-    UserOutlined,
-    FacebookOutlined,
-    TwitterOutlined,
-    LinkedinOutlined,
-    SendOutlined,
-    ExclamationCircleOutlined,
-    PlusOutlined,
-} from '@ant-design/icons';
+    Avatar,
+    Badge,
+    Breadcrumb,
+    Button,
+    Card,
+    Col,
+    Layout,
+    List,
+    Popover,
+    Row,
+    Skeleton,
+} from 'antd';
+import { SearchUser } from '../UsersForm/Users.search/UsersSearch';
+import { UserDelete } from '../UsersForm/User.delete/UserDelete';
+import * as Icon from '@ant-design/icons';
 
 // STYLE
 import './UsersPage.scss';
 
 export const UsersPage: FC = () => {
-    const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const { users } = useAppSelector((state) => state.users);
     const { roles } = useAppSelector((state) => state.usersRole);
@@ -33,20 +32,6 @@ export const UsersPage: FC = () => {
     useEffect(() => {
         setSearch(users);
     }, [users]);
-
-    const showDeleteRoleConfirm = (id: string) => {
-        confirm({
-            title: 'Do you really want to user delete?',
-            content: 'Once deleted, you can no longer restore it.',
-            icon: <ExclamationCircleOutlined />,
-            okText: 'Yes',
-            okType: 'danger',
-            cancelText: 'No',
-            onOk() {
-                dispatch(deleteUser(id));
-            },
-        });
-    };
 
     return (
         <Layout style={{ padding: '0 24px 24px' }}>
@@ -67,14 +52,14 @@ export const UsersPage: FC = () => {
                     <div className="user_page__content">
                         <div className="user_page__content-header">
                             <div className="user_page__search">
-                                <SearchUser setSearch={setSearch} search={search} />
+                                <SearchUser setSearch={setSearch} />
                             </div>
                             <div className="user_page__pagination">
                                 <Button
                                     className="user_page__sidebar_button"
                                     type="primary"
                                     onClick={() => navigate('/users/create')}
-                                    icon={<PlusOutlined />}>
+                                    icon={<Icon.PlusOutlined />}>
                                     Create user
                                 </Button>
                             </div>
@@ -96,14 +81,17 @@ export const UsersPage: FC = () => {
                                     showSizeChanger: false,
                                 }}
                                 dataSource={search}
-                                renderItem={(item) => {
-                                    const role = roles.find((el) => el._id === item.roleId && el);
+                                renderItem={(user) => {
+                                    const role = roles.find(
+                                        (role) => role._id === user.roleId && role,
+                                    );
 
                                     return (
                                         <List.Item>
                                             <Badge.Ribbon
                                                 text={role?.title}
                                                 style={{ background: role?.color }}>
+                                                <Skeleton></Skeleton>
                                                 <Card
                                                     className="user_page__card"
                                                     size="small"
@@ -114,52 +102,53 @@ export const UsersPage: FC = () => {
                                                                     <Button
                                                                         className="user_page__card-social"
                                                                         disabled={
-                                                                            !item.social.facebook
+                                                                            !user.social.facebook
                                                                         }
                                                                         shape="circle"
-                                                                        icon={<FacebookOutlined />}
+                                                                        icon={
+                                                                            <Icon.FacebookOutlined />
+                                                                        }
                                                                     />
                                                                     <Button
                                                                         className="user_page__card-social"
                                                                         shape="circle"
                                                                         disabled={
-                                                                            !item.social.twitter
+                                                                            !user.social.twitter
                                                                         }
-                                                                        icon={<TwitterOutlined />}
+                                                                        icon={
+                                                                            <Icon.TwitterOutlined />
+                                                                        }
                                                                     />
                                                                     <Button
                                                                         className="user_page__card-social"
                                                                         shape="circle"
                                                                         disabled={
-                                                                            !item.social.linkedin
+                                                                            !user.social.linkedin
                                                                         }
-                                                                        icon={<LinkedinOutlined />}
+                                                                        icon={
+                                                                            <Icon.LinkedinOutlined />
+                                                                        }
                                                                     />
                                                                     <Button
                                                                         className="user_page__card-social"
                                                                         shape="circle"
                                                                         disabled={
-                                                                            !item.social.telegram
+                                                                            !user.social.telegram
                                                                         }
-                                                                        icon={<SendOutlined />}
+                                                                        icon={<Icon.SendOutlined />}
                                                                     />
                                                                 </>
                                                             }>
-                                                            <ShareAltOutlined key="social" />
+                                                            <Icon.ShareAltOutlined key="social" />
                                                         </Popover>,
 
-                                                        <EditOutlined
+                                                        <Icon.EditOutlined
                                                             key="edit"
                                                             onClick={() =>
-                                                                navigate(`/users/edit/${item.id}`)
+                                                                navigate(`/users/edit/${user._id}`)
                                                             }
                                                         />,
-                                                        <DeleteOutlined
-                                                            key="delete"
-                                                            onClick={() =>
-                                                                showDeleteRoleConfirm(item.id)
-                                                            }
-                                                        />,
+                                                        <UserDelete userId={user._id} />,
                                                     ]}>
                                                     <Row>
                                                         <Col
@@ -167,18 +156,18 @@ export const UsersPage: FC = () => {
                                                             className="user_page__avatar-box">
                                                             <Avatar
                                                                 size={40}
-                                                                icon={<UserOutlined />}
+                                                                icon={<Icon.UserOutlined />}
                                                             />
                                                         </Col>
                                                         <Col
                                                             span={24}
                                                             className="user_page__fullname-box">
-                                                            {item.firstname}
+                                                            {user.firstName} {user.lastName}
                                                         </Col>
                                                         <Col
                                                             span={24}
                                                             className="user_page__email-box">
-                                                            {item.email}
+                                                            {user.email}
                                                         </Col>
                                                     </Row>
                                                 </Card>

@@ -5,20 +5,47 @@ import { Button, Col, Form, Input, message, Row, Select, Upload } from 'antd';
 import { useAppSelector, useAppDispatch } from '../../../../../../store/hooks/useRedux';
 import { editUser } from '../../../../../../store/users/users.slice';
 import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
+import axios from '../../../../../../axios';
 
 export const UsersPersonalInformation: FC = () => {
     const dispatch = useAppDispatch();
     const { userId } = useParams();
     const { Option } = Select;
     const { roles } = useAppSelector((state) => state.usersRole);
-    const user = useAppSelector((state) => state.users.users.find((el) => el.id === userId));
+    const user = useAppSelector((state) => state.users.users.find((el) => el._id === userId));
     const userRole = roles.find((el) => el._id === user?.roleId);
     const [selectRole, setSelectRole] = useState(userRole?._id);
-    const [isLoad, setLoad] = useState(false);
+    const [isLoading, setLoading] = useState(false);
 
-    // SELECT ROLE
-    const onChange = (value: string) => {
-        setSelectRole(value);
+    const fetchUserUpdate = async (values: any) => {
+        setLoading(true);
+        try {
+            const { data } = await axios.patch(`/api/user/${userId}`, {
+                // avatarUrl: 'http://safdf.com/asdf/asdf',
+                firstName: values.firstName,
+                lastName: values.lastName,
+                email: values.email,
+                roleId: selectRole,
+                social: {},
+            });
+            message.success(data.message);
+            setLoading(false);
+            dispatch(
+                editUser({
+                    _id: userId,
+                    firstName: values.firstName,
+                    lastName: values.lastName,
+                    email: values.email,
+                    roleId: selectRole,
+                    // avatar: user.avatar,
+                }),
+            );
+            return data;
+        } catch (e: any) {
+            message.error(e.response.data.message);
+            setLoading(false);
+            return;
+        }
     };
 
     // AVATAR
@@ -51,33 +78,11 @@ export const UsersPersonalInformation: FC = () => {
     };
     // ./AVATAR
 
-    const onFinish = (values: any) => {
-        setLoad(true);
-        setTimeout(() => {
-            setLoad(false);
-            dispatch(
-                editUser({
-                    id: userId,
-                    firstname: values.firstname,
-                    lastname: values.lastname,
-                    email: values.email,
-                    roleId: selectRole,
-                    // avatar: user.avatar,
-                }),
-            );
-        }, 1000);
-    };
-
-    const onFinishFailed = () => {
-        message.error('Failed to save. Please check that the fields are filled in correctly.');
-    };
-
     return (
         <Form
             name="basic"
             initialValues={{ remember: true }}
-            onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
+            onFinish={fetchUserUpdate}
             size="middle"
             autoComplete="off">
             <Row gutter={[16, 24]}>
@@ -103,16 +108,24 @@ export const UsersPersonalInformation: FC = () => {
                     <Row gutter={[16, 16]}>
                         <Col className="gutter-row" span={12}>
                             <Form.Item
-                                name="firstname"
+                                name="firstName"
                                 hasFeedback
-                                initialValue={user?.firstname}
+                                initialValue={user?.firstName}
                                 rules={[
-                                    { required: true, message: 'Please input your First Name!' },
+                                    {
+                                        type: 'string',
+                                        required: true,
+                                        message: 'Please input your First Name!',
+                                    },
                                     {
                                         type: 'string',
                                         pattern: /^[^\s][a-zA-Zа-яА-Я\s]*$/,
-                                        warningOnly: true,
                                         message: 'Invalid First Name',
+                                    },
+                                    {
+                                        type: 'string',
+                                        min: 2,
+                                        message: 'Minimum length 2 characters',
                                     },
                                 ]}>
                                 <Input placeholder="First Name" allowClear />
@@ -120,16 +133,24 @@ export const UsersPersonalInformation: FC = () => {
                         </Col>
                         <Col className="gutter-row" span={12}>
                             <Form.Item
-                                name="lastname"
+                                name="lastName"
                                 hasFeedback
-                                initialValue={user?.lastname}
+                                initialValue={user?.lastName}
                                 rules={[
-                                    { required: true, message: 'Please input your Last Name!' },
+                                    {
+                                        type: 'string',
+                                        required: true,
+                                        message: 'Please input your Last Name!',
+                                    },
                                     {
                                         type: 'string',
                                         pattern: /^[^\s][a-zA-Zа-яА-Я\s]*$/,
-                                        warningOnly: true,
                                         message: 'Invalid Last Name',
+                                    },
+                                    {
+                                        type: 'string',
+                                        min: 2,
+                                        message: 'Minimum length 2 characters',
                                     },
                                 ]}>
                                 <Input placeholder="Last Name" allowClear />
@@ -138,13 +159,15 @@ export const UsersPersonalInformation: FC = () => {
                         <Col className="gutter-row" span={12}>
                             <Form.Item
                                 name="email"
-                                hasFeedback
                                 initialValue={user?.email}
+                                hasFeedback
                                 rules={[
-                                    { required: true, message: 'Please input your E-Mail!' },
+                                    {
+                                        required: true,
+                                        message: 'Please input your E-Mail!',
+                                    },
                                     {
                                         type: 'email',
-                                        warningOnly: true,
                                         message: 'Please enter a valid E-mail',
                                     },
                                 ]}>
@@ -155,21 +178,38 @@ export const UsersPersonalInformation: FC = () => {
                             <Form.Item
                                 name="role"
                                 initialValue={userRole?.title}
-                                rules={[{ required: true, message: 'Please input your Role!' }]}>
+                                hasFeedback
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Please input your Role!',
+                                    },
+                                ]}>
                                 <Select
                                     style={{ width: '100%' }}
                                     showSearch
-                                    placeholder="Select a person"
+                                    placeholder="Select a role"
                                     optionFilterProp="children"
-                                    onChange={onChange}
+                                    onChange={(value) => setSelectRole(value)}
                                     filterOption={(input, option) =>
                                         (option!.children as unknown as string)
                                             .toLowerCase()
                                             .includes(input.toLowerCase())
                                     }>
-                                    {roles.map((el) => (
-                                        <Option key={el._id} value={el._id}>
-                                            {el.title}
+                                    {roles.map((role) => (
+                                        <Option key={role._id} value={role._id}>
+                                            <div
+                                                style={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                }}>
+                                                <span
+                                                    className="search_dot"
+                                                    style={{
+                                                        backgroundColor: role.color,
+                                                    }}></span>
+                                                {role.title}
+                                            </div>
                                         </Option>
                                     ))}
                                 </Select>
@@ -178,7 +218,7 @@ export const UsersPersonalInformation: FC = () => {
                     </Row>
                 </Col>
                 <Col className="gutter-row" span={24}>
-                    <Button htmlType="submit" loading={isLoad} type="primary">
+                    <Button htmlType="submit" loading={isLoading} type="primary">
                         Save Change
                     </Button>
                 </Col>

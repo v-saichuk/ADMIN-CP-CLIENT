@@ -1,20 +1,14 @@
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 import { Col, Row, Skeleton } from 'antd';
-import { useAppDispatch, useAppSelector } from '../../../../../store/hooks/useRedux';
+import { useAppSelector } from '../../../../../store/hooks/useRedux';
 import { RoleCreate } from './Role.create/RoleCreate';
 import { RoleEdit } from './Role.edit/RoleEdit';
-import { getRoles } from '../../../../../store/settings/usersRole.slice';
 import { RoleDelete } from './Role.delete/Role.delete';
 
 import './RoleSettings.scss';
 
 export const RoleSettings: FC = () => {
     const { roles, isLoading } = useAppSelector((state) => state.usersRole);
-    const dispatch = useAppDispatch();
-
-    useEffect(() => {
-        dispatch(getRoles());
-    }, [dispatch]);
 
     const fakeDataRole = Array.from({ length: 5 }).map((el) => <></>);
 

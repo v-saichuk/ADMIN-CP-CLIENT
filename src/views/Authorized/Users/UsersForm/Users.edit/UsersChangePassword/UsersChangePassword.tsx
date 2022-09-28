@@ -2,37 +2,34 @@ import { FC, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Button, Col, Form, Input, message, Row } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
-import { useAppDispatch } from '../../../../../../store/hooks/useRedux';
-import { editUser } from '../../../../../../store/users/users.slice';
+import axios from '../../../../../../axios';
 
 export const UsersChangePassword: FC = () => {
-    const dispatch = useAppDispatch();
     const { userId } = useParams();
-    const [isLoad, setLoad] = useState(false);
+    const [isLoading, setLoading] = useState(false);
 
-    const onFinish = (values: any) => {
-        setLoad(true);
-        setTimeout(() => {
-            setLoad(false);
-            dispatch(
-                editUser({
-                    id: userId,
-                    password: values.new_password,
-                }),
-            );
-        }, 1000);
-    };
-
-    const onFinishFailed = () => {
-        message.error('Failed to save. Please check that the fields are filled in correctly.');
+    const fetchUserUpdate = async (values: any) => {
+        setLoading(true);
+        try {
+            const { data } = await axios.patch(`/api/user/${userId}`, {
+                password: values.new_password,
+                social: {},
+            });
+            message.success(data.message);
+            setLoading(false);
+            return data;
+        } catch (e: any) {
+            message.error(e.response.data.message);
+            setLoading(false);
+            return;
+        }
     };
 
     return (
         <Form
             name="basic"
             initialValues={{ remember: true }}
-            onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
+            onFinish={fetchUserUpdate}
             size="middle"
             autoComplete="off">
             <Row gutter={[16, 24]}>
@@ -97,7 +94,7 @@ export const UsersChangePassword: FC = () => {
                     </Row>
                 </Col>
                 <Col className="gutter-row" span={24}>
-                    <Button htmlType="submit" loading={isLoad} type="primary">
+                    <Button htmlType="submit" loading={isLoading} type="primary">
                         Save Change
                     </Button>
                 </Col>

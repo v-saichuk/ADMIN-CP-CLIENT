@@ -1,56 +1,47 @@
 import { FC } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import {
-    HomePage,
-    ProjectsPage,
-    UsersPage,
-    NotFoundPage,
-    MyProfilePage,
-    SettingsPage,
-    UsersEdit,
-    UsersCreate,
-} from '../views/Authorized';
+import * as Page from '../views/Authorized';
 
 const ROUTE = [
     {
         id: 1,
         path: '/',
-        element: <HomePage />,
+        element: <Page.HomePage />,
     },
     {
         id: 2,
         path: '/projects',
-        element: <ProjectsPage />,
+        element: <Page.ProjectsPage />,
     },
     {
         id: 3,
         path: '/users',
-        element: <UsersPage />,
+        element: <Page.UsersPage />,
     },
     {
         id: 4,
         path: '/users/edit/:userId',
-        element: <UsersEdit />,
+        element: <Page.UsersEdit />,
     },
     {
         id: 5,
         path: '/users/create',
-        element: <UsersCreate />,
+        element: <Page.UserCreate />,
     },
     {
         id: 6,
         path: '/my-profile',
-        element: <MyProfilePage />,
+        element: <Page.MyProfilePage />,
     },
     {
         id: 7,
         path: '/settings',
-        element: <SettingsPage />,
+        element: <Page.SettingsPage />,
     },
     {
         id: 8,
         path: '*',
-        element: <NotFoundPage />,
+        element: <Page.NotFoundPage />,
     },
 ];
 

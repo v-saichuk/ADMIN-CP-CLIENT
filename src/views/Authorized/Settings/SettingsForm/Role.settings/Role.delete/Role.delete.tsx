@@ -39,7 +39,7 @@ export const RoleDelete: FC<IProps> = ({ roleId }) => {
         notification.error({
             message: 'Deletion error',
             description: `You cannot delete a role because it contains users: (${activeUserRole
-                .map((el) => el.firstname)
+                .map((el) => el.firstName)
                 .join(', ')})`,
         });
     };

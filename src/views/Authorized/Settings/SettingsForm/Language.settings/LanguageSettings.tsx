@@ -1,20 +1,14 @@
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 import axios from '../../../../../axios';
 import { ILanguage } from '../../../../../types';
-import { useAppDispatch, useAppSelector } from '../../../../../store/hooks/useRedux';
+import { useAppSelector } from '../../../../../store/hooks/useRedux';
 import { Col, List, Row, Switch, Skeleton, message } from 'antd';
-import { getCountry } from '../../../../../store/settings/language.slice';
 import { FlagIcon } from '../../../../../components/FlagIcon/FlagIcon';
 
 import './LanguageSettings.scss';
 
 export const LanguageSettings: FC = () => {
     const { lang, isLoading } = useAppSelector((state) => state.language);
-    const dispatch = useAppDispatch();
-
-    useEffect(() => {
-        dispatch(getCountry());
-    }, [dispatch]);
 
     const handleCountry = async ([enabled, id]: [boolean, string]) => {
         await axios

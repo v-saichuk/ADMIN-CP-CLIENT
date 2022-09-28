@@ -84,6 +84,7 @@ export const RoleCreate: FC = () => {
                 dispatch(createRole(data.role));
                 message.success(data.message);
                 setIsModal(false);
+                form.resetFields();
                 return;
             } else {
                 setIsLoadingForm(false);

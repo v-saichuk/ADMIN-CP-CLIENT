@@ -1,36 +1,53 @@
 import { FC, useState } from 'react';
-import { v4 as uuid } from 'uuid';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../../../store/hooks/useRedux';
 import ImgCrop from 'antd-img-crop';
 import { Breadcrumb, Button, Col, Form, Input, Layout, message, Row, Select, Upload } from 'antd';
 import { Content } from 'antd/lib/layout/layout';
+import { createUser } from '../../../../../store/users/users.slice';
+import axios from '../../../../../axios';
 
 import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
 
-import {
-    EyeInvisibleOutlined,
-    EyeTwoTone,
-    FacebookOutlined,
-    LeftOutlined,
-    LinkedinOutlined,
-    SendOutlined,
-    TwitterOutlined,
-} from '@ant-design/icons';
-import './UsersCreate.scss';
-import { createUser } from '../../../../../store/users/users.slice';
+import * as Icon from '@ant-design/icons';
+import './UserCreate.scss';
 
-export const UsersCreate: FC = () => {
+export const UserCreate: FC = () => {
     const dispatch = useAppDispatch();
     const navigation = useNavigate();
     const { Option } = Select;
     const { roles } = useAppSelector((state) => state.usersRole);
     const [selectRole, setSelectRole] = useState('');
-    const [isLoad, setLoad] = useState(false);
+    const [isLoading, setLoading] = useState(false);
 
-    // SELECT ROLE
-    const onChange = (value: string) => {
-        setSelectRole(value);
+    const fetchCreateUser = async (values: any) => {
+        setLoading(true);
+        try {
+            const { data } = await axios.post('/api/user', {
+                avatar: 'http://avatar.com.ua/ter332/sad.png',
+                firstName: values.firstname,
+                lastName: values.lastname,
+                email: values.email,
+                roleId: selectRole,
+                social: {
+                    facebook: values.facebook,
+                    twitter: values.twitter,
+                    telegram: values.telegram,
+                    linkedin: values.linkedin,
+                },
+                password: values.password,
+            });
+            dispatch(createUser(data));
+            setLoading(false);
+            navigation('/users');
+            message.success('User successfully created!');
+            return data;
+        } catch (e: any) {
+            console.log('ERROR CREATE USER =>', e);
+            message.error(e.response.data.message);
+            setLoading(false);
+            return;
+        }
     };
 
     // AVATAR
@@ -63,42 +80,12 @@ export const UsersCreate: FC = () => {
     };
     // ./AVATAR
 
-    const onFinish = (values: any) => {
-        setLoad(true);
-        setTimeout(() => {
-            setLoad(false);
-            dispatch(
-                createUser({
-                    id: uuid(),
-                    avatar: 'avatar_url',
-                    firstname: values.firstname,
-                    lastname: values.lastname,
-                    email: values.email,
-                    roleId: selectRole,
-                    social: {
-                        facebook: values.facebook,
-                        twitter: values.twitter,
-                        telegram: values.telegram,
-                        linkedin: values.linkedin,
-                    },
-                    password: values.password,
-                }),
-            );
-
-            navigation('/users');
-        }, 1000);
-    };
-
-    const onFinishFailed = () => {
-        message.error('Failed to save. Please check that the fields are filled in correctly.');
-    };
-
     return (
         <Layout style={{ padding: '0 24px 24px' }}>
             <Breadcrumb style={{ margin: '16px 0' }}>
                 <Breadcrumb.Item>
                     <Button
-                        icon={<LeftOutlined />}
+                        icon={<Icon.LeftOutlined />}
                         type={'primary'}
                         style={{ marginRight: 10 }}
                         onClick={() => navigation('/users')}
@@ -110,8 +97,7 @@ export const UsersCreate: FC = () => {
                 <Form
                     name="basic"
                     initialValues={{ remember: true }}
-                    onFinish={onFinish}
-                    onFinishFailed={onFinishFailed}
+                    onFinish={fetchCreateUser}
                     size="middle"
                     autoComplete="off">
                     <Row gutter={[16, 24]}>
@@ -142,14 +128,19 @@ export const UsersCreate: FC = () => {
                                         hasFeedback
                                         rules={[
                                             {
+                                                type: 'string',
                                                 required: true,
                                                 message: 'Please input your First Name!',
                                             },
                                             {
                                                 type: 'string',
                                                 pattern: /^[^\s][a-zA-Zа-яА-Я\s]*$/,
-                                                warningOnly: true,
                                                 message: 'Invalid First Name',
+                                            },
+                                            {
+                                                type: 'string',
+                                                min: 2,
+                                                message: 'Minimum length 2 characters',
                                             },
                                         ]}>
                                         <Input placeholder="First Name" allowClear />
@@ -161,14 +152,19 @@ export const UsersCreate: FC = () => {
                                         hasFeedback
                                         rules={[
                                             {
+                                                type: 'string',
                                                 required: true,
                                                 message: 'Please input your Last Name!',
                                             },
                                             {
                                                 type: 'string',
                                                 pattern: /^[^\s][a-zA-Zа-яА-Я\s]*$/,
-                                                warningOnly: true,
                                                 message: 'Invalid Last Name',
+                                            },
+                                            {
+                                                type: 'string',
+                                                min: 2,
+                                                message: 'Minimum length 2 characters',
                                             },
                                         ]}>
                                         <Input placeholder="Last Name" allowClear />
@@ -185,7 +181,6 @@ export const UsersCreate: FC = () => {
                                             },
                                             {
                                                 type: 'email',
-                                                warningOnly: true,
                                                 message: 'Please enter a valid E-mail',
                                             },
                                         ]}>
@@ -207,15 +202,26 @@ export const UsersCreate: FC = () => {
                                             showSearch
                                             placeholder="Select a role"
                                             optionFilterProp="children"
-                                            onChange={onChange}
+                                            onChange={(value) => setSelectRole(value)}
                                             filterOption={(input, option) =>
                                                 (option!.children as unknown as string)
                                                     .toLowerCase()
                                                     .includes(input.toLowerCase())
                                             }>
-                                            {roles.map((el) => (
-                                                <Option key={el._id} value={el._id}>
-                                                    {el.title}
+                                            {roles.map((role) => (
+                                                <Option key={role._id} value={role._id}>
+                                                    <div
+                                                        style={{
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                        }}>
+                                                        <span
+                                                            className="search_dot"
+                                                            style={{
+                                                                backgroundColor: role.color,
+                                                            }}></span>
+                                                        {role.title}
+                                                    </div>
                                                 </Option>
                                             ))}
                                         </Select>
@@ -244,7 +250,11 @@ export const UsersCreate: FC = () => {
                                             placeholder="Password"
                                             allowClear
                                             iconRender={(visible) =>
-                                                visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                                                visible ? (
+                                                    <Icon.EyeTwoTone />
+                                                ) : (
+                                                    <Icon.EyeInvisibleOutlined />
+                                                )
                                             }
                                         />
                                     </Form.Item>
@@ -278,7 +288,11 @@ export const UsersCreate: FC = () => {
                                             placeholder="Confirm password"
                                             allowClear
                                             iconRender={(visible) =>
-                                                visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                                                visible ? (
+                                                    <Icon.EyeTwoTone />
+                                                ) : (
+                                                    <Icon.EyeInvisibleOutlined />
+                                                )
                                             }
                                         />
                                     </Form.Item>
@@ -293,7 +307,7 @@ export const UsersCreate: FC = () => {
                                         <Input
                                             addonBefore="https://"
                                             placeholder="twitter"
-                                            addonAfter={<TwitterOutlined />}
+                                            addonAfter={<Icon.TwitterOutlined />}
                                             allowClear
                                         />
                                     </Form.Item>
@@ -303,7 +317,7 @@ export const UsersCreate: FC = () => {
                                         <Input
                                             addonBefore="https://"
                                             placeholder="facebook"
-                                            addonAfter={<FacebookOutlined />}
+                                            addonAfter={<Icon.FacebookOutlined />}
                                             allowClear
                                         />
                                     </Form.Item>
@@ -313,7 +327,7 @@ export const UsersCreate: FC = () => {
                                         <Input
                                             addonBefore="https://"
                                             placeholder="telegram"
-                                            addonAfter={<SendOutlined />}
+                                            addonAfter={<Icon.SendOutlined />}
                                             allowClear
                                         />
                                     </Form.Item>
@@ -323,7 +337,7 @@ export const UsersCreate: FC = () => {
                                         <Input
                                             addonBefore="https://"
                                             placeholder="linkedin"
-                                            addonAfter={<LinkedinOutlined />}
+                                            addonAfter={<Icon.LinkedinOutlined />}
                                             allowClear
                                         />
                                     </Form.Item>
@@ -331,7 +345,7 @@ export const UsersCreate: FC = () => {
                             </Row>
                         </Col>
                         <Col className="gutter-row" span={24} md={{ span: 12 }}>
-                            <Button htmlType="submit" loading={isLoad} type="primary">
+                            <Button htmlType="submit" loading={isLoading} type="primary">
                                 Save Change
                             </Button>
                         </Col>

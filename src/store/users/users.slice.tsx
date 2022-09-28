@@ -1,73 +1,28 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { message } from 'antd';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import axios from '../../axios';
+import { IUsers } from '../../types';
 
-interface IUsers {
-    id: string;
-    avatar: string;
-    firstname: string;
-    lastname: string;
-    email: string;
-    roleId: string;
-    social: {
-        facebook: string;
-        twitter: string;
-        telegram: string;
-        linkedin: string;
-    };
-    password: string;
+export const getUsers = createAsyncThunk('users/getUsers', async (_, { rejectWithValue }) => {
+    try {
+        const { data } = await axios.get('/api/users');
+        console.log('data Users => ', data);
+        return data;
+    } catch (e) {
+        console.log('Error getUsers =>', e);
+        return rejectWithValue(e);
+    }
+});
+
+interface IInitialState {
+    isActive: boolean;
+    isLoading: boolean;
+    users: IUsers[];
 }
 
-const USERS: IUsers[] = [
-    {
-        id: '1',
-        avatar: 'avatar_url',
-        firstname: 'Vitaliy',
-        lastname: 'Saichuk',
-        email: 'saic4uk@gmail.com',
-        roleId: '1',
-        social: {
-            facebook: 'testing',
-            twitter: 'testing',
-            telegram: 'testing',
-            linkedin: 'testing',
-        },
-        password: '2107fily',
-    },
-    {
-        id: '2',
-        avatar: 'avatar_url',
-        firstname: 'John 2',
-        lastname: 'Doe',
-        email: 'johnDoe@gmail.com',
-        roleId: '2',
-        social: {
-            facebook: '',
-            twitter: '',
-            telegram: 'test',
-            linkedin: '',
-        },
-        password: '2107fily',
-    },
-    {
-        id: '3',
-        avatar: 'avatar_url',
-        firstname: 'John 3',
-        lastname: 'Doe',
-        email: 'johnDoe@gmail.com',
-        roleId: '3',
-        social: {
-            facebook: '',
-            twitter: '',
-            telegram: '',
-            linkedin: '',
-        },
-        password: '2107fily',
-    },
-];
-
-const initialState = {
+const initialState: IInitialState = {
     isActive: false,
-    users: USERS,
+    isLoading: false,
+    users: [],
 };
 
 const users = createSlice({
@@ -76,18 +31,28 @@ const users = createSlice({
     reducers: {
         createUser: (state, action) => {
             state.users.push(action.payload);
-            message.success('Saved!');
         },
         deleteUser: (state, action) => {
-            state.users = state.users.filter((el) => el.id !== action.payload);
-            message.success('Deleted!');
+            state.users = state.users.filter((el) => el._id !== action.payload);
         },
         editUser: (state, action) => {
-            state.users = state.users.map((el) =>
-                el.id === action.payload.id ? { ...el, ...action.payload } : el,
+            state.users = state.users.map((user) =>
+                user._id === action.payload._id ? { ...user, ...action.payload } : user,
             );
-            message.success('Saved!');
         },
+    },
+    extraReducers: (builder) => {
+        builder
+            .addCase(getUsers.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(getUsers.fulfilled, (state, action) => {
+                state.users = action.payload;
+                state.isLoading = false;
+            })
+            .addCase(getUsers.rejected, (state) => {
+                state.isLoading = false;
+            });
     },
 });
 
