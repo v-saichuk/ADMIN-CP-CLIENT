@@ -198,18 +198,19 @@ export const UsersPersonalInformation: FC = () => {
                                     }>
                                     {roles.map((role) => (
                                         <Option key={role._id} value={role._id}>
+                                            {/* 
                                             <div
+                                            style={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                            }}>
+                                            <span
+                                                className="search_dot"
                                                 style={{
-                                                    display: 'flex',
-                                                    alignItems: 'center',
+                                                    backgroundColor: role.color,
                                                 }}>
-                                                <span
-                                                    className="search_dot"
-                                                    style={{
-                                                        backgroundColor: role.color,
-                                                    }}></span>
-                                                {role.title}
-                                            </div>
+                                            </span> </div> */}
+                                            {role.title}
                                         </Option>
                                     ))}
                                 </Select>

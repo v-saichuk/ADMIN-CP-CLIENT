@@ -306,7 +306,7 @@ export const UserCreate: FC = () => {
                                     <Form.Item name="twitter" hasFeedback>
                                         <Input
                                             addonBefore="https://"
-                                            placeholder="twitter"
+                                            placeholder="Twitter"
                                             addonAfter={<Icon.TwitterOutlined />}
                                             allowClear
                                         />
@@ -316,7 +316,7 @@ export const UserCreate: FC = () => {
                                     <Form.Item name="facebook" hasFeedback>
                                         <Input
                                             addonBefore="https://"
-                                            placeholder="facebook"
+                                            placeholder="Facebook"
                                             addonAfter={<Icon.FacebookOutlined />}
                                             allowClear
                                         />
@@ -326,7 +326,7 @@ export const UserCreate: FC = () => {
                                     <Form.Item name="telegram" hasFeedback>
                                         <Input
                                             addonBefore="https://"
-                                            placeholder="telegram"
+                                            placeholder="Telegram"
                                             addonAfter={<Icon.SendOutlined />}
                                             allowClear
                                         />
@@ -336,7 +336,7 @@ export const UserCreate: FC = () => {
                                     <Form.Item name="linkedin" hasFeedback>
                                         <Input
                                             addonBefore="https://"
-                                            placeholder="linkedin"
+                                            placeholder="Linkedin"
                                             addonAfter={<Icon.LinkedinOutlined />}
                                             allowClear
                                         />
@@ -345,8 +345,12 @@ export const UserCreate: FC = () => {
                             </Row>
                         </Col>
                         <Col className="gutter-row" span={24} md={{ span: 12 }}>
-                            <Button htmlType="submit" loading={isLoading} type="primary">
-                                Save Change
+                            <Button
+                                htmlType="submit"
+                                icon={<Icon.SafetyOutlined />}
+                                loading={isLoading}
+                                type="primary">
+                                Create user
                             </Button>
                         </Col>
                     </Row>

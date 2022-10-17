@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Avatar, Layout, Modal, Dropdown, Menu, Space } from 'antd';
+import { Avatar, Layout, Modal, Dropdown, Menu, Space, Input } from 'antd';
 import { useAppDispatch, useAppSelector } from '../../store/hooks/useRedux';
 import { Logo } from '../../components/Logo/Logo';
 import { logout } from '../../store/auth/auth.slice';
@@ -9,11 +9,12 @@ import { ExclamationCircleOutlined, LogoutOutlined, UserOutlined } from '@ant-de
 import './Header.scss';
 
 export const Header: FC = () => {
-    const { Header } = Layout;
     const { confirm } = Modal;
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const myProfile = useAppSelector((state) => state.auth.data);
+    const myProfileId = useAppSelector((state) => state.auth.data?._id);
+    const users = useAppSelector((state) => state.users.users);
+    const myProfile = users.find((user) => user._id === myProfileId);
 
     const menu = (
         <Menu
@@ -56,7 +57,7 @@ export const Header: FC = () => {
     };
 
     return (
-        <Header className="header">
+        <Layout.Header className="header">
             <Logo iconClass={['logo__authorized-icon']} textClass={['logo__authorized-text']} />
             <div className="header__wrapper">
                 <div className="header__search">
@@ -76,6 +77,6 @@ export const Header: FC = () => {
                     </Dropdown>
                 </div>
             </div>
-        </Header>
+        </Layout.Header>
     );
 };

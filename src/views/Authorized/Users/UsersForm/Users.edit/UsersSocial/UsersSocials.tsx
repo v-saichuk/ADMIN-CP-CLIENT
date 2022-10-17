@@ -62,22 +62,22 @@ export const UsersSocial: FC = () => {
                     <Row gutter={[16, 16]}>
                         <Col className="gutter-row" span={12}>
                             <Form.Item name="twitter" initialValue={user?.social.twitter}>
-                                <Input addonBefore="https://" placeholder="twitter" allowClear />
+                                <Input addonBefore="https://" placeholder="Twitter" allowClear />
                             </Form.Item>
                         </Col>
                         <Col className="gutter-row" span={12}>
                             <Form.Item name="facebook" initialValue={user?.social.facebook}>
-                                <Input addonBefore="https://" placeholder="facebook" allowClear />
+                                <Input addonBefore="https://" placeholder="Facebook" allowClear />
                             </Form.Item>
                         </Col>
                         <Col className="gutter-row" span={12}>
                             <Form.Item name="telegram" initialValue={user?.social.telegram}>
-                                <Input addonBefore="https://" placeholder="telegram" allowClear />
+                                <Input addonBefore="https://" placeholder="Telegram" allowClear />
                             </Form.Item>
                         </Col>
                         <Col className="gutter-row" span={12}>
                             <Form.Item name="linkedin" initialValue={user?.social.linkedin}>
-                                <Input addonBefore="https://" placeholder="linkedin" allowClear />
+                                <Input addonBefore="https://" placeholder="Linkedin" allowClear />
                             </Form.Item>
                         </Col>
                     </Row>
