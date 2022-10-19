@@ -1,4 +1,9 @@
-export { HomePage } from './Home/HomePage/HomePage';
+export { WebsitesPage } from './Websites/WebsitesPage/WebsitesPage';
+export { LandingsPage } from './Landings/LandingsPage/LandingsPage';
+export { TemplatesPage } from './Templates/TemplatesPage/TemplatesPage';
+export { LegalsPage } from './Legals/LegalsPage/LegalsPage';
+export { OfferOwnerPage } from './OfferOwner/OfferOwnerPage/OfferOwnerPage';
+export { OffersPage } from './Offers/OffersPage/OffersPage';
 export { ProjectsPage } from './Projects/ProjectsPage/ProjectsPage';
 export { UsersPage } from './Users/UsersPage/UsersPage';
 export { NotFoundPage } from './NotFound/NotFoundPage/NotFoundPage';

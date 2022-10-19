@@ -11,7 +11,6 @@ interface ISearchUser {
 export const SearchUser: FC<ISearchUser> = ({ setSearch }) => {
     const { users } = useAppSelector((state) => state.users);
     const { roles } = useAppSelector((state) => state.usersRole);
-    const [inputSize, setInputSize] = useState('300px');
 
     const handleChange = (value: any) => {
         setSearch(
@@ -28,9 +27,7 @@ export const SearchUser: FC<ISearchUser> = ({ setSearch }) => {
             onChange={handleChange}
             showArrow
             placeholder="Search user"
-            onFocus={() => setInputSize('400px')}
-            onBlur={() => setInputSize('300px')}
-            style={{ minWidth: inputSize, transition: '0.3s' }}>
+            style={{ width: '100%', marginTop: '20px' }}>
             {users.map((user) => (
                 <Select.Option key={user._id} value={user.firstName + user.lastName}>
                     <div className="search_user">

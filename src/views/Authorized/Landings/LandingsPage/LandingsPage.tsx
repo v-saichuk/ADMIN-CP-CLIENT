@@ -3,9 +3,9 @@ import { Content } from 'antd/lib/layout/layout';
 import { FC } from 'react';
 
 // STYLE
-import './HomePage.scss';
+import './LandingsPage.scss';
 
-export const HomePage: FC = () => {
+export const LandingsPage: FC = () => {
     return (
         <Layout style={{ padding: '0 24px 24px' }}>
             <Breadcrumb style={{ margin: '16px 0' }}>
@@ -21,7 +21,7 @@ export const HomePage: FC = () => {
                     minHeight: 280,
                     color: 'green',
                 }}>
-                Home Page
+                Landings Page
             </Content>
         </Layout>
     );

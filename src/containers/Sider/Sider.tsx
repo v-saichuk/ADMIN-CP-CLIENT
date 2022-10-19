@@ -1,7 +1,8 @@
 import { FC, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Layout, Menu, MenuProps } from 'antd';
-import { AppstoreOutlined, HomeOutlined, SettingOutlined, TeamOutlined } from '@ant-design/icons';
+import { ROUT_PATH } from '../../router/Authorized.route';
+import * as Icon from '@ant-design/icons';
 
 import './Sider.scss';
 
@@ -13,38 +14,60 @@ export const Sider: FC = () => {
 
     const MENU_ITEMS: MenuProps['items'] = [
         {
-            key: 1,
-            icon: <HomeOutlined />,
-            label: 'Home',
-            onClick: () => navigation('/'),
+            key: ROUT_PATH.HOME,
+            icon: <Icon.DesktopOutlined />,
+            label: 'Websites',
+            onClick: () => navigation(ROUT_PATH.HOME),
         },
         {
-            key: 2,
-            icon: <AppstoreOutlined />,
-            label: 'Projects',
-            onClick: () => navigation('/projects'),
+            key: ROUT_PATH.LANDINGS,
+            icon: <Icon.LayoutOutlined />,
+            label: 'Landings page',
+            onClick: () => navigation(ROUT_PATH.LANDINGS),
         },
         {
-            key: 3,
-            icon: <TeamOutlined />,
+            key: ROUT_PATH.TEMPLATES,
+            icon: <Icon.RobotOutlined />,
+            label: 'Templates',
+            onClick: () => navigation(ROUT_PATH.TEMPLATES),
+        },
+        {
+            key: ROUT_PATH.LEGALS,
+            icon: <Icon.FileProtectOutlined />,
+            label: 'Legals page',
+            onClick: () => navigation(ROUT_PATH.LEGALS),
+        },
+        {
+            key: ROUT_PATH.OFFER_OWNER,
+            icon: <Icon.SafetyCertificateOutlined />,
+            label: 'Offer owner',
+            onClick: () => navigation(ROUT_PATH.OFFER_OWNER),
+        },
+        {
+            key: ROUT_PATH.OFFERS,
+            icon: <Icon.ClusterOutlined />,
+            label: 'Offers',
+            onClick: () => navigation(ROUT_PATH.OFFERS),
+        },
+        {
+            key: ROUT_PATH.USERS,
+            icon: <Icon.TeamOutlined />,
             label: 'Users',
-            onClick: () => navigation('/users'),
+            onClick: () => navigation(ROUT_PATH.USERS),
         },
         {
             type: 'divider',
         },
         {
-            key: 4,
-            icon: <SettingOutlined />,
+            key: ROUT_PATH.SETTINGS,
+            icon: <Icon.SettingOutlined />,
             label: 'Settings',
-            onClick: () => navigation('/settings'),
+            onClick: () => navigation(ROUT_PATH.SETTINGS),
         },
     ];
 
-    const ActivePage = MENU_ITEMS.filter((el) =>
-        // @ts-ignore
-        pathname.slice(1) === '' ? ['1'] : el.label?.toLowerCase() === pathname.split('/')[1] && el,
-    );
+    const ActivePage = MENU_ITEMS.find((item) => pathname === item?.key && item);
+
     return (
         <Sider
             width={220}
@@ -57,7 +80,7 @@ export const Sider: FC = () => {
             <Menu
                 mode="inline"
                 theme="dark"
-                selectedKeys={[String(ActivePage[0]?.key)]}
+                selectedKeys={[String(ActivePage?.key)]}
                 style={{ height: '100%', borderRight: 0 }}
                 items={MENU_ITEMS}
             />

@@ -9,11 +9,14 @@
         width: 280px;
         margin-right: 16px;
         height: calc(100vh - 144px);
+        padding: 15px;
     }
 
     &__content {
         background-color: #323541;
         width: 100%;
+        height: calc(100vh - 144px);
+        overflow: scroll;
     }
 
     &__content-header {
@@ -25,12 +28,14 @@
     }
 
     &__main {
-        padding: 20px;
+        padding: 15px;
     }
 
     &__card {
         background-color: #383B46 !important;
         border: none !important;
+        display: flex;
+        width: 100%;
 
         &>.ant-card-body {
             padding: 15px;

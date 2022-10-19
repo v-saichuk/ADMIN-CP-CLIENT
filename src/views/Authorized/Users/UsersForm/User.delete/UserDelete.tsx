@@ -4,7 +4,7 @@ import axios from '../../../../../axios';
 import { deleteUser } from '../../../../../store/users/users.slice';
 import { useAppDispatch } from '../../../../../store/hooks/useRedux';
 import { DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
-import { message } from 'antd';
+import { message, Button } from 'antd';
 
 interface IProps {
     userId: string;
@@ -46,5 +46,9 @@ export const UserDelete: FC<IProps> = ({ userId }) => {
         });
     };
 
-    return <DeleteOutlined key="delete" onClick={showConfirm} />;
+    return (
+        <Button onClick={showConfirm}>
+            <DeleteOutlined key="delete" />
+        </Button>
+    );
 };
