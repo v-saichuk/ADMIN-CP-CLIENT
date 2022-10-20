@@ -48,7 +48,7 @@ export const UsersEdit: FC = () => {
                         <Breadcrumb.Item>Edit</Breadcrumb.Item>
                         <Breadcrumb.Item>ID: {userId}</Breadcrumb.Item>
                     </Breadcrumb>
-                    <Content className="site-layout-background">
+                    <Content className="site-layout-background" style={{ border: 'none' }}>
                         <Tabs tabPosition="left" type="card">
                             {TABCONTENT.map((el) => (
                                 <Tabs.TabPane

@@ -1,0 +1,10 @@
+.offer_owner__color {
+    border-radius: 100% !important;
+    border: none;
+    border-left-width: thin !important;
+
+    &::before {
+        display: none !important;
+    }
+
+}

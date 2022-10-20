@@ -30,7 +30,7 @@ export const SettingsPage: FC = () => {
             <Breadcrumb style={{ margin: '16px 0' }}>
                 <Breadcrumb.Item>Settings</Breadcrumb.Item>
             </Breadcrumb>
-            <Content className="site-layout-background">
+            <Content className="site-layout-background" style={{ border: 'none' }}>
                 <Tabs tabPosition="left" type="card" tabBarStyle={{ width: '200px' }}>
                     {TABCONTENT.map((el) => (
                         <TabPane

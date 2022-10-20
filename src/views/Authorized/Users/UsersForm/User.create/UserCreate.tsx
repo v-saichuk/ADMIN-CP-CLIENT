@@ -93,7 +93,9 @@ export const UserCreate: FC = () => {
                     New User
                 </Breadcrumb.Item>
             </Breadcrumb>
-            <Content className="site-layout-background user_page__content user_page__main">
+            <Content
+                className="site-layout-background user_page__content user_page__main main_content"
+                style={{ border: 'none' }}>
                 <Form
                     name="basic"
                     initialValues={{ remember: true }}

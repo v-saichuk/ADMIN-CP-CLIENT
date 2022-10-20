@@ -7,6 +7,7 @@ import { getRoles } from './store/settings/usersRole.slice';
 import { getCountry } from './store/settings/language.slice';
 import { NoAuthorized } from './router/NoAuthorized.route';
 import { getUsers } from './store/users/users.slice';
+import { getOfferOwner } from './store/offerOwner/offerOwner.slice';
 
 export const App: FC = () => {
     const dispatch = useAppDispatch();
@@ -16,6 +17,7 @@ export const App: FC = () => {
         dispatch(fetchLogin());
 
         if (isAuth) {
+            dispatch(getOfferOwner());
             dispatch(getRoles());
             dispatch(getCountry());
             dispatch(getUsers());

@@ -64,7 +64,7 @@ export const UsersPage: FC = () => {
                         </div>
                         <UsersFilter setSearch={setSearch} />
                     </div>
-                    <div className="user_page__content">
+                    <div className="main_content">
                         <div className="user_page__main">
                             <Antd.List
                                 pagination={{

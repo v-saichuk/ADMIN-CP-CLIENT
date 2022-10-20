@@ -4,7 +4,7 @@ import { store } from './store/rootReducer';
 
 import { App } from './App';
 
-import './assets/styles/index.scss';
+import './assets/styles/index.less';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(

@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Avatar, Layout, Modal, Dropdown, Menu, Space, Input } from 'antd';
+import { Avatar, Layout, Modal, Dropdown, Menu, Space } from 'antd';
 import { useAppDispatch, useAppSelector } from '../../store/hooks/useRedux';
 import { Logo } from '../../components/Logo/Logo';
 import { logout } from '../../store/auth/auth.slice';

@@ -1,6 +1,22 @@
-@import 'antd/dist/antd.dark.css';
-@import './mixins.scss';
+@import '~antd/dist/antd.dark.less';
+// @import './fonts.less';
 
+
+.main_content {
+    background-color: #323541;
+    width: 100%;
+    height: calc(100vh - 144px);
+    overflow: scroll;
+}
+
+.dot{
+    display: block;
+    width: 10px;
+    height: 10px;
+    margin-right: 15px;
+    border-radius: 50%;
+    background-color: rgb(71, 71, 71);
+}
 
 .auth {
     position: relative;
@@ -25,11 +41,10 @@
     &__wrapper {
         display: grid;
         grid-template-columns: repeat(1, 1fr);
-        @include width(550px, 880px, 768px, 1920px);
-        @include gap(0px, 32px, 768px, 1920px);
         background-color: #323541;
         padding: 15px;
         border-radius: 16px;
+        max-width: 610px;
         box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.25);
 
         @media (min-width: 768px) {
@@ -42,7 +57,7 @@
     }
 
     &__logo {
-        @include width(180px, 392px, 320px, 1920px);
+        width: 100%;
         margin: 0 auto;
     }
 
@@ -75,6 +90,7 @@
 // ======= ANTD THEME =======
 body {
     background-color: #383B46;
+    // font-family: HelveticaNeueCyr, Helvetica Neue;
 }
 
 .ant-layout-sider-trigger {
@@ -108,9 +124,6 @@ body {
 .ant-layout-header {
     background: #323541;
     box-shadow: inset 0px -1px 0px #56565F;
-
-    @include padding-left(15px, 30px, 320px, 1920px);
-    @include padding-right(15px, 30px, 320px, 1920px);
 }
 
 .ant-layout-content {
@@ -129,25 +142,6 @@ body {
     background: #393b46;
 
 }
-
-.ant-menu-dark.ant-menu-dark:not(.ant-menu-horizontal) .ant-menu-item-selected {
-    background-color: #F59337;
-}
-
-// ANTD BUTTONS
-
-.ant-btn-dangerous {
-    color: #f44336;
-    border-color: #f44336;
-}
-
-.ant-btn-dangerous:hover,
-.ant-btn-dangerous:focus {
-    color: #b73026;
-    border-color: #b73026;
-}
-
-// ./ANTD BUTTONS
 
 
 // TABS
@@ -191,16 +185,6 @@ body {
     padding: 0;
 }
 
-.ant-tabs-tab:hover {
-    color: #f59337;
-}
-
-.ant-tabs-tab-btn:focus,
-.ant-tabs-tab-remove:focus,
-.ant-tabs-tab-btn:active,
-.ant-tabs-tab-remove:active {
-    color: #f59337;
-}
 
 // ./TABS
 

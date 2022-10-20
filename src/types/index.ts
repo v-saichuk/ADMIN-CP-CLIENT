@@ -8,6 +8,12 @@ export interface ILanguage {
     enabled: boolean;
 }
 
+export interface IOfferOwner {
+    _id: string;
+    name: string;
+    color: string;
+}
+
 export interface IRoles {
     _id: string;
     title: string;
