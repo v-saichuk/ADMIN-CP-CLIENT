@@ -14,6 +14,13 @@ export interface IOfferOwner {
     color: string;
 }
 
+export interface IOffers {
+    _id: string;
+    name: string;
+    offerOwner: IOfferOwner;
+    logo: string;
+}
+
 export interface IRoles {
     _id: string;
     title: string;

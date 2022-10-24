@@ -142,14 +142,15 @@ export const UsersPage: FC = () => {
                                             <Antd.Col
                                                 span={3}
                                                 style={{ display: 'flex', justifyContent: 'end' }}>
-                                                <Antd.Button
-                                                    style={{ marginRight: 5 }}
-                                                    onClick={() =>
-                                                        navigate(`/users/edit/${user._id}`)
-                                                    }>
-                                                    <Icon.EditOutlined key="edit" />
-                                                </Antd.Button>
-                                                <UserDelete userId={user._id} />
+                                                <Antd.Space size="small">
+                                                    <Antd.Button
+                                                        onClick={() =>
+                                                            navigate(`/users/edit/${user._id}`)
+                                                        }>
+                                                        <Icon.EditOutlined key="edit" />
+                                                    </Antd.Button>
+                                                    <UserDelete userId={user._id} />
+                                                </Antd.Space>
                                             </Antd.Col>
                                         </Antd.Row>
                                     );

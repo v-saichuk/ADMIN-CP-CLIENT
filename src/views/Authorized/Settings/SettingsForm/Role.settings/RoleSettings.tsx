@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Col, Row, Skeleton } from 'antd';
+import { Col, Row, Skeleton, Space } from 'antd';
 import { useAppSelector } from '../../../../../store/hooks/useRedux';
 import { RoleCreate } from './Role.create/RoleCreate';
 import { RoleEdit } from './Role.edit/RoleEdit';
@@ -68,12 +68,10 @@ export const RoleSettings: FC = () => {
                                         <Col>{el.title}</Col>
                                     </Row>
                                     <Row gutter={3}>
-                                        <Col>
+                                        <Space size="small">
                                             <RoleEdit roleId={el._id} />
-                                        </Col>
-                                        <Col>
                                             <RoleDelete roleId={el._id} />
-                                        </Col>
+                                        </Space>
                                     </Row>
                                 </Row>
                             </Col>

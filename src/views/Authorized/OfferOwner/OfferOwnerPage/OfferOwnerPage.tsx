@@ -14,10 +14,20 @@ export const OfferOwnerPage: FC = () => {
     const data = useAppSelector((state) => state.offerOwner);
 
     return (
-        <Layout style={{ padding: '0 24px 24px' }}>
-            <Breadcrumb style={{ margin: '16px 0' }}>
+        <Layout style={{ padding: '0 24px 24px', marginTop: 20 }}>
+            {/* <Breadcrumb style={{ margin: '16px 0' }}>
                 <Breadcrumb.Item>Offer Owner</Breadcrumb.Item>
-            </Breadcrumb>
+            </Breadcrumb> */}
+            <div
+                style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    marginBottom: '20px',
+                }}>
+                <span>Offer Owner</span>
+                <OfferOwnerCreate />
+            </div>
             <Content
                 className="site-layout-background main_content"
                 style={{
@@ -26,16 +36,6 @@ export const OfferOwnerPage: FC = () => {
                     border: 'none',
                 }}>
                 <div>
-                    <div
-                        style={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            marginBottom: '20px',
-                        }}>
-                        <span>Offer owner</span>
-                        <OfferOwnerCreate />
-                    </div>
                     <Antd.List
                         pagination={{
                             defaultPageSize: 9,
@@ -68,8 +68,10 @@ export const OfferOwnerPage: FC = () => {
                                     <Antd.Col
                                         span={3}
                                         style={{ display: 'flex', justifyContent: 'end' }}>
-                                        <OfferOwnerEdit offerOwnerId={offer._id} />
-                                        <OfferOwnerDelete offerOwnerId={offer._id} />
+                                        <Antd.Space size="small">
+                                            <OfferOwnerEdit offerOwnerId={offer._id} />
+                                            <OfferOwnerDelete offerOwnerId={offer._id} />
+                                        </Antd.Space>
                                     </Antd.Col>
                                 </Antd.Row>
                             );

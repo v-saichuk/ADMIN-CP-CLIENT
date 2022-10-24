@@ -8,6 +8,7 @@ import { getCountry } from './store/settings/language.slice';
 import { NoAuthorized } from './router/NoAuthorized.route';
 import { getUsers } from './store/users/users.slice';
 import { getOfferOwner } from './store/offerOwner/offerOwner.slice';
+import { getOffers } from './store/offers/offers.slice';
 
 export const App: FC = () => {
     const dispatch = useAppDispatch();
@@ -18,6 +19,7 @@ export const App: FC = () => {
 
         if (isAuth) {
             dispatch(getOfferOwner());
+            dispatch(getOffers());
             dispatch(getRoles());
             dispatch(getCountry());
             dispatch(getUsers());

@@ -62,7 +62,6 @@ export const RoleDelete: FC<IProps> = ({ roleId }) => {
         <Button
             loading={isLoading}
             size="small"
-            type="text"
             onClick={() => (activeUserRole.length ? showMessage() : showModalDelete())}>
             <DeleteOutlined />
         </Button>

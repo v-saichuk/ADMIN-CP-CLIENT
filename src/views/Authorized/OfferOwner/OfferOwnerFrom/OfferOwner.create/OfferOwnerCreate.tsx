@@ -115,7 +115,10 @@ export const OfferOwnerCreate: FC = () => {
                                 rules={[
                                     { required: true, message: 'Please input name!' },
                                     { min: 3, message: 'Minimum length 3 characters' },
-                                    { type: 'string', message: 'Role name cannot be a number' },
+                                    {
+                                        type: 'string',
+                                        message: 'Offer Owner name cannot be a number',
+                                    },
                                 ]}>
                                 <Input placeholder="Name" size="middle" />
                             </Form.Item>

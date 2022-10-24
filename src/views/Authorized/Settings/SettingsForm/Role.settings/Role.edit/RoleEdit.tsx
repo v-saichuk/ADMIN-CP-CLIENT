@@ -123,11 +123,7 @@ export const RoleEdit: FC<IProps> = ({ roleId }) => {
 
     return (
         <>
-            <Button
-                size="small"
-                loading={isLoadingForm}
-                type="text"
-                onClick={() => setIsModal(!isModal)}>
+            <Button size="small" loading={isLoadingForm} onClick={() => setIsModal(!isModal)}>
                 <EditOutlined />
             </Button>
             <Modal

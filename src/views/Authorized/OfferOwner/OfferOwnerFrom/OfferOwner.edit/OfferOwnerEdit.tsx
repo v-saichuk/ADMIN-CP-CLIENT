@@ -113,10 +113,7 @@ export const OfferOwnerEdit: FC<IOfferOwnerId> = ({ offerOwnerId }) => {
 
     return (
         <>
-            <Button
-                loading={isLoadingForm}
-                onClick={() => setIsModal(!isModal)}
-                style={{ marginRight: 5 }}>
+            <Button loading={isLoadingForm} onClick={() => setIsModal(!isModal)}>
                 <EditOutlined />
             </Button>
             <Modal
