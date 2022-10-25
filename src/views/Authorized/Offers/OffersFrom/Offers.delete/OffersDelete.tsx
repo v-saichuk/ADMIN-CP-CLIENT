@@ -18,7 +18,7 @@ export const OffersDelete: FC<IProps> = ({ offerId }) => {
         try {
             const { data } = await axios.delete(`/api/offers/${offerId}`);
             if (data.success) {
-                message.success('Successfully remotely');
+                message.success(data.message);
                 dispatch(remove(offerId));
                 setIsLoading(false);
             }

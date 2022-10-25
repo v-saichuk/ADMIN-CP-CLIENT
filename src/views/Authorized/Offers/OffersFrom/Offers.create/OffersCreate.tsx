@@ -112,7 +112,9 @@ export const OffersCreate: FC = () => {
                                     loading={owner.isLoading}
                                     disabled={owner.isLoading}>
                                     {owner.offerOwner.map((el) => (
-                                        <Select.Option value={el._id}>{el.name}</Select.Option>
+                                        <Select.Option key={el._id} value={el._id}>
+                                            {el.name}
+                                        </Select.Option>
                                     ))}
                                 </Select>
                             </Form.Item>

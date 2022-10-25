@@ -13,12 +13,11 @@ interface IProps {
 
 export const OffersEdit: FC<IProps> = ({ offerId }) => {
     const [form] = Form.useForm();
+    const [isModal, setIsModal] = useState(false);
+    const [isLoadingForm, setIsLoadingForm] = useState(false);
     const dispatch = useAppDispatch();
     const owner = useAppSelector((state) => state.offerOwner);
     const offer = useAppSelector((state) => state.offers.offers).find((el) => el._id === offerId);
-
-    const [isModal, setIsModal] = useState(false);
-    const [isLoadingForm, setIsLoadingForm] = useState(false);
 
     const handleUpdate = async (props: any) => {
         setIsLoadingForm(true);
@@ -33,7 +32,6 @@ export const OffersEdit: FC<IProps> = ({ offerId }) => {
                 setIsLoadingForm(false);
                 dispatch(Offer.update(data.offer));
                 setIsModal(false);
-                form.resetFields();
                 message.success(data.message);
                 return;
             } else {
@@ -120,7 +118,9 @@ export const OffersEdit: FC<IProps> = ({ offerId }) => {
                                     loading={owner.isLoading}
                                     disabled={owner.isLoading}>
                                     {owner.offerOwner.map((el) => (
-                                        <Select.Option value={el._id}>{el.name}</Select.Option>
+                                        <Select.Option key={el._id} value={el._id}>
+                                            {el.name}
+                                        </Select.Option>
                                     ))}
                                 </Select>
                             </Form.Item>

@@ -1,18 +1,16 @@
 import { FC } from 'react';
-import { Table } from 'antd';
-import { Button, Layout, Space } from 'antd';
+import { Table, Layout, Space } from 'antd';
+import { useAppSelector } from '../../../../store/hooks/useRedux';
 import { Content } from 'antd/lib/layout/layout';
+import { OffersCreate } from '../OffersFrom/Offers.create/OffersCreate';
+import { OffersDelete } from '../OffersFrom/Offers.delete/OffersDelete';
+import { OffersEdit } from '../OffersFrom/Offers.edit/OffersEdit';
 
-import type { ColumnsType, TableProps } from 'antd/es/table';
-import { EditOutlined } from '@ant-design/icons';
+import { IOfferOwner } from '../../../../types';
+import type { ColumnsType } from 'antd/es/table';
 
 // STYLE
 import './OffersPage.scss';
-import { useAppSelector } from '../../../../store/hooks/useRedux';
-import { OffersCreate } from '../OffersFrom/Offers.create/OffersCreate';
-import { IOfferOwner } from '../../../../types';
-import { OffersDelete } from '../OffersFrom/Offers.delete/OffersDelete';
-import { OffersEdit } from '../OffersFrom/Offers.edit/OffersEdit';
 
 interface DataType {
     key: React.Key;
@@ -21,133 +19,49 @@ interface DataType {
     logo: string;
 }
 
-// const data: DataType[] = [
-//     {
-//         key: '1',
-//         name: 'John Brown',
-//         offerowner: 'ProjectMVMW',
-//         logo: 'Logo 1',
-//     },
-//     {
-//         key: '2',
-//         name: 'Jim Green',
-//         offerowner: 'ProjectMVMT',
-//         logo: 'Logo 2',
-//     },
-//     {
-//         key: '3',
-//         name: 'Jim Green',
-//         offerowner: 'ProjectMVMT',
-//         logo: 'Logo 3',
-//     },
-//     {
-//         key: '4',
-//         name: 'Jim Green',
-//         offerowner: 'ProjectMVMT',
-//         logo: 'Logo 4',
-//     },
-//     {
-//         key: '5',
-//         name: 'Jim Green',
-//         offerowner: 'DigitalMVMT',
-//         logo: 'Logo 5',
-//     },
-//     {
-//         key: '6',
-//         name: 'Jim Green',
-//         offerowner: 'ProjectMVMT',
-//         logo: 'Logo 6',
-//     },
-//     {
-//         key: '7',
-//         name: 'Jim Green',
-//         offerowner: 'ProjectMVMT',
-//         logo: 'Logo 7',
-//     },
-//     {
-//         key: '8',
-//         name: 'Jim Green',
-//         offerowner: 'ProjectMVMT',
-//         logo: 'Logo 8',
-//     },
-//     {
-//         key: '9',
-//         name: 'Jim Green',
-//         offerowner: 'ProjectMVMT',
-//         logo: 'Logo 9',
-//     },
-//     {
-//         key: '10',
-//         name: 'Jim Green',
-//         offerowner: 'ProjectMVMT',
-//         logo: 'Logo 10',
-//     },
-// ];
-
-const onChange: TableProps<DataType>['onChange'] = (pagination, filters, sorter, extra) => {
-    console.log('params', pagination, filters, sorter, extra);
-};
-
 export const OffersPage: FC = () => {
     const { offers } = useAppSelector((state) => state.offers);
 
-    const offerOwnerData = useAppSelector((state) => state.offerOwner.offerOwner).map((el) => ({
+    const offerOwnerFilter = useAppSelector((state) => state.offerOwner.offerOwner).map((el) => ({
         text: el.name,
         value: el._id,
     }));
 
-    console.log('offerOwnerData=>>>', offerOwnerData);
+    const offerFilter = offers.map((offer) => ({
+        text: offer.name,
+        value: offer._id,
+    }));
 
     const OffersData = offers.map((offer) => ({
         key: offer._id,
         ...offer,
         owner: (
             <span
+                className="offer__offer-owner"
                 style={{
                     backgroundColor: offer.offerOwner.color,
-                    marginRight: 20,
-                    padding: '5px 15px',
                 }}>
                 {offer.offerOwner.name}
             </span>
         ),
     }));
 
-    console.log('OffersData =>', OffersData);
-    // const datas = offerOwnerData.map((el) => ({ text: el.name, value: el.name }));
-
     const columns: ColumnsType<DataType> = [
         {
             title: 'Name',
             dataIndex: 'name',
-            filters: [
-                {
-                    text: 'John',
-                    value: 'John',
-                },
-                {
-                    text: 'Category 1',
-                    value: 'Category 1',
-                },
-                {
-                    text: 'Category 2',
-                    value: 'Category 2',
-                },
-            ],
-            // filterMode: 'tree',
+            filters: offerFilter,
             filterSearch: true,
-            // @ts-ignore
-            onFilter: (value: string, record) => record.name.startsWith(value),
+            onFilter: (value: string | any, offer: any) => offer.key.startsWith(value),
             width: '20%',
         },
         {
             title: 'Offer owner',
             dataIndex: 'owner',
             width: '20%',
-            filters: offerOwnerData,
+            filters: offerOwnerFilter,
             filterSearch: true,
-            // @ts-ignore
-            onFilter: (value: string, record: DataType) => record.offerOwner._id.startsWith(value),
+            onFilter: (value: string | any, owner) => owner.offerOwner._id.startsWith(value),
         },
         {
             title: 'Logo',
@@ -155,46 +69,30 @@ export const OffersPage: FC = () => {
             width: '20%',
         },
         {
-            className: 'testing',
             title: 'Action',
             key: 'action',
             width: '40%',
+            className: 'offer__action',
 
-            render: (_, record) => (
+            render: (_, offer) => (
                 <Space size="small">
-                    <OffersEdit offerId={record.key} />
-                    <OffersDelete offerId={record.key} />
+                    <OffersEdit offerId={offer.key} />
+                    <OffersDelete offerId={offer.key} />
                 </Space>
             ),
         },
     ];
 
     return (
-        <Layout style={{ padding: '0 24px 24px', marginTop: 20 }}>
-            {/* <Breadcrumb style={{ margin: '16px 0' }}>
-                <Breadcrumb.Item>Offers</Breadcrumb.Item>
-            </Breadcrumb> */}
-            <div
-                style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    marginBottom: '20px',
-                }}>
+        <Layout className="offer__layout">
+            <div className="offer__header">
                 <span>Offers</span>
                 <OffersCreate />
             </div>
-            <Content
-                className="site-layout-background main_content"
-                style={{
-                    margin: 0,
-                    padding: 15,
-                    border: 'none',
-                }}>
+            <Content className="site-layout-background main_content offer__content">
                 <Table
                     columns={columns}
                     dataSource={OffersData}
-                    onChange={onChange}
                     pagination={{
                         defaultPageSize: 8,
                         hideOnSinglePage: true,
