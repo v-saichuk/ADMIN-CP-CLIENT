@@ -1,5 +1,13 @@
 import { ReactNode } from 'react';
 
+export interface IWebsites {
+    _id: string;
+    url: string;
+    offers: IOffers[];
+    enabled: boolean;
+    notes: string;
+}
+
 export interface ILanguage {
     _id: string;
     code: string;

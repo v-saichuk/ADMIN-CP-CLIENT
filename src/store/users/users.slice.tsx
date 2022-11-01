@@ -5,7 +5,6 @@ import { IUsers } from '../../types';
 export const getUsers = createAsyncThunk('users/getUsers', async (_, { rejectWithValue }) => {
     try {
         const { data } = await axios.get('/api/users');
-        console.log('data Users => ', data);
         return data;
     } catch (e) {
         console.log('Error getUsers =>', e);

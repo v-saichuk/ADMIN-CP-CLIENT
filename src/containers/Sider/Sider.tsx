@@ -14,10 +14,10 @@ export const Sider: FC = () => {
 
     const MENU_ITEMS: MenuProps['items'] = [
         {
-            key: ROUT_PATH.HOME,
+            key: ROUT_PATH.WEBSITES,
             icon: <Icon.DesktopOutlined />,
             label: 'Websites',
-            onClick: () => navigation(ROUT_PATH.HOME),
+            onClick: () => navigation(ROUT_PATH.WEBSITES),
         },
         {
             key: ROUT_PATH.LANDINGS,

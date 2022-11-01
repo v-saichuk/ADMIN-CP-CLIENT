@@ -1,4 +1,6 @@
 export { WebsitesPage } from './Websites/WebsitesPage/WebsitesPage';
+export { WebsitesCreate } from './Websites/WebsitesForm/Websites.create/WebsitesCreate';
+export { WebsitesEdit } from './Websites/WebsitesForm/Website.edit/WebsitesEdit';
 export { LandingsPage } from './Landings/LandingsPage/LandingsPage';
 export { TemplatesPage } from './Templates/TemplatesPage/TemplatesPage';
 export { LegalsPage } from './Legals/LegalsPage/LegalsPage';

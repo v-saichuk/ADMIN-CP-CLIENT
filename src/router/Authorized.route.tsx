@@ -3,7 +3,9 @@ import { Routes, Route } from 'react-router-dom';
 import * as Page from '../views/Authorized';
 
 export const ROUT_PATH = {
-    HOME: '/',
+    WEBSITES: '/',
+    WEBSITES_CREATE: '/websites/create',
+    WEBSITES_EDIT: '/websites/edit/:id',
     LANDINGS: '/landings',
     TEMPLATES: '/templates',
     LEGALS: '/legals',
@@ -20,61 +22,71 @@ export const ROUT_PATH = {
 const ROUTE = [
     {
         id: 1,
-        path: ROUT_PATH.HOME,
+        path: ROUT_PATH.WEBSITES,
         element: <Page.WebsitesPage />,
     },
     {
         id: 2,
+        path: ROUT_PATH.WEBSITES_CREATE,
+        element: <Page.WebsitesCreate />,
+    },
+    {
+        id: 3,
+        path: ROUT_PATH.WEBSITES_EDIT,
+        element: <Page.WebsitesEdit />,
+    },
+    {
+        id: 4,
         path: ROUT_PATH.LANDINGS,
         element: <Page.LandingsPage />,
     },
     {
-        id: 3,
+        id: 5,
         path: ROUT_PATH.TEMPLATES,
         element: <Page.TemplatesPage />,
     },
     {
-        id: 4,
+        id: 6,
         path: ROUT_PATH.LEGALS,
         element: <Page.LegalsPage />,
     },
     {
-        id: 5,
+        id: 7,
         path: ROUT_PATH.OFFER_OWNER,
         element: <Page.OfferOwnerPage />,
     },
     {
-        id: 6,
+        id: 8,
         path: ROUT_PATH.OFFERS,
         element: <Page.OffersPage />,
     },
     {
-        id: 7,
+        id: 9,
         path: ROUT_PATH.USERS,
         element: <Page.UsersPage />,
     },
     {
-        id: 8,
+        id: 10,
         path: ROUT_PATH.USERS_EDIT_ID,
         element: <Page.UsersEdit />,
     },
     {
-        id: 9,
+        id: 11,
         path: ROUT_PATH.USERS_CREATE,
         element: <Page.UserCreate />,
     },
     {
-        id: 10,
+        id: 12,
         path: ROUT_PATH.MY_PROFILE,
         element: <Page.MyProfilePage />,
     },
     {
-        id: 11,
+        id: 13,
         path: ROUT_PATH.SETTINGS,
         element: <Page.SettingsPage />,
     },
     {
-        id: 12,
+        id: 14,
         path: ROUT_PATH.ALL,
         element: <Page.NotFoundPage />,
     },
