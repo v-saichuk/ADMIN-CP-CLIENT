@@ -4,6 +4,8 @@ export { WebsitesEdit } from './Websites/WebsitesForm/Website.edit/WebsitesEdit'
 export { LandingsPage } from './Landings/LandingsPage/LandingsPage';
 export { TemplatesPage } from './Templates/TemplatesPage/TemplatesPage';
 export { LegalsPage } from './Legals/LegalsPage/LegalsPage';
+export { LegalsCreate } from './Legals/LegalsFrom/Legals.create/Legals.create';
+export { LegalsEdit } from './Legals/LegalsFrom/Legals.edit/Legals.edit';
 export { OfferOwnerPage } from './OfferOwner/OfferOwnerPage/OfferOwnerPage';
 export { OffersPage } from './Offers/OffersPage/OffersPage';
 export { ProjectsPage } from './Projects/ProjectsPage/ProjectsPage';

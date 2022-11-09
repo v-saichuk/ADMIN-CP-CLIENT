@@ -27,3 +27,14 @@
 .language__skeleton-box-wid {
     width: 100% !important;
 }
+
+.lang-table {
+    display: flex;
+    align-items: center;
+
+    &>span {
+        margin-right: 5px;
+        line-height: 0;
+        font-size: 17px;
+    }
+}

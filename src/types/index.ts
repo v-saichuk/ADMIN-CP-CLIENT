@@ -8,11 +8,24 @@ export interface IWebsites {
     notes: string;
 }
 
+export interface ILegals {
+    _id: string;
+    name: string;
+    language: ILanguage[];
+    offer: IOffers[];
+    website: IWebsites[];
+    offerOwner: IOfferOwner[];
+    enabled: boolean;
+    content: {
+        title?: string;
+        description?: string;
+    };
+}
+
 export interface ILanguage {
     _id: string;
-    code: string;
     title: string;
-    icon: ReactNode;
+    icon: string;
     enabled: boolean;
 }
 

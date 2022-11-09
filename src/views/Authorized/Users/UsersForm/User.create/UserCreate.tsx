@@ -82,7 +82,7 @@ export const UserCreate: FC = () => {
 
     return (
         <Layout style={{ padding: '0 24px 24px' }}>
-            <Breadcrumb style={{ margin: '16px 0' }}>
+            <Breadcrumb className="Breadcrumb-custome">
                 <Breadcrumb.Item>
                     <Button
                         icon={<Icon.LeftOutlined />}

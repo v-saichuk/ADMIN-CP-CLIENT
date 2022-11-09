@@ -1,8 +1,8 @@
 import { FC } from 'react';
-import { useParams } from 'react-router-dom';
-import { Breadcrumb, Layout, Tabs } from 'antd';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Breadcrumb, Button, Layout, Tabs } from 'antd';
 import { Content } from 'antd/lib/layout/layout';
-import { ApartmentOutlined, LockOutlined, UserOutlined } from '@ant-design/icons';
+import { ApartmentOutlined, LeftOutlined, LockOutlined, UserOutlined } from '@ant-design/icons';
 import { UsersChangePassword } from './UsersChangePassword/UsersChangePassword';
 import { UsersPersonalInformation } from './UsersPersonalInformation/UsersPersonalInformation';
 import { UsersSocial } from './UsersSocial/UsersSocials';
@@ -14,6 +14,7 @@ import './UsersEdit.scss';
 
 export const UsersEdit: FC = () => {
     const { userId } = useParams();
+    const navigation = useNavigate();
 
     const { users } = useAppSelector((state) => state.users);
     const user = users.filter((el) => userId && el._id === userId)[0];
@@ -43,8 +44,16 @@ export const UsersEdit: FC = () => {
         <>
             {user ? (
                 <Layout style={{ padding: '0 24px 24px' }}>
-                    <Breadcrumb style={{ margin: '16px 0' }}>
-                        <Breadcrumb.Item>Users</Breadcrumb.Item>
+                    <Breadcrumb className="Breadcrumb-custome">
+                        <Breadcrumb.Item>
+                            <Button
+                                icon={<LeftOutlined />}
+                                type={'primary'}
+                                style={{ marginRight: 10 }}
+                                onClick={() => navigation('/users')}
+                            />
+                            Users
+                        </Breadcrumb.Item>
                         <Breadcrumb.Item>Edit</Breadcrumb.Item>
                         <Breadcrumb.Item>ID: {userId}</Breadcrumb.Item>
                     </Breadcrumb>

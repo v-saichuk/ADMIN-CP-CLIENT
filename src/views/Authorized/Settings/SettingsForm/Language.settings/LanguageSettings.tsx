@@ -1,20 +1,26 @@
 import { FC } from 'react';
 import axios from '../../../../../axios';
 import { ILanguage } from '../../../../../types';
-import { useAppSelector } from '../../../../../store/hooks/useRedux';
+import { useAppDispatch, useAppSelector } from '../../../../../store/hooks/useRedux';
 import { Col, List, Row, Switch, Skeleton, message } from 'antd';
-import { FlagIcon } from '../../../../../components/FlagIcon/FlagIcon';
+import * as Language from '../../../../../store/settings/language.slice';
 
 import './LanguageSettings.scss';
 
 export const LanguageSettings: FC = () => {
+    const dispatch = useAppDispatch();
     const { lang, isLoading } = useAppSelector((state) => state.language);
-
     const handleCountry = async ([enabled, id]: [boolean, string]) => {
         await axios
             .patch(`/api/language/${id}`, { enabled })
             .then(() => {
                 message.success('Saved!');
+                dispatch(
+                    Language.update({
+                        id,
+                        enabled,
+                    }),
+                );
             })
             .catch(() => {
                 message.error('Error!');
@@ -24,9 +30,8 @@ export const LanguageSettings: FC = () => {
     const fakeDataLang = Array.from({ length: 55 }).map(
         (_, i): ILanguage => ({
             _id: String(i),
-            code: '',
             title: '',
-            icon: <></>,
+            icon: '',
             enabled: false,
         }),
     );
@@ -69,7 +74,9 @@ export const LanguageSettings: FC = () => {
                                     <>
                                         <div className="language__box">
                                             <div className="language__flag">
-                                                <FlagIcon code={item.code} />
+                                                <span style={{ fontSize: 30, lineHeight: 0 }}>
+                                                    {item.icon}
+                                                </span>
                                             </div>
                                             <div className="language__country">{item.title}</div>
                                         </div>

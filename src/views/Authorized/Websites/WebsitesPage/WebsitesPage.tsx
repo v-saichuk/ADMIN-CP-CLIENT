@@ -49,10 +49,7 @@ export const WebsitesPage: FC = () => {
         ) : (
             <Tag color="#f50">Deactive</Tag>
         ),
-        notes:
-            // <Tooltip placement="bottom" title={website.notes}>
-            website.notes,
-        // </Tooltip>
+        notes: website.notes,
         offers: website.offers.map((offer) => <Tag key={offer._id}>{offer.name}</Tag>),
     }));
 
@@ -121,6 +118,7 @@ export const WebsitesPage: FC = () => {
             width: '20%',
             filters: urlFilter,
             filterSearch: true,
+            ellipsis: true,
             onFilter: (value: string | any, website: any) => website.key.startsWith(value),
         },
         {
@@ -132,7 +130,7 @@ export const WebsitesPage: FC = () => {
             title: 'Offers',
             dataIndex: 'offers',
             width: '20%',
-            // ellipsis: true,
+            ellipsis: true,
             filters: offersFilter,
             filterSearch: true,
             onFilter: (value: string | any, website: any) =>
@@ -221,6 +219,3 @@ export const WebsitesPage: FC = () => {
         </Layout>
     );
 };
-
-// TODO: 4. Зробити автооновлення в локальному сторі при виконнані масових дій
-// TODO: 5. При наведенні на колонку НОТЕ відкривати вспливаюче вікно з повною інформаціею

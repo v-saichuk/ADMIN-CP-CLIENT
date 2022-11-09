@@ -8,7 +8,7 @@ interface IinitialState {
 }
 
 export const getWebsites = createAsyncThunk(
-    'offers/getWebsites',
+    'websites/getWebsites',
     async (_, { rejectWithValue }) => {
         try {
             const { data } = await axios.get('/api/websites');
@@ -44,25 +44,27 @@ const websites = createSlice({
         remove: (state, action) => {
             state.websites = state.websites.filter((el) => el._id !== action.payload);
         },
+
         activateGroup: (state, action) => {
-            const res = action.payload.map((site: any) =>
-                state.websites.find((el) => el._id === site),
+            action.payload.map(
+                (siteID: string) =>
+                    (state.websites = state.websites.map((website) =>
+                        website._id === siteID ? { ...website, enabled: true } : website,
+                    )),
             );
-
-            console.log('res', res);
-
-            // state.websites = state.websites.map((el) =>
-            //     el._id === action.payload.id ? { ...el, enabled: action.payload.enabled } : el,
-            // );
         },
         deactivateGroup: (state, action) => {
-            state.websites = state.websites.map((el) =>
-                el._id === action.payload.id ? { ...el, enabled: action.payload.enabled } : el,
+            action.payload.map(
+                (siteID: string) =>
+                    (state.websites = state.websites.map((website) =>
+                        website._id === siteID ? { ...website, enabled: false } : website,
+                    )),
             );
         },
         removeGroup: (state, action) => {
-            state.websites = state.websites.map((el) =>
-                el._id === action.payload.id ? { ...el, enabled: action.payload.enabled } : el,
+            action.payload.map(
+                (siteID: string) =>
+                    (state.websites = state.websites.filter((website) => website._id !== siteID)),
             );
         },
     },

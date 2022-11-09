@@ -35,13 +35,20 @@ export const WebsitesEdit: FC = () => {
         }
     };
 
+    const selectBefore = (
+        <Select defaultValue="http://" className="select-before">
+            <Select.Option value="http://">http://</Select.Option>
+            <Select.Option value="https://">https://</Select.Option>
+        </Select>
+    );
+
     if (!WEBSITE) {
         return <h1>Loading</h1>;
     }
 
     return (
         <Layout style={{ padding: '0 24px 24px' }}>
-            <Breadcrumb style={{ margin: '16px 0' }}>
+            <Breadcrumb className="Breadcrumb-custome">
                 <Breadcrumb.Item>
                     <Button
                         icon={<Icon.LeftOutlined />}
@@ -85,7 +92,7 @@ export const WebsitesEdit: FC = () => {
                                             },
                                         ]}>
                                         <Input
-                                            addonBefore="https://"
+                                            addonBefore={selectBefore}
                                             placeholder="URL"
                                             allowClear
                                         />

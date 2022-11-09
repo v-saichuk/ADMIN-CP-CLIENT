@@ -26,7 +26,13 @@ const initialState: IInitialState = {
 const language = createSlice({
     name: 'language',
     initialState,
-    reducers: {},
+    reducers: {
+        update: (state, action) => {
+            state.lang = state.lang.map((el) =>
+                el._id === action.payload.id ? { ...el, enabled: action.payload.enabled } : el,
+            );
+        },
+    },
     extraReducers: (build) => {
         build
             .addCase(getCountry.pending, (state) => {
@@ -43,3 +49,4 @@ const language = createSlice({
 });
 
 export default language.reducer;
+export const { update } = language.actions;

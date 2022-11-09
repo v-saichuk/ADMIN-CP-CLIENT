@@ -10,6 +10,7 @@ import { getUsers } from './store/users/users.slice';
 import { getOfferOwner } from './store/offerOwner/offerOwner.slice';
 import { getOffers } from './store/offers/offers.slice';
 import { getWebsites } from './store/websites/websites.slice';
+import { getLegals } from './store/legals/legalas.slice';
 
 export const App: FC = () => {
     const dispatch = useAppDispatch();
@@ -19,6 +20,8 @@ export const App: FC = () => {
         dispatch(fetchLogin());
 
         if (isAuth) {
+            dispatch(getWebsites());
+            dispatch(getLegals());
             dispatch(getWebsites());
             dispatch(getOfferOwner());
             dispatch(getOffers());
