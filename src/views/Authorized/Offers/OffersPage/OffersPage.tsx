@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Table, Layout, Space } from 'antd';
+import { Table, Layout, Space, Tag } from 'antd';
 import { useAppSelector } from '../../../../store/hooks/useRedux';
 import { Content } from 'antd/lib/layout/layout';
 import { OffersCreate } from '../OffersFrom/Offers.create/OffersCreate';
@@ -35,15 +35,7 @@ export const OffersPage: FC = () => {
     const OffersData = offers.map((offer) => ({
         key: offer._id,
         ...offer,
-        owner: (
-            <span
-                className="offer__offer-owner"
-                style={{
-                    backgroundColor: offer.offerOwner.color,
-                }}>
-                {offer.offerOwner.name}
-            </span>
-        ),
+        owner: <Tag color={offer.offerOwner.color}>{offer.offerOwner.name}</Tag>,
     }));
 
     const columns: ColumnsType<DataType> = [

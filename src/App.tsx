@@ -2,15 +2,16 @@ import { FC, useEffect } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from './store/hooks/useRedux';
 import { fetchLogin } from './store/auth/auth.slice';
+import { NoAuthorized } from './router/NoAuthorized.route';
+import { getWebsites } from './store/websites/websites.slice';
+import { getTemplates } from './store/templates/templates.slice';
+import { getLegals } from './store/legals/legalas.slice';
+import { getOfferOwner } from './store/offerOwner/offerOwner.slice';
+import { getOffers } from './store/offers/offers.slice';
 import { Layout } from './containers/Layout/Layout';
 import { getRoles } from './store/settings/usersRole.slice';
 import { getCountry } from './store/settings/language.slice';
-import { NoAuthorized } from './router/NoAuthorized.route';
 import { getUsers } from './store/users/users.slice';
-import { getOfferOwner } from './store/offerOwner/offerOwner.slice';
-import { getOffers } from './store/offers/offers.slice';
-import { getWebsites } from './store/websites/websites.slice';
-import { getLegals } from './store/legals/legalas.slice';
 
 export const App: FC = () => {
     const dispatch = useAppDispatch();
@@ -21,6 +22,7 @@ export const App: FC = () => {
 
         if (isAuth) {
             dispatch(getWebsites());
+            dispatch(getTemplates());
             dispatch(getLegals());
             dispatch(getWebsites());
             dispatch(getOfferOwner());

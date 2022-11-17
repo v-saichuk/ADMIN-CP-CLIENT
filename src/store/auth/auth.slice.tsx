@@ -1,8 +1,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from '../../axios';
+import { IUsers } from '../../types/';
 
 export const fetchAuth = createAsyncThunk(
-    'auth/fetchUserData',
+    'auth/fetchAuth',
     async (params: {}, { rejectWithValue }) => {
         try {
             const { data } = await axios.post('/api/auth/login', params);
@@ -22,19 +23,10 @@ export const fetchLogin = createAsyncThunk('auth/fetchLogin', async (_, { reject
     }
 });
 
-interface IUser {
-    _id: string;
-    avatarUrl: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    roleId: string;
-}
-
 interface IInitialState {
     isLoading: boolean;
     isAuth: boolean;
-    data: IUser | null;
+    data: IUsers | null;
 }
 
 const initialState: IInitialState = {

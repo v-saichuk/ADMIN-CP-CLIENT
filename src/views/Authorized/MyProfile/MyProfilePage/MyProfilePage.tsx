@@ -1,15 +1,12 @@
 import { FC } from 'react';
 import { Breadcrumb, Layout, Tabs } from 'antd';
 import { Content } from 'antd/lib/layout/layout';
-import { ChangePasswordForm, PersonalInfoForm, SocialForm } from '../MyProfileForm';
 import { ApartmentOutlined, LockOutlined, UserOutlined } from '@ant-design/icons';
-
-// STYLE
-import './MyProfilePage.scss';
+import { ChangePasswordForm } from '../MyProfileForm/ChangePasswordForm/ChangePasswordForm';
+import { PersonalInfoForm } from '../MyProfileForm/PersonalInfoForm/PersonalInfoForm';
+import { SocialForm } from '../MyProfileForm/SocialForm/SocialForm';
 
 export const MyProfilePage: FC = () => {
-    const { TabPane } = Tabs;
-
     const TABCONTENT = [
         {
             key: '1',
@@ -33,13 +30,13 @@ export const MyProfilePage: FC = () => {
 
     return (
         <Layout style={{ padding: '0 24px 24px' }}>
-            <Breadcrumb style={{ margin: '16px 0' }}>
+            <Breadcrumb className="Breadcrumb-custome">
                 <Breadcrumb.Item>My Profile</Breadcrumb.Item>
             </Breadcrumb>
-            <Content className="site-layout-background">
+            <Content className="site-layout-background" style={{ border: 'none' }}>
                 <Tabs tabPosition="left" type="card">
                     {TABCONTENT.map((el) => (
-                        <TabPane
+                        <Tabs.TabPane
                             key={el.key}
                             tab={
                                 <span>
@@ -48,7 +45,7 @@ export const MyProfilePage: FC = () => {
                                 </span>
                             }>
                             {el.content}
-                        </TabPane>
+                        </Tabs.TabPane>
                     ))}
                 </Tabs>
             </Content>

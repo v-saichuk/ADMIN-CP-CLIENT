@@ -1,5 +1,6 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import websites from './websites/websites.slice';
+import templates from './templates/templates.slice';
 import legals from './legals/legalas.slice';
 import offerOwner from './offerOwner/offerOwner.slice';
 import offers from './offers/offers.slice';
@@ -10,6 +11,7 @@ import auth from './auth/auth.slice';
 
 const reducers = combineReducers({
     websites,
+    templates,
     legals,
     offerOwner,
     offers,

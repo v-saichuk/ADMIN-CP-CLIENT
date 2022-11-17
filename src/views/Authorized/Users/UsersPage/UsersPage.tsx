@@ -101,15 +101,9 @@ export const UsersPage: FC = () => {
                                                 />
                                             </Antd.Col>
                                             <Antd.Col span={4}>
-                                                <span
-                                                    style={{
-                                                        marginRight: '20px',
-                                                        background: role?.color,
-                                                        padding: '5px 15px',
-                                                        fontSize: '12px',
-                                                    }}>
+                                                <Antd.Tag color={role?.color}>
                                                     {role?.title}
-                                                </span>
+                                                </Antd.Tag>
                                             </Antd.Col>
                                             <Antd.Col span={12}>
                                                 <span style={{ marginRight: '20px' }}>

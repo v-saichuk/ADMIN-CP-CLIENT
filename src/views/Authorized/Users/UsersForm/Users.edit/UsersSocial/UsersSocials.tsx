@@ -4,6 +4,14 @@ import { Button, Col, Form, Input, message, Row } from 'antd';
 import { useAppDispatch, useAppSelector } from '../../../../../../store/hooks/useRedux';
 import { editUser } from '../../../../../../store/users/users.slice';
 import axios from '../../../../../../axios';
+import { SaveOutlined } from '@ant-design/icons';
+
+interface IValue {
+    facebook: string;
+    twitter: string;
+    telegram: string;
+    linkedin: string;
+}
 
 export const UsersSocial: FC = () => {
     const dispatch = useAppDispatch();
@@ -13,7 +21,7 @@ export const UsersSocial: FC = () => {
         state.users.users.find((el) => userId && el._id === userId),
     );
 
-    const fetchUserUpdate = async (values: any) => {
+    const fetchUserUpdate = async (values: IValue) => {
         setLoading(true);
         try {
             const { data } = await axios.patch(`/api/user/${userId}`, {
@@ -38,8 +46,8 @@ export const UsersSocial: FC = () => {
                 }),
             );
             return data;
-        } catch (e: any) {
-            message.error(e.response.data.message);
+        } catch (e) {
+            message.error('An error occurred while saving data');
             setLoading(false);
             return;
         }
@@ -84,7 +92,11 @@ export const UsersSocial: FC = () => {
                 </Col>
                 <Col className="gutter-row" span={24}>
                     <Form.Item>
-                        <Button htmlType="submit" loading={isLoading} type="primary">
+                        <Button
+                            htmlType="submit"
+                            loading={isLoading}
+                            type="primary"
+                            icon={<SaveOutlined />}>
                             Save Change
                         </Button>
                     </Form.Item>

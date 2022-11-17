@@ -8,6 +8,15 @@ export interface IWebsites {
     notes: string;
 }
 
+export interface ITemplates {
+    _id: string;
+    name: string;
+    language: ILanguage;
+    template_pack: string;
+    description: string;
+    screenshot: string;
+}
+
 export interface ILegals {
     _id: string;
     name: string;

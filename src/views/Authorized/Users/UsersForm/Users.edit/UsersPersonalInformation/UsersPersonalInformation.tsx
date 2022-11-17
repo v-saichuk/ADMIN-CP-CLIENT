@@ -1,23 +1,29 @@
 import { FC, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import ImgCrop from 'antd-img-crop';
-import { Button, Col, Form, Input, message, Row, Select, Upload } from 'antd';
 import { useAppSelector, useAppDispatch } from '../../../../../../store/hooks/useRedux';
+import { Badge, Button, Col, Form, Input, message, Row, Select, Upload } from 'antd';
 import { editUser } from '../../../../../../store/users/users.slice';
-import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
 import axios from '../../../../../../axios';
+import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
+import ImgCrop from 'antd-img-crop';
+import { MailOutlined, SaveOutlined, UserOutlined } from '@ant-design/icons';
+
+interface IValue {
+    email: string;
+    firstName: string;
+    lastName: string;
+    role: React.Key;
+}
 
 export const UsersPersonalInformation: FC = () => {
     const dispatch = useAppDispatch();
     const { userId } = useParams();
-    const { Option } = Select;
     const { roles } = useAppSelector((state) => state.usersRole);
     const user = useAppSelector((state) => state.users.users.find((el) => el._id === userId));
     const userRole = roles.find((el) => el._id === user?.roleId);
-    const [selectRole, setSelectRole] = useState(userRole?._id);
     const [isLoading, setLoading] = useState(false);
 
-    const fetchUserUpdate = async (values: any) => {
+    const fetchUserUpdate = async (values: IValue) => {
         setLoading(true);
         try {
             const { data } = await axios.patch(`/api/user/${userId}`, {
@@ -25,7 +31,7 @@ export const UsersPersonalInformation: FC = () => {
                 firstName: values.firstName,
                 lastName: values.lastName,
                 email: values.email,
-                roleId: selectRole,
+                roleId: values.role,
                 social: {},
             });
             message.success(data.message);
@@ -36,13 +42,13 @@ export const UsersPersonalInformation: FC = () => {
                     firstName: values.firstName,
                     lastName: values.lastName,
                     email: values.email,
-                    roleId: selectRole,
+                    roleId: values.role,
                     // avatar: user.avatar,
                 }),
             );
             return data;
-        } catch (e: any) {
-            message.error(e.response.data.message);
+        } catch (e) {
+            message.error('An error occurred while saving data');
             setLoading(false);
             return;
         }
@@ -128,7 +134,11 @@ export const UsersPersonalInformation: FC = () => {
                                         message: 'Minimum length 2 characters',
                                     },
                                 ]}>
-                                <Input placeholder="First Name" allowClear />
+                                <Input
+                                    placeholder="First Name"
+                                    prefix={<UserOutlined />}
+                                    allowClear
+                                />
                             </Form.Item>
                         </Col>
                         <Col className="gutter-row" span={12}>
@@ -153,7 +163,11 @@ export const UsersPersonalInformation: FC = () => {
                                         message: 'Minimum length 2 characters',
                                     },
                                 ]}>
-                                <Input placeholder="Last Name" allowClear />
+                                <Input
+                                    placeholder="Last Name"
+                                    prefix={<UserOutlined />}
+                                    allowClear
+                                />
                             </Form.Item>
                         </Col>
                         <Col className="gutter-row" span={12}>
@@ -171,13 +185,13 @@ export const UsersPersonalInformation: FC = () => {
                                         message: 'Please enter a valid E-mail',
                                     },
                                 ]}>
-                                <Input placeholder="E-Mail" allowClear />
+                                <Input placeholder="E-Mail" prefix={<MailOutlined />} allowClear />
                             </Form.Item>
                         </Col>
                         <Col className="gutter-row" span={12}>
                             <Form.Item
                                 name="role"
-                                initialValue={userRole?.title}
+                                initialValue={userRole?._id}
                                 hasFeedback
                                 rules={[
                                     {
@@ -186,32 +200,23 @@ export const UsersPersonalInformation: FC = () => {
                                     },
                                 ]}>
                                 <Select
-                                    style={{ width: '100%' }}
                                     showSearch
-                                    placeholder="Select a role"
+                                    placeholder="Select role..."
                                     optionFilterProp="children"
-                                    onChange={(value) => setSelectRole(value)}
-                                    filterOption={(input, option) =>
-                                        (option!.children as unknown as string)
+                                    optionLabelProp="label"
+                                    loading={!userRole}
+                                    filterOption={(input, option: any) =>
+                                        option.children.props.text
                                             .toLowerCase()
                                             .includes(input.toLowerCase())
                                     }>
                                     {roles.map((role) => (
-                                        <Option key={role._id} value={role._id}>
-                                            {/* 
-                                            <div
-                                            style={{
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                            }}>
-                                            <span
-                                                className="search_dot"
-                                                style={{
-                                                    backgroundColor: role.color,
-                                                }}>
-                                            </span> </div> */}
-                                            {role.title}
-                                        </Option>
+                                        <Select.Option
+                                            key={role._id}
+                                            value={role._id}
+                                            label={<Badge color={role.color} text={role.title} />}>
+                                            <Badge color={role.color} text={role.title} />
+                                        </Select.Option>
                                     ))}
                                 </Select>
                             </Form.Item>
@@ -219,7 +224,11 @@ export const UsersPersonalInformation: FC = () => {
                     </Row>
                 </Col>
                 <Col className="gutter-row" span={24}>
-                    <Button htmlType="submit" loading={isLoading} type="primary">
+                    <Button
+                        htmlType="submit"
+                        loading={isLoading}
+                        icon={<SaveOutlined />}
+                        type="primary">
                         Save Change
                     </Button>
                 </Col>

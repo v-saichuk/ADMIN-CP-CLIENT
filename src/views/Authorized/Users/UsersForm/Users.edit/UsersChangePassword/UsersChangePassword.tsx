@@ -1,14 +1,25 @@
 import { FC, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Button, Col, Form, Input, message, Row } from 'antd';
-import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
+import {
+    EyeInvisibleOutlined,
+    EyeTwoTone,
+    SafetyCertificateOutlined,
+    SaveOutlined,
+    UnlockOutlined,
+} from '@ant-design/icons';
 import axios from '../../../../../../axios';
+
+interface IValue {
+    new_password: string;
+    confirm_new_password: string;
+}
 
 export const UsersChangePassword: FC = () => {
     const { userId } = useParams();
     const [isLoading, setLoading] = useState(false);
 
-    const fetchUserUpdate = async (values: any) => {
+    const fetchUserUpdate = async (values: IValue) => {
         setLoading(true);
         try {
             const { data } = await axios.patch(`/api/user/${userId}`, {
@@ -18,8 +29,8 @@ export const UsersChangePassword: FC = () => {
             message.success(data.message);
             setLoading(false);
             return data;
-        } catch (e: any) {
-            message.error(e.response.data.message);
+        } catch (e) {
+            message.error('An error occurred while saving data');
             setLoading(false);
             return;
         }
@@ -54,6 +65,7 @@ export const UsersChangePassword: FC = () => {
                                 <Input.Password
                                     placeholder="Enter new password"
                                     allowClear
+                                    prefix={<UnlockOutlined />}
                                     iconRender={(visible) =>
                                         visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
                                     }
@@ -85,6 +97,7 @@ export const UsersChangePassword: FC = () => {
                                 <Input.Password
                                     placeholder="Confirm new password"
                                     allowClear
+                                    prefix={<UnlockOutlined />}
                                     iconRender={(visible) =>
                                         visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
                                     }
@@ -94,7 +107,11 @@ export const UsersChangePassword: FC = () => {
                     </Row>
                 </Col>
                 <Col className="gutter-row" span={24}>
-                    <Button htmlType="submit" loading={isLoading} type="primary">
+                    <Button
+                        htmlType="submit"
+                        loading={isLoading}
+                        type="primary"
+                        icon={<SaveOutlined />}>
                         Save Change
                     </Button>
                 </Col>
