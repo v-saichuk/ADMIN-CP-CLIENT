@@ -9,34 +9,32 @@ interface IProps {
     offerId: React.Key;
 }
 
+const key = 'Deleted';
+
 export const OffersDelete: FC<IProps> = ({ offerId }) => {
     const dispatch = useAppDispatch();
     const [isLoading, setIsLoading] = useState(false);
 
     const handleDelete = async () => {
+        message.loading({ content: 'Loading...', key });
         setIsLoading(true);
         try {
             const { data } = await axios.delete(`/api/offers/${offerId}`);
             if (data.success) {
-                message.success(data.message);
                 dispatch(remove(offerId));
                 setIsLoading(false);
+                message.success({ content: 'Offer deleted!', key, duration: 2 });
             }
         } catch (error) {
-            const {
-                response: {
-                    data: { message: msg },
-                },
-            }: any = error;
             setIsLoading(false);
-            message.error(msg);
+            message.error({ content: 'Error!', key, duration: 2 });
         }
     };
 
     const showModalDelete = () => {
         Modal.confirm({
             title: 'Do you really want to delete?',
-            content: `Once deleted, you will not be able to restore offer`,
+            content: 'Once deleted, you will not be able to restore offer',
             icon: <ExclamationCircleOutlined />,
             okText: 'Yes',
             okType: 'danger',

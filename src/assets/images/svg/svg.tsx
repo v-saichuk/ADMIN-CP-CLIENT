@@ -4413,3 +4413,19 @@ export const IconMaintenance: FC = () => (
         />
     </svg>
 );
+
+export const IconNoImage: FC = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 230 50" width="230" height="50">
+        <rect width="230" height="50" fill="#777777FF"></rect>
+        <text
+            x="50%"
+            y="50%"
+            dominantBaseline="middle"
+            textAnchor="middle"
+            fontFamily="monospace"
+            fontSize="10px"
+            fill="#E0E0E0FF">
+            230x50
+        </text>
+    </svg>
+);

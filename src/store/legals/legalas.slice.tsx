@@ -43,12 +43,7 @@ const Legals = createSlice({
         },
 
         duplicateGroup: (state, action) => {
-            action.payload.map(
-                (siteID: string) =>
-                    (state.LegalsData = state.LegalsData.map((legal) =>
-                        legal._id === siteID ? { ...legal, enabled: false } : legal,
-                    )),
-            );
+            state.LegalsData = action.payload;
         },
         removeGroup: (state, action) => {
             action.payload.map(

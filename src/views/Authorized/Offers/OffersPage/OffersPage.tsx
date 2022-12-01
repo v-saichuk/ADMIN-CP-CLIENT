@@ -8,15 +8,17 @@ import { OffersEdit } from '../OffersFrom/Offers.edit/OffersEdit';
 
 import { IOfferOwner } from '../../../../types';
 import type { ColumnsType } from 'antd/es/table';
+import { StarOutlined } from '@ant-design/icons';
+import { IconNoImage } from '../../../../assets/images/svg/svg';
 
 // STYLE
 import './OffersPage.scss';
 
 interface DataType {
     key: React.Key;
-    name: string;
+    name: React.ReactNode;
     offerOwner: IOfferOwner;
-    logo: string;
+    logo: React.ReactNode;
 }
 
 export const OffersPage: FC = () => {
@@ -35,6 +37,12 @@ export const OffersPage: FC = () => {
     const OffersData = offers.map((offer) => ({
         key: offer._id,
         ...offer,
+        logo: <IconNoImage />,
+        name: (
+            <>
+                <StarOutlined className="offer__star-icon" /> {offer.name}
+            </>
+        ),
         owner: <Tag color={offer.offerOwner.color}>{offer.offerOwner.name}</Tag>,
     }));
 
@@ -58,6 +66,7 @@ export const OffersPage: FC = () => {
         {
             title: 'Logo',
             dataIndex: 'logo',
+            className: 'offer__image',
             width: '20%',
         },
         {
@@ -76,8 +85,8 @@ export const OffersPage: FC = () => {
     ];
 
     return (
-        <Layout className="offer__layout">
-            <div className="offer__header">
+        <Layout className="content-layout">
+            <div className="content-header">
                 <span>Offers</span>
                 <OffersCreate />
             </div>

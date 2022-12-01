@@ -12,6 +12,7 @@ import * as Icon from '@ant-design/icons';
 
 // STYLE
 import './TemplatesPage.scss';
+import { EmptyCustome } from '../../../../components/EmptyCustome/EmptyCustome';
 
 interface DataType {
     key: React.Key;
@@ -165,8 +166,8 @@ export const TemplatesPage: FC = () => {
     ];
 
     return (
-        <Layout className="offer__layout">
-            <div className="section-header__top">
+        <Layout className="content-layout">
+            <div className="content-header">
                 <span>Templates</span>
                 <Button
                     type="primary"
@@ -176,16 +177,18 @@ export const TemplatesPage: FC = () => {
                 </Button>
             </div>
             <Content className="site-layout-background main_content offer__content">
-                <Table
-                    rowSelection={TemplatesGroupUpdate()}
-                    columns={columns}
-                    dataSource={Data}
-                    pagination={{
-                        defaultPageSize: 8,
-                        hideOnSinglePage: true,
-                        showSizeChanger: false,
-                    }}
-                />
+                <EmptyCustome>
+                    <Table
+                        rowSelection={TemplatesGroupUpdate()}
+                        columns={columns}
+                        dataSource={Data}
+                        pagination={{
+                            defaultPageSize: 8,
+                            hideOnSinglePage: true,
+                            showSizeChanger: false,
+                        }}
+                    />
+                </EmptyCustome>
             </Content>
         </Layout>
     );

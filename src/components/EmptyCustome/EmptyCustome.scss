@@ -1,0 +1,17 @@
+// Empty
+.empty-custom {
+    height: calc(100vh - 277px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+// ./Empty
+
+.ant-table-tbody>.ant-table-placeholder>.ant-table-cell {
+    &:hover {
+        background: transparent;
+        height: 100%;
+    }
+}

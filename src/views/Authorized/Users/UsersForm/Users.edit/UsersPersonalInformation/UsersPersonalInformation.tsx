@@ -15,6 +15,8 @@ interface IValue {
     role: React.Key;
 }
 
+const key = 'updatable';
+
 export const UsersPersonalInformation: FC = () => {
     const dispatch = useAppDispatch();
     const { userId } = useParams();
@@ -25,6 +27,7 @@ export const UsersPersonalInformation: FC = () => {
 
     const fetchUserUpdate = async (values: IValue) => {
         setLoading(true);
+        message.loading({ content: 'Loading...', key });
         try {
             const { data } = await axios.patch(`/api/user/${userId}`, {
                 // avatarUrl: 'http://safdf.com/asdf/asdf',
@@ -34,7 +37,7 @@ export const UsersPersonalInformation: FC = () => {
                 roleId: values.role,
                 social: {},
             });
-            message.success(data.message);
+            message.success({ content: 'User updated!', key, duration: 2 });
             setLoading(false);
             dispatch(
                 editUser({
@@ -48,7 +51,7 @@ export const UsersPersonalInformation: FC = () => {
             );
             return data;
         } catch (e) {
-            message.error('An error occurred while saving data');
+            message.error({ content: 'Error!', key, duration: 2 });
             setLoading(false);
             return;
         }

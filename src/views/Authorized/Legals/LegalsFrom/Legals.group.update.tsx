@@ -10,11 +10,11 @@ import * as Legals from '../../../../store/legals/legalas.slice';
 
 interface DataType {
     key: React.Key;
-    name: string;
-    language: any;
-    offer: any;
-    website: any;
-    offerOwner: any;
+    name: React.ReactNode;
+    language: React.ReactNode;
+    offer: React.ReactNode;
+    website: React.ReactNode;
+    offerOwner: React.ReactNode;
     enabled: React.ReactNode;
 }
 
@@ -39,30 +39,38 @@ export const LegalsGroupUpdate = () => {
         message.loading({ content: 'Loading...', key });
         try {
             const { data } = await axios.patch('/api/legals/group/update', props);
-            console.log('data', data);
-            if (data.success) {
-                switch (props.action) {
-                    case 'Duplicate':
-                        // TODO: Не оновлюеця стор, не додается нова дубльвана сторінка
-                        // dispatch(Legals.duplicateGroup(props.legalsId));
-                        break;
-                    case 'Delete':
-                        dispatch(Legals.removeGroup(props.legalsId));
-                        break;
+            // console.log('Legal fedback', data);
 
-                    default:
-                        break;
-                }
-                message.success({ content: 'Loaded!', key, duration: 2 });
+            switch (props.action) {
+                case 'Duplicate':
+                    dispatch(Legals.duplicateGroup(data.data));
+                    message.success({
+                        content: `Duplicate ${props.legalsId.length} elements!`,
+                        key,
+                        duration: 2,
+                    });
+
+                    break;
+                case 'Delete':
+                    dispatch(Legals.removeGroup(props.legalsId));
+                    message.success({
+                        content: `Delete ${props.legalsId.length} elements!`,
+                        key,
+                        duration: 2,
+                    });
+                    break;
+
+                default:
+                    break;
             }
         } catch (e) {
-            message.error({ content: `Error! => ${e}`, key, duration: 2 });
+            message.error({ content: 'Error!', key, duration: 2 });
         }
     };
 
     const showStatusConfirm = (props: IGroupUpdateProps) => {
         Modal.confirm({
-            title: `Are you sure you want to duplicate the selected items?`,
+            title: 'Are you sure you want to duplicate the selected items?',
             icon: <ExclamationCircleOutlined />,
             okText: 'Yes',
             cancelText: 'No',

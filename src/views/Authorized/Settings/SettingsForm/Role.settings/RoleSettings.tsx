@@ -10,10 +10,10 @@ import './RoleSettings.scss';
 export const RoleSettings: FC = () => {
     const { roles, isLoading } = useAppSelector((state) => state.usersRole);
 
-    const fakeDataRole = Array.from({ length: 5 }).map((el) => <></>);
+    const fakeDataRole = Array.from({ length: 5 }).map(() => <></>);
 
     return (
-        <Row gutter={[16, 24]}>
+        <Row gutter={[16, 15]}>
             <Col span={24}>
                 <Row gutter={[16, 24]} justify="space-between" align="middle">
                     <Col>User Roles</Col>
@@ -24,7 +24,7 @@ export const RoleSettings: FC = () => {
             </Col>
 
             <Col span={24} style={{ height: 'calc(100vh - 240px)', overflow: 'scroll' }}>
-                <Row gutter={[16, 10]}>
+                <Row gutter={[16, 5]}>
                     {isLoading &&
                         fakeDataRole.map((_, ind) => (
                             <Col span={24} key={ind}>

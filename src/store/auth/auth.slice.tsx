@@ -2,6 +2,12 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from '../../axios';
 import { IUsers } from '../../types/';
 
+interface IInitialState {
+    isLoading: boolean;
+    isAuth: boolean;
+    data: IUsers | null;
+}
+
 export const fetchAuth = createAsyncThunk(
     'auth/fetchAuth',
     async (params: {}, { rejectWithValue }) => {
@@ -19,15 +25,9 @@ export const fetchLogin = createAsyncThunk('auth/fetchLogin', async (_, { reject
         const { data } = await axios.get('/api/profile');
         return data;
     } catch (e) {
-        return rejectWithValue(e);
+        return null;
     }
 });
-
-interface IInitialState {
-    isLoading: boolean;
-    isAuth: boolean;
-    data: IUsers | null;
-}
 
 const initialState: IInitialState = {
     isLoading: false,
@@ -66,7 +66,7 @@ const Auth = createSlice({
             state.data = action.payload;
             state.isAuth = !!state.data ? true : false;
         });
-        builder.addCase(fetchLogin.rejected, (state) => {
+        builder.addCase(fetchLogin.rejected, (state, action) => {
             state.isLoading = false;
             state.isAuth = false;
         });

@@ -4,17 +4,25 @@ import { ILanguage } from '../../../../../types';
 import { useAppDispatch, useAppSelector } from '../../../../../store/hooks/useRedux';
 import { Col, List, Row, Switch, Skeleton, message } from 'antd';
 import * as Language from '../../../../../store/settings/language.slice';
+import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 
 import './LanguageSettings.scss';
+
+const key = 'updatable';
 
 export const LanguageSettings: FC = () => {
     const dispatch = useAppDispatch();
     const { lang, isLoading } = useAppSelector((state) => state.language);
     const handleCountry = async ([enabled, id]: [boolean, string]) => {
+        message.loading({ content: 'Loading...', key });
         await axios
             .patch(`/api/language/${id}`, { enabled })
             .then(() => {
-                message.success('Saved!');
+                message.success({
+                    content: enabled ? 'Activated' : 'Deactivated',
+                    key,
+                    duration: 2,
+                });
                 dispatch(
                     Language.update({
                         id,
@@ -22,8 +30,8 @@ export const LanguageSettings: FC = () => {
                     }),
                 );
             })
-            .catch(() => {
-                message.error('Error!');
+            .catch((e) => {
+                message.error({ content: 'Error!', key, duration: 2 });
             });
     };
 
@@ -84,6 +92,8 @@ export const LanguageSettings: FC = () => {
                                             <Switch
                                                 size="small"
                                                 defaultChecked={item.enabled}
+                                                checkedChildren={<CheckOutlined />}
+                                                unCheckedChildren={<CloseOutlined />}
                                                 onChange={(checked: boolean) =>
                                                     handleCountry([checked, item._id])
                                                 }

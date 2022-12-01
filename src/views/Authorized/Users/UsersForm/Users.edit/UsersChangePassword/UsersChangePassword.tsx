@@ -1,13 +1,7 @@
 import { FC, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Button, Col, Form, Input, message, Row } from 'antd';
-import {
-    EyeInvisibleOutlined,
-    EyeTwoTone,
-    SafetyCertificateOutlined,
-    SaveOutlined,
-    UnlockOutlined,
-} from '@ant-design/icons';
+import { EyeInvisibleOutlined, EyeTwoTone, SaveOutlined, UnlockOutlined } from '@ant-design/icons';
 import axios from '../../../../../../axios';
 
 interface IValue {
@@ -15,22 +9,25 @@ interface IValue {
     confirm_new_password: string;
 }
 
+const key = 'deleted';
+
 export const UsersChangePassword: FC = () => {
     const { userId } = useParams();
     const [isLoading, setLoading] = useState(false);
 
     const fetchUserUpdate = async (values: IValue) => {
         setLoading(true);
+        message.loading({ content: 'Loading...', key });
         try {
             const { data } = await axios.patch(`/api/user/${userId}`, {
                 password: values.new_password,
                 social: {},
             });
-            message.success(data.message);
+            message.success({ content: 'User updated!', key, duration: 2 });
             setLoading(false);
             return data;
         } catch (e) {
-            message.error('An error occurred while saving data');
+            message.error({ content: 'Error!', key, duration: 2 });
             setLoading(false);
             return;
         }

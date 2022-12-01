@@ -13,6 +13,8 @@ interface IValue {
     linkedin: string;
 }
 
+const key = 'updatable';
+
 export const UsersSocial: FC = () => {
     const dispatch = useAppDispatch();
     const { userId } = useParams();
@@ -23,6 +25,7 @@ export const UsersSocial: FC = () => {
 
     const fetchUserUpdate = async (values: IValue) => {
         setLoading(true);
+        message.loading({ content: 'Loading...', key });
         try {
             const { data } = await axios.patch(`/api/user/${userId}`, {
                 social: {
@@ -32,7 +35,7 @@ export const UsersSocial: FC = () => {
                     linkedin: values.linkedin,
                 },
             });
-            message.success(data.message);
+            message.success({ content: 'User created successfully!', key, duration: 2 });
             setLoading(false);
             dispatch(
                 editUser({
@@ -47,7 +50,7 @@ export const UsersSocial: FC = () => {
             );
             return data;
         } catch (e) {
-            message.error('An error occurred while saving data');
+            message.error({ content: 'Error!', key, duration: 2 });
             setLoading(false);
             return;
         }

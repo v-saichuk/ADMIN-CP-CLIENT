@@ -5,8 +5,10 @@ import { useAppDispatch } from '../../../../../../store/hooks/useRedux';
 import { createRole } from '../../../../../../store/settings/usersRole.slice';
 import { IRolesForm, IRoleColor } from '../../../../../../types';
 
-import { PlusOutlined } from '@ant-design/icons';
+import { CheckOutlined, CloseOutlined, PlusOutlined } from '@ant-design/icons';
 import './RoleCreate.scss';
+
+const key = 'updatable';
 
 const COLOR_BUTTON: IRoleColor[] = [
     {
@@ -63,6 +65,7 @@ export const RoleCreate: FC = () => {
 
     const handleCreateRole = async (props: IRolesForm) => {
         setIsLoadingForm(true);
+        message.loading({ content: 'Loading...', key });
         try {
             const { data } = await axios.post('/api/roles', {
                 title: props.title,
@@ -82,19 +85,17 @@ export const RoleCreate: FC = () => {
             if (data.success) {
                 setIsLoadingForm(false);
                 dispatch(createRole(data.role));
-                message.success(data.message);
                 setIsModal(false);
                 form.resetFields();
+                message.success({ content: 'Created!', key, duration: 2 });
                 return;
             } else {
                 setIsLoadingForm(false);
-                message.error(data.message);
-                console.log('Error', data);
+                message.error({ content: 'Error!', key, duration: 2 });
             }
         } catch (e: any) {
             setIsLoadingForm(false);
-            console.log('Error e =>', e);
-            message.error(e.response.data[0].msg);
+            message.error({ content: 'Error!', key, duration: 2 });
         } finally {
             setIsLoadingForm(false);
         }
@@ -104,7 +105,7 @@ export const RoleCreate: FC = () => {
         <>
             <Tooltip placement="topLeft" title={'Add a new user role'} mouseEnterDelay={0.5}>
                 <Button size="middle" type="primary" onClick={() => setIsModal(true)}>
-                    <PlusOutlined /> Add
+                    <PlusOutlined /> Create
                 </Button>
             </Tooltip>
             <Modal
@@ -165,7 +166,11 @@ export const RoleCreate: FC = () => {
                                         name="createUsers"
                                         initialValue={false}
                                         valuePropName="checked">
-                                        <Switch size="small" />
+                                        <Switch
+                                            size="small"
+                                            checkedChildren={<CheckOutlined />}
+                                            unCheckedChildren={<CloseOutlined />}
+                                        />
                                     </Form.Item>
                                     <span>Create Users</span>
                                 </Col>
@@ -174,7 +179,11 @@ export const RoleCreate: FC = () => {
                                         name="editUsers"
                                         initialValue={false}
                                         valuePropName="checked">
-                                        <Switch size="small" />
+                                        <Switch
+                                            size="small"
+                                            checkedChildren={<CheckOutlined />}
+                                            unCheckedChildren={<CloseOutlined />}
+                                        />
                                     </Form.Item>
                                     <span>Edit users</span>
                                 </Col>
@@ -183,7 +192,11 @@ export const RoleCreate: FC = () => {
                                         name="deleteUsers"
                                         initialValue={false}
                                         valuePropName="checked">
-                                        <Switch size="small" />
+                                        <Switch
+                                            size="small"
+                                            checkedChildren={<CheckOutlined />}
+                                            unCheckedChildren={<CloseOutlined />}
+                                        />
                                     </Form.Item>
                                     <span>Delete users</span>
                                 </Col>
@@ -197,7 +210,11 @@ export const RoleCreate: FC = () => {
                                         name="createProjects"
                                         initialValue={false}
                                         valuePropName="checked">
-                                        <Switch size="small" />
+                                        <Switch
+                                            size="small"
+                                            checkedChildren={<CheckOutlined />}
+                                            unCheckedChildren={<CloseOutlined />}
+                                        />
                                     </Form.Item>
                                     <span>Create Projects</span>
                                 </Col>
@@ -206,7 +223,11 @@ export const RoleCreate: FC = () => {
                                         name="editProjects"
                                         initialValue={false}
                                         valuePropName="checked">
-                                        <Switch size="small" />
+                                        <Switch
+                                            size="small"
+                                            checkedChildren={<CheckOutlined />}
+                                            unCheckedChildren={<CloseOutlined />}
+                                        />
                                     </Form.Item>
                                     <span>Edit Projects</span>
                                 </Col>
@@ -215,7 +236,11 @@ export const RoleCreate: FC = () => {
                                         name="deleteProjects"
                                         initialValue={false}
                                         valuePropName="checked">
-                                        <Switch size="small" />
+                                        <Switch
+                                            size="small"
+                                            checkedChildren={<CheckOutlined />}
+                                            unCheckedChildren={<CloseOutlined />}
+                                        />
                                     </Form.Item>
                                     <span>Delete Projects</span>
                                 </Col>
@@ -229,7 +254,11 @@ export const RoleCreate: FC = () => {
                                         name="isSetting"
                                         initialValue={false}
                                         valuePropName="checked">
-                                        <Switch size="small" />
+                                        <Switch
+                                            size="small"
+                                            checkedChildren={<CheckOutlined />}
+                                            unCheckedChildren={<CloseOutlined />}
+                                        />
                                     </Form.Item>
                                     <span>Access to settings</span>
                                 </Col>

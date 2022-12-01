@@ -133,14 +133,30 @@ export const LegalsCreate: FC = () => {
                                             showSearch
                                             placeholder="Select offer"
                                             optionFilterProp="children"
-                                            filterOption={(input, option) =>
-                                                (option!.children as unknown as string)
+                                            optionLabelProp="label"
+                                            filterOption={(input, option: any) =>
+                                                option.children.props.children[2]
                                                     .toLowerCase()
                                                     .includes(input.toLowerCase())
                                             }>
                                             {offers.map((offer) => (
-                                                <Select.Option key={offer._id} value={offer._id}>
-                                                    {offer.name}
+                                                <Select.Option
+                                                    key={offer._id}
+                                                    value={offer._id}
+                                                    label={
+                                                        <>
+                                                            <Icon.StarOutlined
+                                                                style={{ color: 'orange' }}
+                                                            />{' '}
+                                                            {offer.name}
+                                                        </>
+                                                    }>
+                                                    <>
+                                                        <Icon.StarOutlined
+                                                            style={{ color: 'orange' }}
+                                                        />{' '}
+                                                        {offer.name}
+                                                    </>
                                                 </Select.Option>
                                             ))}
                                         </Select>
@@ -238,7 +254,7 @@ export const LegalsCreate: FC = () => {
                         <Col className="gutter-row" span={24} md={{ span: 12 }}>
                             <Button
                                 htmlType="submit"
-                                icon={<Icon.SafetyCertificateOutlined />}
+                                icon={<Icon.SaveOutlined />}
                                 loading={isLoading}
                                 type="primary">
                                 Save

@@ -1,11 +1,12 @@
 import { FC, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from '../../../../axios';
 import { Table, Layout, Space, Button, Switch, Tag, message, Modal } from 'antd';
 import { useAppDispatch, useAppSelector } from '../../../../store/hooks/useRedux';
 import { Content } from 'antd/lib/layout/layout';
 import * as LegalPage from '../../../../store/legals/legalas.slice';
 import { LegalsGroupUpdate } from '../LegalsFrom/Legals.group.update';
+import { EmptyCustome } from '../../../../components/EmptyCustome/EmptyCustome';
 
 import type { ColumnsType } from 'antd/es/table';
 import * as Icon from '@ant-design/icons';
@@ -13,15 +14,17 @@ import * as Icon from '@ant-design/icons';
 // STYLE
 import './LegalsPage.scss';
 
-interface DataType {
+interface ColumnsDataType {
     key: React.Key;
-    name: string;
+    name: React.ReactNode;
     language: React.ReactNode;
-    offer: any;
-    website: any;
-    offerOwner: any;
+    offer: React.ReactNode;
+    website: React.ReactNode;
+    offerOwner: React.ReactNode;
     enabled: React.ReactNode;
 }
+
+const key = 'updated';
 
 export const LegalsPage: FC = () => {
     const navigate = useNavigate();
@@ -39,10 +42,12 @@ export const LegalsPage: FC = () => {
         value: el._id,
     }));
 
-    const filterLanguage = lang.map((el) => ({
-        text: el.icon + ' ' + el.title,
-        value: el.title,
-    }));
+    const filterLanguage = lang
+        .filter((el) => el.enabled)
+        .map((el) => ({
+            text: el.icon + ' ' + el.title,
+            value: el.title,
+        }));
 
     const filterOffer = offers.map((el) => ({
         text: el.name,
@@ -54,7 +59,6 @@ export const LegalsPage: FC = () => {
         value: el.url,
     }));
 
-    // TODO: Додати іконки для Offer Owner
     const filterOfferOwner = offerOwner.map((el) => ({
         text: el.name,
         value: el.name,
@@ -62,14 +66,18 @@ export const LegalsPage: FC = () => {
 
     const Data = LegalsData.map((legal) => ({
         key: legal._id,
-        name: legal.name,
+        name: <Link to={`/legals/edit/${legal._id}`}>{legal.name}</Link>,
         language: (
             <div className="lang-table">
                 <span>{legal.language[0].icon}</span>
                 {legal.language[0].title}
             </div>
         ),
-        offer: <Tag key={legal.offer[0]._id}>{legal.offer[0].name}</Tag>,
+        offer: (
+            <Tag key={legal.offer[0]._id}>
+                <Icon.StarOutlined /> {legal.offer[0].name}
+            </Tag>
+        ),
         website: legal.website[0].url,
         offerOwner: <Tag color={legal.offerOwner[0].color}>{legal.offerOwner[0].name}</Tag>,
         enabled: legal.enabled ? (
@@ -81,12 +89,13 @@ export const LegalsPage: FC = () => {
 
     // UPDATE_ONE
     const fetchUpdateOne = async (props: any) => {
+        message.loading({ content: 'Loading...', key });
         setIsLoadingOne({
             id: props.id,
             enabled: true,
         });
         try {
-            const { data } = await axios.patch(`/api/legals/enabled/${props.id}`, {
+            await axios.patch(`/api/legals/enabled/${props.id}`, {
                 enabled: props.enabled,
             });
             dispatch(
@@ -95,39 +104,36 @@ export const LegalsPage: FC = () => {
                     enabled: props.enabled,
                 }),
             );
-            message.success(data.message);
+            message.success({
+                content: props.enabled ? 'Activated' : 'Deactivated',
+                key,
+                duration: 2,
+            });
             setIsLoadingOne({
                 id: props.id,
                 enabled: false,
             });
-            return;
-        } catch (e: any) {
+        } catch (e) {
             setIsLoadingOne({
                 id: props.id,
                 enabled: false,
             });
-            console.log('ERROR LegalPage fetchUpdateOne =>', e);
-            e.response.data.map((el: any) => message.error(el.msg));
-            return;
+            message.error({ content: 'Error!', key, duration: 2 });
         }
     };
     // ./UPDATE_ONE
 
     // DELETE
     const handleDelete = async (legalId: React.Key) => {
+        message.loading({ content: 'Loading...', key });
         try {
             const { data } = await axios.delete(`/api/legals/${legalId}`);
             if (data.success) {
-                message.success(data.message);
+                message.success({ content: 'Legal page deleted', key, duration: 2 });
                 dispatch(LegalPage.remove(legalId));
             }
-        } catch (error) {
-            const {
-                response: {
-                    data: { message: msg },
-                },
-            }: any = error;
-            message.error(msg);
+        } catch (e) {
+            message.error({ content: 'Error!', key, duration: 2 });
         }
     };
 
@@ -146,11 +152,10 @@ export const LegalsPage: FC = () => {
     };
     // ./DELETE
 
-    const columns: ColumnsType<DataType> = [
+    const columns: ColumnsType<ColumnsDataType> = [
         {
             title: 'Name',
             dataIndex: 'name',
-            // width: '10%',
             filters: filterName,
             filterSearch: true,
             ellipsis: true,
@@ -168,7 +173,6 @@ export const LegalsPage: FC = () => {
         {
             title: 'Offer',
             dataIndex: 'offer',
-            // width: '20%',
             ellipsis: true,
             filters: filterOffer,
             filterSearch: true,
@@ -177,7 +181,6 @@ export const LegalsPage: FC = () => {
         {
             title: 'Website',
             dataIndex: 'website',
-            // width: '20%',
             filters: filterWebsite,
             filterSearch: true,
             ellipsis: true,
@@ -186,7 +189,6 @@ export const LegalsPage: FC = () => {
         {
             title: 'Offer owner',
             dataIndex: 'offerOwner',
-            // width: '20%',
             filters: filterOfferOwner,
             filterSearch: true,
             ellipsis: true,
@@ -221,15 +223,16 @@ export const LegalsPage: FC = () => {
         {
             title: 'Action',
             key: 'action',
-            width: '10%',
+            width: '12%',
             className: 'offer__action',
-            render: (_, legal) => {
+            render: (_, legal: any) => {
                 return (
                     <Space size="small">
                         <Switch
                             size="small"
+                            checkedChildren={<Icon.CheckOutlined />}
+                            unCheckedChildren={<Icon.CloseOutlined />}
                             defaultChecked={
-                                // @ts-ignore
                                 legal.enabled.props.children === 'Active' ? true : false
                             }
                             loading={legal.key === isLoadingOne.id && isLoadingOne.enabled}
@@ -254,8 +257,8 @@ export const LegalsPage: FC = () => {
     ];
 
     return (
-        <Layout className="offer__layout">
-            <div className="offer__header">
+        <Layout className="content-layout">
+            <div className="content-header">
                 <span>Legals</span>
                 <Button
                     type="primary"
@@ -265,16 +268,18 @@ export const LegalsPage: FC = () => {
                 </Button>
             </div>
             <Content className="site-layout-background main_content offer__content">
-                <Table
-                    rowSelection={groupUpdate}
-                    columns={columns}
-                    dataSource={Data}
-                    pagination={{
-                        defaultPageSize: 8,
-                        hideOnSinglePage: true,
-                        showSizeChanger: false,
-                    }}
-                />
+                <EmptyCustome>
+                    <Table
+                        rowSelection={groupUpdate}
+                        columns={columns}
+                        dataSource={Data}
+                        pagination={{
+                            defaultPageSize: 8,
+                            hideOnSinglePage: true,
+                            showSizeChanger: false,
+                        }}
+                    />
+                </EmptyCustome>
             </Content>
         </Layout>
     );

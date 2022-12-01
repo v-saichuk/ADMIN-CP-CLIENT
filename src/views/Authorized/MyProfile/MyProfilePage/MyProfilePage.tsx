@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Breadcrumb, Layout, Tabs } from 'antd';
+import { Layout, Tabs } from 'antd';
 import { Content } from 'antd/lib/layout/layout';
 import { ApartmentOutlined, LockOutlined, UserOutlined } from '@ant-design/icons';
 import { ChangePasswordForm } from '../MyProfileForm/ChangePasswordForm/ChangePasswordForm';
@@ -29,10 +29,10 @@ export const MyProfilePage: FC = () => {
     ];
 
     return (
-        <Layout style={{ padding: '0 24px 24px' }}>
-            <Breadcrumb className="Breadcrumb-custome">
-                <Breadcrumb.Item>My Profile</Breadcrumb.Item>
-            </Breadcrumb>
+        <Layout className="content-layout">
+            <div className="content-header">
+                <span>My profile</span>
+            </div>
             <Content className="site-layout-background" style={{ border: 'none' }}>
                 <Tabs tabPosition="left" type="card">
                     {TABCONTENT.map((el) => (

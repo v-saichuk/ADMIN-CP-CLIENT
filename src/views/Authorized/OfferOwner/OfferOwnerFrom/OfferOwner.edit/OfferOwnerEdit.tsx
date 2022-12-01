@@ -96,20 +96,20 @@ export const OfferOwnerEdit: FC<IOfferOwnerId> = ({ offerOwnerId }) => {
         }
     };
 
-    const onCancel = () => {
-        Modal.confirm({
-            title: 'Do you really want to close?',
-            content: `All your changes will not be saved`,
-            icon: <ExclamationCircleOutlined />,
-            okText: 'Yes',
-            okType: 'danger',
-            cancelText: 'No',
-            onOk() {
-                setIsModal(false);
-                form.resetFields();
-            },
-        });
-    };
+    // const onCancel = () => {
+    //     Modal.confirm({
+    //         title: 'Do you really want to close?',
+    //         content: `All your changes will not be saved`,
+    //         icon: <ExclamationCircleOutlined />,
+    //         okText: 'Yes',
+    //         okType: 'danger',
+    //         cancelText: 'No',
+    //         onOk() {
+    //             setIsModal(false);
+    //             form.resetFields();
+    //         },
+    //     });
+    // };
 
     return (
         <>
@@ -122,7 +122,7 @@ export const OfferOwnerEdit: FC<IOfferOwnerId> = ({ offerOwnerId }) => {
                 visible={isModal}
                 onOk={() => form.submit()}
                 confirmLoading={isLoadingForm}
-                onCancel={onCancel}>
+                onCancel={() => setIsModal(false)}>
                 <Form
                     name="basic"
                     form={form}

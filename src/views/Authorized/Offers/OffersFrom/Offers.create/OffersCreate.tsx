@@ -1,11 +1,19 @@
 import { FC, useState } from 'react';
 import axios from '../../../../../axios';
 import { useAppDispatch, useAppSelector } from '../../../../../store/hooks/useRedux';
-import { Button, Col, Form, Input, message, Modal, Row, Select, Upload } from 'antd';
+import { Badge, Button, Col, Form, Input, message, Modal, Row, Select, Upload } from 'antd';
 import * as Offer from '../../../../../store/offers/offers.slice';
 
 import type { UploadProps } from 'antd';
 import { PlusOutlined, UploadOutlined } from '@ant-design/icons';
+
+interface ICreateOfferProps {
+    logo: string;
+    name: string;
+    offerOwner: string;
+}
+
+const key = 'updatable';
 
 export const OffersCreate: FC = () => {
     const [form] = Form.useForm();
@@ -15,30 +23,23 @@ export const OffersCreate: FC = () => {
     const [isModal, setIsModal] = useState(false);
     const [isLoadingForm, setIsLoadingForm] = useState(false);
 
-    const handleCreateOfferOwner = async (props: any) => {
+    const handleCreateOffer = async (props: ICreateOfferProps) => {
         setIsLoadingForm(true);
+        message.loading({ content: 'Loading...', key });
         try {
             const { data } = await axios.post('/api/offers', {
                 name: props.name,
                 logo: props.logo,
                 offerOwner: props.offerOwner,
             });
-            if (data.success) {
-                setIsLoadingForm(false);
-                dispatch(Offer.create(data.offer));
-                setIsModal(false);
-                form.resetFields();
-                message.success(data.message);
-                return;
-            } else {
-                setIsLoadingForm(false);
-                message.error(data.message);
-                console.log('Error', data);
-            }
-        } catch (e: any) {
             setIsLoadingForm(false);
-            console.log('Error e =>', e);
-            message.error(e.response.data[0].msg);
+            dispatch(Offer.create(data.offer));
+            setIsModal(false);
+            form.resetFields();
+            message.success({ content: 'Offer created!', key, duration: 2 });
+        } catch (e) {
+            setIsLoadingForm(false);
+            message.error({ content: 'Error!', key, duration: 2 });
         } finally {
             setIsLoadingForm(false);
         }
@@ -76,7 +77,7 @@ export const OffersCreate: FC = () => {
                     name="basic"
                     form={form}
                     initialValues={{ remember: true }}
-                    onFinish={handleCreateOfferOwner}
+                    onFinish={handleCreateOffer}
                     size="middle"
                     autoComplete="off">
                     <Row gutter={[16, 16]}>
@@ -110,10 +111,18 @@ export const OffersCreate: FC = () => {
                                     placeholder="Select Offer Owner"
                                     optionFilterProp="children"
                                     loading={owner.isLoading}
-                                    disabled={owner.isLoading}>
-                                    {owner.offerOwner.map((el) => (
-                                        <Select.Option key={el._id} value={el._id}>
-                                            {el.name}
+                                    disabled={owner.isLoading}
+                                    filterOption={(input, option: any) =>
+                                        option.children.props.text
+                                            .toLowerCase()
+                                            .includes(input.toLowerCase())
+                                    }>
+                                    {owner.offerOwner.map((owner) => (
+                                        <Select.Option
+                                            key={owner._id}
+                                            value={owner._id}
+                                            label={<Badge color={owner.color} text={owner.name} />}>
+                                            <Badge color={owner.color} text={owner.name} />
                                         </Select.Option>
                                     ))}
                                 </Select>

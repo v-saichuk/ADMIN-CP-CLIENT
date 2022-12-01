@@ -4,13 +4,15 @@ import axios from '../../../../../../axios';
 import { useAppDispatch, useAppSelector } from '../../../../../../store/hooks/useRedux';
 import { updateRole } from '../../../../../../store/settings/usersRole.slice';
 import { IRoles, IRoleColor, IRolesForm } from '../../../../../../types/';
-import { EditOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import * as Icon from '@ant-design/icons';
 
 import './RoleEdit.scss';
 
 interface IProps {
     roleId: string;
 }
+
+const key = 'updatable';
 
 const COLOR_BUTTON: IRoleColor[] = [
     {
@@ -69,6 +71,7 @@ export const RoleEdit: FC<IProps> = ({ roleId }) => {
 
     const handlePatchRole = async (props: IRolesForm) => {
         setIsLoadingForm(true);
+        message.loading({ content: 'Loading...', key });
         try {
             const updatedRole: IRoles = {
                 _id: roleId,
@@ -90,41 +93,25 @@ export const RoleEdit: FC<IProps> = ({ roleId }) => {
             if (data.success) {
                 setIsLoadingForm(false);
                 dispatch(updateRole(updatedRole));
-                message.success(data.message);
                 setIsModal(false);
+                message.success({ content: 'Saved!', key, duration: 2 });
                 return;
             } else {
                 setIsLoadingForm(false);
-                message.error(data.message);
+                message.error({ content: 'Error!', key, duration: 2 });
             }
         } catch (e) {
             setIsLoadingForm(false);
-            message.error('Виникла помилка в оновлені ролі');
-            console.log('Error =>', e);
+            message.error({ content: 'Error!', key, duration: 2 });
         } finally {
             setIsLoadingForm(false);
         }
     };
 
-    const onCancel = () => {
-        Modal.confirm({
-            title: 'Do you really want to close?',
-            content: `All your changes will not be saved`,
-            icon: <ExclamationCircleOutlined />,
-            okText: 'Yes',
-            okType: 'danger',
-            cancelText: 'No',
-            onOk() {
-                setIsModal(false);
-                form.resetFields();
-            },
-        });
-    };
-
     return (
         <>
             <Button size="small" loading={isLoadingForm} onClick={() => setIsModal(!isModal)}>
-                <EditOutlined />
+                <Icon.EditOutlined />
             </Button>
             <Modal
                 okText="Save"
@@ -132,7 +119,7 @@ export const RoleEdit: FC<IProps> = ({ roleId }) => {
                 visible={isModal}
                 onOk={() => form.submit()}
                 confirmLoading={isLoadingForm}
-                onCancel={onCancel}>
+                onCancel={() => setIsModal(false)}>
                 <Form
                     name="basic"
                     form={form}
@@ -186,7 +173,11 @@ export const RoleEdit: FC<IProps> = ({ roleId }) => {
                                         name="createUsers"
                                         initialValue={role?.users?.createUsers}
                                         valuePropName="checked">
-                                        <Switch size="small" />
+                                        <Switch
+                                            size="small"
+                                            checkedChildren={<Icon.CheckOutlined />}
+                                            unCheckedChildren={<Icon.CloseOutlined />}
+                                        />
                                     </Form.Item>
                                     <span>Create Users</span>
                                 </Col>
@@ -195,7 +186,11 @@ export const RoleEdit: FC<IProps> = ({ roleId }) => {
                                         name="editUsers"
                                         initialValue={role?.users?.editUsers}
                                         valuePropName="checked">
-                                        <Switch size="small" />
+                                        <Switch
+                                            size="small"
+                                            checkedChildren={<Icon.CheckOutlined />}
+                                            unCheckedChildren={<Icon.CloseOutlined />}
+                                        />
                                     </Form.Item>
                                     <span>Edit users</span>
                                 </Col>
@@ -204,7 +199,11 @@ export const RoleEdit: FC<IProps> = ({ roleId }) => {
                                         name="deleteUsers"
                                         initialValue={role?.users?.deleteUsers}
                                         valuePropName="checked">
-                                        <Switch size="small" />
+                                        <Switch
+                                            size="small"
+                                            checkedChildren={<Icon.CheckOutlined />}
+                                            unCheckedChildren={<Icon.CloseOutlined />}
+                                        />
                                     </Form.Item>
                                     <span>Delete users</span>
                                 </Col>
@@ -218,7 +217,11 @@ export const RoleEdit: FC<IProps> = ({ roleId }) => {
                                         name="createProjects"
                                         initialValue={role?.projects?.createProjects}
                                         valuePropName="checked">
-                                        <Switch size="small" />
+                                        <Switch
+                                            size="small"
+                                            checkedChildren={<Icon.CheckOutlined />}
+                                            unCheckedChildren={<Icon.CloseOutlined />}
+                                        />
                                     </Form.Item>
                                     <span>Create Projects</span>
                                 </Col>
@@ -227,7 +230,11 @@ export const RoleEdit: FC<IProps> = ({ roleId }) => {
                                         name="editProjects"
                                         initialValue={role?.projects?.editProjects}
                                         valuePropName="checked">
-                                        <Switch size="small" />
+                                        <Switch
+                                            size="small"
+                                            checkedChildren={<Icon.CheckOutlined />}
+                                            unCheckedChildren={<Icon.CloseOutlined />}
+                                        />
                                     </Form.Item>
                                     <span>Edit Projects</span>
                                 </Col>
@@ -236,7 +243,11 @@ export const RoleEdit: FC<IProps> = ({ roleId }) => {
                                         name="deleteProjects"
                                         initialValue={role?.projects?.deleteProjects}
                                         valuePropName="checked">
-                                        <Switch size="small" />
+                                        <Switch
+                                            size="small"
+                                            checkedChildren={<Icon.CheckOutlined />}
+                                            unCheckedChildren={<Icon.CloseOutlined />}
+                                        />
                                     </Form.Item>
                                     <span>Delete Projects</span>
                                 </Col>
@@ -250,7 +261,11 @@ export const RoleEdit: FC<IProps> = ({ roleId }) => {
                                         name="isSetting"
                                         initialValue={role?.isSetting}
                                         valuePropName="checked">
-                                        <Switch size="small" />
+                                        <Switch
+                                            size="small"
+                                            checkedChildren={<Icon.CheckOutlined />}
+                                            unCheckedChildren={<Icon.CloseOutlined />}
+                                        />
                                     </Form.Item>
                                     <span>Access to settings</span>
                                 </Col>

@@ -12,6 +12,7 @@ import { WebsitesGroupUpdate } from '../WebsitesForm/Websites.group.update/Websi
 
 // STYLE
 import './WebsitesPage.scss';
+import { EmptyCustome } from '../../../../components/EmptyCustome/EmptyCustome';
 
 interface DataType {
     key: React.Key;
@@ -194,8 +195,8 @@ export const WebsitesPage: FC = () => {
     ];
 
     return (
-        <Layout className="offer__layout">
-            <div className="offer__header">
+        <Layout className="content-layout">
+            <div className="content-header">
                 <span>Websites</span>
                 <Button
                     type="primary"
@@ -205,16 +206,18 @@ export const WebsitesPage: FC = () => {
                 </Button>
             </div>
             <Content className="site-layout-background main_content offer__content">
-                <Table
-                    rowSelection={groupSelect}
-                    columns={columns}
-                    dataSource={WebsiteData}
-                    pagination={{
-                        defaultPageSize: 8,
-                        hideOnSinglePage: true,
-                        showSizeChanger: false,
-                    }}
-                />
+                <EmptyCustome>
+                    <Table
+                        rowSelection={groupSelect}
+                        columns={columns}
+                        dataSource={WebsiteData}
+                        pagination={{
+                            defaultPageSize: 8,
+                            hideOnSinglePage: true,
+                            showSizeChanger: false,
+                        }}
+                    />
+                </EmptyCustome>
             </Content>
         </Layout>
     );

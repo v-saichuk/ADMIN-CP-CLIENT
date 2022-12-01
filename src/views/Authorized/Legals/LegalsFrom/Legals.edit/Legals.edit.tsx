@@ -1,22 +1,11 @@
 import { FC } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Breadcrumb, Button, Layout, Modal, Tabs, Typography } from 'antd';
 import { Content } from 'antd/lib/layout/layout';
 import { LegalsBasic } from './Legals.basic/Legals.settings';
 import { LegalsContent } from './Legals.content/Legals.content';
 
-import {
-    DeploymentUnitOutlined,
-    ForkOutlined,
-    LeftOutlined,
-    PicLeftOutlined,
-    SettingOutlined,
-    ShareAltOutlined,
-    WifiOutlined,
-} from '@ant-design/icons';
-import { useNavigate, useParams } from 'react-router-dom';
-
-// STYLE
-// import './SettingsPage.scss';
+import * as Icon from '@ant-design/icons';
 
 export const LegalsEdit: FC = () => {
     const { TabPane } = Tabs;
@@ -26,13 +15,13 @@ export const LegalsEdit: FC = () => {
     const TABCONTENT = [
         {
             key: '1',
-            icon: <PicLeftOutlined />,
+            icon: <Icon.PicLeftOutlined />,
             buttonText: 'Content',
             content: <LegalsContent />,
         },
         {
             key: '2',
-            icon: <SettingOutlined />,
+            icon: <Icon.SettingOutlined />,
             buttonText: 'Settings',
             content: <LegalsBasic />,
         },
@@ -58,7 +47,7 @@ export const LegalsEdit: FC = () => {
                 <Breadcrumb className="Breadcrumb-custome">
                     <Breadcrumb.Item>
                         <Button
-                            icon={<LeftOutlined />}
+                            icon={<Icon.LeftOutlined />}
                             type={'primary'}
                             style={{ marginRight: 10 }}
                             onClick={() => navigation('/legals')}
@@ -68,7 +57,7 @@ export const LegalsEdit: FC = () => {
                     <Breadcrumb.Item>Edit</Breadcrumb.Item>
                     <Breadcrumb.Item>ID:{LEGAL_PAGE_ID}</Breadcrumb.Item>
                 </Breadcrumb>
-                <Button type="primary" onClick={info} icon={<DeploymentUnitOutlined />}>
+                <Button type="primary" onClick={info} icon={<Icon.DeploymentUnitOutlined />}>
                     API
                 </Button>
             </div>

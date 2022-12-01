@@ -11,6 +11,7 @@ interface IProps {
 }
 
 const ADMINISTRATOR = '633401c1df1dec1b16e37a0c';
+const key = 'deleted';
 
 export const UserDelete: FC<IProps> = ({ userId }) => {
     const dispatch = useAppDispatch();
@@ -20,15 +21,16 @@ export const UserDelete: FC<IProps> = ({ userId }) => {
             message.error('This user is not allowed to be deleted!');
             return null;
         }
+        message.loading({ content: 'Loading...', key });
         try {
             const { data } = await axios.delete(`/api/user/${userId}`);
             if (data.success) {
                 dispatch(deleteUser(userId));
-                message.success('Success!');
+                message.success({ content: 'User deleted!', key, duration: 2 });
             }
             return;
-        } catch (e: any) {
-            return message.error(e.response.data.message);
+        } catch (e) {
+            message.error({ content: 'Error!', key, duration: 2 });
         }
     };
 

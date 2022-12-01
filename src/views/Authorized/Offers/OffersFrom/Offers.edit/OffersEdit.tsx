@@ -1,7 +1,7 @@
 import { FC, useState } from 'react';
 import axios from '../../../../../axios';
 import { useAppDispatch, useAppSelector } from '../../../../../store/hooks/useRedux';
-import { Button, Col, Form, Input, message, Modal, Row, Select, Upload } from 'antd';
+import { Badge, Button, Col, Form, Input, message, Modal, Row, Select, Upload } from 'antd';
 import * as Offer from '../../../../../store/offers/offers.slice';
 
 import type { UploadProps } from 'antd';
@@ -11,37 +11,38 @@ interface IProps {
     offerId: React.Key;
 }
 
+interface IUpdateOffer {
+    logo: string;
+    name: string;
+    offerOwner: string;
+}
+
+const key = 'updatable';
+
 export const OffersEdit: FC<IProps> = ({ offerId }) => {
+    const dispatch = useAppDispatch();
     const [form] = Form.useForm();
     const [isModal, setIsModal] = useState(false);
     const [isLoadingForm, setIsLoadingForm] = useState(false);
-    const dispatch = useAppDispatch();
     const owner = useAppSelector((state) => state.offerOwner);
     const offer = useAppSelector((state) => state.offers.offers).find((el) => el._id === offerId);
 
-    const handleUpdate = async (props: any) => {
+    const handleUpdateOffer = async (props: IUpdateOffer) => {
         setIsLoadingForm(true);
-
+        message.loading({ content: 'Loading...', key });
         try {
             const { data } = await axios.patch(`/api/offers/${offerId}`, {
                 name: props.name,
                 logo: props.logo,
                 offerOwner: props.offerOwner,
             });
-            if (data.success) {
-                setIsLoadingForm(false);
-                dispatch(Offer.update(data.offer));
-                setIsModal(false);
-                message.success(data.message);
-                return;
-            } else {
-                setIsLoadingForm(false);
-                message.error(data.message);
-            }
-        } catch (e: any) {
             setIsLoadingForm(false);
-            console.log('Error e =>', e);
-            message.error(e.response.data[0].msg);
+            dispatch(Offer.update(data.offer));
+            setIsModal(false);
+            message.success({ content: 'Offer Updated!', key, duration: 2 });
+        } catch (e) {
+            setIsLoadingForm(false);
+            message.error({ content: 'Error!', key, duration: 2 });
         } finally {
             setIsLoadingForm(false);
         }
@@ -79,7 +80,7 @@ export const OffersEdit: FC<IProps> = ({ offerId }) => {
                     name="basic"
                     form={form}
                     initialValues={{ remember: true }}
-                    onFinish={handleUpdate}
+                    onFinish={handleUpdateOffer}
                     size="middle"
                     autoComplete="off">
                     <Row gutter={[16, 16]}>
@@ -116,10 +117,18 @@ export const OffersEdit: FC<IProps> = ({ offerId }) => {
                                     optionFilterProp="children"
                                     defaultValue={offer?.offerOwner._id}
                                     loading={owner.isLoading}
-                                    disabled={owner.isLoading}>
-                                    {owner.offerOwner.map((el) => (
-                                        <Select.Option key={el._id} value={el._id}>
-                                            {el.name}
+                                    disabled={owner.isLoading}
+                                    filterOption={(input, option: any) =>
+                                        option.children.props.text
+                                            .toLowerCase()
+                                            .includes(input.toLowerCase())
+                                    }>
+                                    {owner.offerOwner.map((owner) => (
+                                        <Select.Option
+                                            key={owner._id}
+                                            value={owner._id}
+                                            label={<Badge color={owner.color} text={owner.name} />}>
+                                            <Badge color={owner.color} text={owner.name} />
                                         </Select.Option>
                                     ))}
                                 </Select>

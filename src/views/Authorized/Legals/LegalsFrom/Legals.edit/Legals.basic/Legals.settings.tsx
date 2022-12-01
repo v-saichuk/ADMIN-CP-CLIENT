@@ -2,9 +2,9 @@ import { FC, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from '../../../../../../axios';
 import { useAppDispatch, useAppSelector } from '../../../../../../store/hooks/useRedux';
-import { Badge, Button, Col, Form, Input, message, Row, Select, Typography } from 'antd';
+import { Badge, Button, Col, Form, Input, message, Row, Select } from 'antd';
 import * as Legal from '../../../../../../store/legals/legalas.slice';
-import { CheckOutlined, CloseOutlined, SafetyCertificateOutlined } from '@ant-design/icons';
+import { CheckOutlined, CloseOutlined, SaveOutlined, StarOutlined } from '@ant-design/icons';
 
 export const LegalsBasic: FC = () => {
     const dispatch = useAppDispatch();
@@ -135,14 +135,28 @@ export const LegalsBasic: FC = () => {
                                             showSearch
                                             placeholder="Select offer"
                                             optionFilterProp="children"
-                                            filterOption={(input, option) =>
-                                                (option!.children as unknown as string)
+                                            optionLabelProp="label"
+                                            filterOption={(input, option: any) =>
+                                                option.children.props.children[2]
                                                     .toLowerCase()
                                                     .includes(input.toLowerCase())
                                             }>
                                             {offers.map((offer) => (
-                                                <Select.Option key={offer._id} value={offer._id}>
-                                                    {offer.name}
+                                                <Select.Option
+                                                    key={offer._id}
+                                                    value={offer._id}
+                                                    label={
+                                                        <>
+                                                            <StarOutlined
+                                                                style={{ color: 'orange' }}
+                                                            />{' '}
+                                                            {offer.name}
+                                                        </>
+                                                    }>
+                                                    <>
+                                                        <StarOutlined style={{ color: 'orange' }} />{' '}
+                                                        {offer.name}
+                                                    </>
                                                 </Select.Option>
                                             ))}
                                         </Select>
@@ -243,7 +257,7 @@ export const LegalsBasic: FC = () => {
                         <Col className="gutter-row" span={24} md={{ span: 12 }}>
                             <Button
                                 htmlType="submit"
-                                icon={<SafetyCertificateOutlined />}
+                                icon={<SaveOutlined />}
                                 loading={isLoading}
                                 type="primary">
                                 Save

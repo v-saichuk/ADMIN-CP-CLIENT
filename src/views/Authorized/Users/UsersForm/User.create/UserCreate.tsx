@@ -1,34 +1,61 @@
 import { FC, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../../../store/hooks/useRedux';
-import ImgCrop from 'antd-img-crop';
-import { Breadcrumb, Button, Col, Form, Input, Layout, message, Row, Select, Upload } from 'antd';
+import {
+    Badge,
+    Breadcrumb,
+    Button,
+    Col,
+    Form,
+    Input,
+    Layout,
+    message,
+    Row,
+    Select,
+    Upload,
+} from 'antd';
 import { Content } from 'antd/lib/layout/layout';
 import { createUser } from '../../../../../store/users/users.slice';
 import axios from '../../../../../axios';
+import ImgCrop from 'antd-img-crop';
 
 import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
 
 import * as Icon from '@ant-design/icons';
+
 import './UserCreate.scss';
+
+interface IValues {
+    avatar: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    roleId: string;
+    facebook: string;
+    twitter: string;
+    telegram: string;
+    linkedin: string;
+    password: string;
+}
+
+const key = 'updatable';
 
 export const UserCreate: FC = () => {
     const dispatch = useAppDispatch();
     const navigation = useNavigate();
-    const { Option } = Select;
     const { roles } = useAppSelector((state) => state.usersRole);
-    const [selectRole, setSelectRole] = useState('');
     const [isLoading, setLoading] = useState(false);
 
-    const fetchCreateUser = async (values: any) => {
+    const fetchCreateUser = async (values: IValues) => {
         setLoading(true);
+        message.loading({ content: 'Loading...', key });
         try {
             const { data } = await axios.post('/api/user', {
                 avatar: 'http://avatar.com.ua/ter332/sad.png',
-                firstName: values.firstname,
-                lastName: values.lastname,
+                firstName: values.firstName,
+                lastName: values.lastName,
                 email: values.email,
-                roleId: selectRole,
+                roleId: values.roleId,
                 social: {
                     facebook: values.facebook,
                     twitter: values.twitter,
@@ -40,11 +67,10 @@ export const UserCreate: FC = () => {
             dispatch(createUser(data));
             setLoading(false);
             navigation('/users');
-            message.success('User successfully created!');
+            message.success({ content: 'User updated!', key, duration: 2 });
             return data;
         } catch (e: any) {
-            console.log('ERROR CREATE USER =>', e);
-            message.error(e.response.data.message);
+            message.error({ content: 'Error!', key, duration: 2 });
             setLoading(false);
             return;
         }
@@ -126,7 +152,7 @@ export const UserCreate: FC = () => {
                             <Row gutter={[16, 16]}>
                                 <Col className="gutter-row" span={24} md={{ span: 12 }}>
                                     <Form.Item
-                                        name="firstname"
+                                        name="firstName"
                                         hasFeedback
                                         rules={[
                                             {
@@ -145,12 +171,16 @@ export const UserCreate: FC = () => {
                                                 message: 'Minimum length 2 characters',
                                             },
                                         ]}>
-                                        <Input placeholder="First Name" allowClear />
+                                        <Input
+                                            placeholder="First Name"
+                                            prefix={<Icon.UserOutlined />}
+                                            allowClear
+                                        />
                                     </Form.Item>
                                 </Col>
                                 <Col className="gutter-row" span={24} md={{ span: 12 }}>
                                     <Form.Item
-                                        name="lastname"
+                                        name="lastName"
                                         hasFeedback
                                         rules={[
                                             {
@@ -169,7 +199,11 @@ export const UserCreate: FC = () => {
                                                 message: 'Minimum length 2 characters',
                                             },
                                         ]}>
-                                        <Input placeholder="Last Name" allowClear />
+                                        <Input
+                                            placeholder="Last Name"
+                                            prefix={<Icon.UserOutlined />}
+                                            allowClear
+                                        />
                                     </Form.Item>
                                 </Col>
                                 <Col className="gutter-row" span={24} md={{ span: 12 }}>
@@ -186,12 +220,16 @@ export const UserCreate: FC = () => {
                                                 message: 'Please enter a valid E-mail',
                                             },
                                         ]}>
-                                        <Input placeholder="E-Mail" allowClear />
+                                        <Input
+                                            placeholder="E-Mail"
+                                            prefix={<Icon.MailOutlined />}
+                                            allowClear
+                                        />
                                     </Form.Item>
                                 </Col>
                                 <Col className="gutter-row" span={24} md={{ span: 12 }}>
                                     <Form.Item
-                                        name="role"
+                                        name="roleId"
                                         hasFeedback
                                         rules={[
                                             {
@@ -200,31 +238,28 @@ export const UserCreate: FC = () => {
                                             },
                                         ]}>
                                         <Select
-                                            style={{ width: '100%' }}
                                             showSearch
-                                            placeholder="Select a role"
+                                            placeholder="Select role..."
                                             optionFilterProp="children"
-                                            onChange={(value) => setSelectRole(value)}
-                                            filterOption={(input, option) =>
-                                                (option!.children as unknown as string)
+                                            optionLabelProp="label"
+                                            loading={!roles}
+                                            filterOption={(input, option: any) =>
+                                                option.children.props.text
                                                     .toLowerCase()
                                                     .includes(input.toLowerCase())
                                             }>
                                             {roles.map((role) => (
-                                                <Option key={role._id} value={role._id}>
-                                                    <div
-                                                        style={{
-                                                            display: 'flex',
-                                                            alignItems: 'center',
-                                                        }}>
-                                                        <span
-                                                            className="search_dot"
-                                                            style={{
-                                                                backgroundColor: role.color,
-                                                            }}></span>
-                                                        {role.title}
-                                                    </div>
-                                                </Option>
+                                                <Select.Option
+                                                    key={role._id}
+                                                    value={role._id}
+                                                    label={
+                                                        <Badge
+                                                            color={role.color}
+                                                            text={role.title}
+                                                        />
+                                                    }>
+                                                    <Badge color={role.color} text={role.title} />
+                                                </Select.Option>
                                             ))}
                                         </Select>
                                     </Form.Item>
@@ -250,6 +285,7 @@ export const UserCreate: FC = () => {
                                         ]}>
                                         <Input.Password
                                             placeholder="Password"
+                                            prefix={<Icon.UnlockOutlined />}
                                             allowClear
                                             iconRender={(visible) =>
                                                 visible ? (
@@ -288,6 +324,7 @@ export const UserCreate: FC = () => {
                                         ]}>
                                         <Input.Password
                                             placeholder="Confirm password"
+                                            prefix={<Icon.UnlockOutlined />}
                                             allowClear
                                             iconRender={(visible) =>
                                                 visible ? (
@@ -349,7 +386,7 @@ export const UserCreate: FC = () => {
                         <Col className="gutter-row" span={24} md={{ span: 12 }}>
                             <Button
                                 htmlType="submit"
-                                icon={<Icon.SafetyOutlined />}
+                                icon={<Icon.SaveOutlined />}
                                 loading={isLoading}
                                 type="primary">
                                 Create user

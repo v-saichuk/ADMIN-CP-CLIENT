@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from '../../../../../../store/hooks/us
 import { Button, Col, Form, Input, message, Row } from 'antd';
 import * as Legal from '../../../../../../store/legals/legalas.slice';
 import TextArea from 'antd/lib/input/TextArea';
-import { SafetyCertificateOutlined } from '@ant-design/icons';
+import { SafetyCertificateOutlined, SaveOutlined } from '@ant-design/icons';
 
 export const LegalsContent: FC = () => {
     const dispatch = useAppDispatch();
@@ -87,7 +87,7 @@ export const LegalsContent: FC = () => {
                         <Col className="gutter-row" span={24} md={{ span: 12 }}>
                             <Button
                                 htmlType="submit"
-                                icon={<SafetyCertificateOutlined />}
+                                icon={<SaveOutlined />}
                                 loading={isLoading}
                                 type="primary">
                                 Save

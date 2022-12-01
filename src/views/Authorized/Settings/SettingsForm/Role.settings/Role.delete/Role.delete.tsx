@@ -9,6 +9,8 @@ interface IProps {
     roleId: string;
 }
 
+const key = 'deleted';
+
 export const RoleDelete: FC<IProps> = ({ roleId }) => {
     const dispatch = useAppDispatch();
     const { users } = useAppSelector((state) => state.users);
@@ -17,21 +19,17 @@ export const RoleDelete: FC<IProps> = ({ roleId }) => {
 
     const handleDeleteRole = async () => {
         setIsLoading(true);
+        message.loading({ content: 'Loading...', key });
         try {
             const { data } = await axios.delete(`/api/roles/${roleId}`);
             if (data.success) {
-                message.success('Successfully remotely');
                 dispatch(deleteRole(roleId));
                 setIsLoading(false);
+                message.success({ content: 'Successfully remotely', key, duration: 2 });
             }
-        } catch (error) {
-            const {
-                response: {
-                    data: { message: msg },
-                },
-            }: any = error;
+        } catch (e) {
             setIsLoading(false);
-            message.error(msg);
+            message.error({ content: 'Deletion error!', key, duration: 2 });
         }
     };
 

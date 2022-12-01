@@ -1,30 +1,21 @@
 import { FC } from 'react';
-import { Breadcrumb, Layout } from 'antd';
+import { Layout } from 'antd';
 import * as Antd from 'antd';
 import { Content } from 'antd/lib/layout/layout';
 import { OfferOwnerCreate } from '../OfferOwnerFrom/OfferOwner.create/OfferOwnerCreate';
 import { useAppSelector } from '../../../../store/hooks/useRedux';
+import { OfferOwnerDelete } from '../OfferOwnerFrom/OfferOwner.delete/OfferOwnerDelete';
+import { OfferOwnerEdit } from '../OfferOwnerFrom/OfferOwner.edit/OfferOwnerEdit';
 
 // STYLE
 import './OfferOwnerPage.scss';
-import { OfferOwnerDelete } from '../OfferOwnerFrom/OfferOwner.delete/OfferOwnerDelete';
-import { OfferOwnerEdit } from '../OfferOwnerFrom/OfferOwner.edit/OfferOwnerEdit';
 
 export const OfferOwnerPage: FC = () => {
     const data = useAppSelector((state) => state.offerOwner);
 
     return (
-        <Layout style={{ padding: '0 24px 24px', marginTop: 20 }}>
-            {/* <Breadcrumb style={{ margin: '16px 0' }}>
-                <Breadcrumb.Item>Offer Owner</Breadcrumb.Item>
-            </Breadcrumb> */}
-            <div
-                style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    marginBottom: '20px',
-                }}>
+        <Layout className="content-layout">
+            <div className="content-header">
                 <span>Offer Owner</span>
                 <OfferOwnerCreate />
             </div>
@@ -38,7 +29,7 @@ export const OfferOwnerPage: FC = () => {
                 <div>
                     <Antd.List
                         pagination={{
-                            defaultPageSize: 9,
+                            defaultPageSize: 10,
                             hideOnSinglePage: true,
                             showSizeChanger: false,
                         }}

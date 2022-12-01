@@ -37,10 +37,10 @@ export const UsersPage: FC = () => {
     }));
 
     return (
-        <Antd.Layout style={{ padding: '0 24px 24px' }}>
-            <Antd.Breadcrumb style={{ margin: '16px 0' }}>
-                <Antd.Breadcrumb.Item>Users</Antd.Breadcrumb.Item>
-            </Antd.Breadcrumb>
+        <Antd.Layout className="content-layout">
+            <div className="content-header">
+                <span>Users</span>
+            </div>
             <Content
                 className="site-layout-background"
                 style={{
