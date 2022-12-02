@@ -39,7 +39,6 @@ export const LegalsGroupUpdate = () => {
         message.loading({ content: 'Loading...', key });
         try {
             const { data } = await axios.patch('/api/legals/group/update', props);
-            // console.log('Legal fedback', data);
 
             switch (props.action) {
                 case 'Duplicate':

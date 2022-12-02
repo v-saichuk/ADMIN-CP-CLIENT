@@ -25,7 +25,6 @@ export const WebsitesEdit: FC = () => {
             dispatch(Website.update(data.website));
             message.success(data.message);
             setLoading(false);
-            // navigation('/');
             return;
         } catch (e: any) {
             console.log('ERROR EDIT WEBSITES =>', e);
@@ -109,18 +108,15 @@ export const WebsitesEdit: FC = () => {
                                                 message: 'Please select Status!',
                                             },
                                         ]}>
-                                        <Select
-                                            style={{ width: '100%' }}
-                                            showSearch
-                                            placeholder="Select status"
-                                            optionFilterProp="children"
-                                            filterOption={(input, option) =>
-                                                (option!.children as unknown as string)
-                                                    .toLowerCase()
-                                                    .includes(input.toLowerCase())
-                                            }>
-                                            <Select.Option value={true}>Active</Select.Option>
-                                            <Select.Option value={false}>Deactive</Select.Option>
+                                        <Select placeholder="Select status">
+                                            <Select.Option value={true}>
+                                                <Icon.CheckOutlined style={{ color: '#66d986' }} />{' '}
+                                                Active
+                                            </Select.Option>
+                                            <Select.Option value={false}>
+                                                <Icon.CloseOutlined style={{ color: '#f25b5b' }} />{' '}
+                                                Deactive
+                                            </Select.Option>
                                         </Select>
                                     </Form.Item>
                                 </Col>
@@ -137,17 +133,33 @@ export const WebsitesEdit: FC = () => {
                                         ]}>
                                         <Select
                                             showSearch
-                                            placeholder="Select offers"
-                                            optionFilterProp="children"
                                             mode="multiple"
-                                            filterOption={(input, option) =>
-                                                (option!.children as unknown as string)
+                                            placeholder="Select offer"
+                                            optionFilterProp="children"
+                                            optionLabelProp="label"
+                                            filterOption={(input, option: any) =>
+                                                option.children.props.children[2]
                                                     .toLowerCase()
                                                     .includes(input.toLowerCase())
                                             }>
                                             {offers.map((offer) => (
-                                                <Select.Option key={offer._id} value={offer._id}>
-                                                    {offer.name}
+                                                <Select.Option
+                                                    key={offer._id}
+                                                    value={offer._id}
+                                                    label={
+                                                        <>
+                                                            <Icon.StarOutlined
+                                                                style={{ color: 'orange' }}
+                                                            />{' '}
+                                                            {offer.name}
+                                                        </>
+                                                    }>
+                                                    <>
+                                                        <Icon.StarOutlined
+                                                            style={{ color: 'orange' }}
+                                                        />{' '}
+                                                        {offer.name}
+                                                    </>
                                                 </Select.Option>
                                             ))}
                                         </Select>

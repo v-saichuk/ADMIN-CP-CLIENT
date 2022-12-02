@@ -18,7 +18,7 @@ interface DataType {
     key: React.Key;
     url: string;
     landing: string;
-    offers: any;
+    offers: React.ReactNode;
     enabled: React.ReactNode;
     notes: string;
 }
@@ -28,7 +28,6 @@ export const WebsitesPage: FC = () => {
     const dispatch = useAppDispatch();
     const groupSelect = WebsitesGroupUpdate();
     const { websites } = useAppSelector((state) => state.websites);
-    const [isLoading, setIsLoading] = useState(false);
 
     const urlFilter = websites.map((website) => ({
         text: website.url,
@@ -43,7 +42,6 @@ export const WebsitesPage: FC = () => {
     const WebsiteData = websites.map((website) => ({
         key: website._id,
         landing: '1 conected',
-        // ...website,
         url: website.url,
         enabled: website.enabled ? (
             <Tag color="#87d068">Active</Tag>
@@ -51,7 +49,11 @@ export const WebsitesPage: FC = () => {
             <Tag color="#f50">Deactive</Tag>
         ),
         notes: website.notes,
-        offers: website.offers.map((offer) => <Tag key={offer._id}>{offer.name}</Tag>),
+        offers: website.offers.map((offer) => (
+            <Tag key={offer._id}>
+                <Icon.StarOutlined /> {offer.name}
+            </Tag>
+        )),
     }));
 
     // UPDATE_ONE
@@ -78,13 +80,11 @@ export const WebsitesPage: FC = () => {
 
     // DELETE
     const handleDelete = async (websiteId: React.Key) => {
-        setIsLoading(true);
         try {
             const { data } = await axios.delete(`/api/websites/${websiteId}`);
             if (data.success) {
                 message.success(data.message);
                 dispatch(Website.remove(websiteId));
-                setIsLoading(false);
             }
         } catch (error) {
             const {
@@ -92,7 +92,6 @@ export const WebsitesPage: FC = () => {
                     data: { message: msg },
                 },
             }: any = error;
-            setIsLoading(false);
             message.error(msg);
         }
     };
@@ -143,11 +142,19 @@ export const WebsitesPage: FC = () => {
             width: '8%',
             filters: [
                 {
-                    text: 'Active',
+                    text: (
+                        <>
+                            <Icon.CheckOutlined style={{ color: '#66d986' }} /> Active
+                        </>
+                    ),
                     value: 'Active',
                 },
                 {
-                    text: 'Deactive',
+                    text: (
+                        <>
+                            <Icon.CloseOutlined style={{ color: '#f25b5b' }} /> Deactive
+                        </>
+                    ),
                     value: 'Deactive',
                 },
             ],

@@ -34,10 +34,12 @@ export const TemplatesPage: FC = () => {
         value: el._id,
     }));
 
-    const filterLanguage = lang.map((el) => ({
-        text: el.icon + ' ' + el.title,
-        value: el.title,
-    }));
+    const filterLanguage = lang
+        .filter((el) => el.enabled)
+        .map((el) => ({
+            text: el.icon + ' ' + el.title,
+            value: el.title,
+        }));
 
     const filterDescription = TemplatesData.map((el) => ({
         text: el.description,

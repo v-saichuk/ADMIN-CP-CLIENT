@@ -22,30 +22,45 @@ interface IGroupUpdateProps {
     websites: React.Key[];
 }
 
+const key = 'updatable';
+
 const error = (mes: string) => {
     message.error(mes);
 };
 
 export const WebsitesGroupUpdate = () => {
-    // ALL
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
     const dispatch = useAppDispatch();
 
     const groupUpdate = async (props: IGroupUpdateProps) => {
-        // setIsLoading(true);
-        console.log('props', props);
+        message.loading({ content: 'Loading...', key });
         try {
             const { data } = await axios.patch('/api/websites/group/update', props);
             if (data.success) {
                 switch (props.action) {
                     case 'Activate':
                         dispatch(Websites.activateGroup(props.websites));
+                        message.success({
+                            content: `Activate ${props.websites.length} elements!`,
+                            key,
+                            duration: 2,
+                        });
                         break;
                     case 'Deactivate':
                         dispatch(Websites.deactivateGroup(props.websites));
+                        message.success({
+                            content: `Deactivate ${props.websites.length} elements!`,
+                            key,
+                            duration: 2,
+                        });
                         break;
                     case 'Delete':
                         dispatch(Websites.removeGroup(props.websites));
+                        message.success({
+                            content: `Delete ${props.websites.length} elements!`,
+                            key,
+                            duration: 2,
+                        });
                         break;
 
                     default:
@@ -53,16 +68,9 @@ export const WebsitesGroupUpdate = () => {
                 }
 
                 message.success(data.message);
-                // setIsLoading(false);
             }
-        } catch (error) {
-            const {
-                response: {
-                    data: { message: msg },
-                },
-            }: any = error;
-            // setIsLoading(false);
-            message.error(msg);
+        } catch (e) {
+            message.error({ content: 'Error!', key, duration: 2 });
         }
     };
 
@@ -100,7 +108,7 @@ export const WebsitesGroupUpdate = () => {
                 key: 'activate',
                 text: (
                     <>
-                        <Icon.CheckOutlined style={{ marginRight: 5 }} />
+                        <Icon.CheckOutlined style={{ marginRight: 5, color: '#66d986' }} />
                         Activate
                     </>
                 ),
@@ -117,7 +125,7 @@ export const WebsitesGroupUpdate = () => {
                 key: 'deactivate',
                 text: (
                     <>
-                        <Icon.CloseOutlined style={{ marginRight: 5 }} />
+                        <Icon.CloseOutlined style={{ marginRight: 5, color: '#f25b5b' }} />
                         Deactivate
                     </>
                 ),
@@ -134,7 +142,7 @@ export const WebsitesGroupUpdate = () => {
                 key: 'delete',
                 text: (
                     <>
-                        <Icon.DeleteOutlined style={{ marginRight: 5 }} />
+                        <Icon.DeleteOutlined style={{ marginRight: 5, color: '#f25b5b' }} />
                         Delete
                     </>
                 ),
@@ -149,7 +157,6 @@ export const WebsitesGroupUpdate = () => {
             },
         ],
     };
-    // ./ALL
 
     return rowSelection;
 };
