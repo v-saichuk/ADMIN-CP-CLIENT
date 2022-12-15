@@ -14,7 +14,14 @@ export interface ITemplates {
     language: ILanguage;
     template_pack: string;
     description: string;
+    sections: ITemplateSections[];
     screenshot: string;
+}
+
+export interface ITemplateSections {
+    _id: string;
+    title: string;
+    fields: [];
 }
 
 export interface ILegals {
@@ -100,4 +107,13 @@ export interface IUsers {
         linkedin: string;
     };
     passwordHash: string;
+}
+
+export interface ITemplatesPage {
+    key: React.Key;
+    name: JSX.Element;
+    language: JSX.Element;
+    template_pack: string;
+    description: string;
+    screenshot: JSX.Element;
 }

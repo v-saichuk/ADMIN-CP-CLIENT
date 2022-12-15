@@ -3,9 +3,10 @@ export { WebsitesCreate } from './Websites/WebsitesForm/Websites.create/Websites
 export { WebsitesEdit } from './Websites/WebsitesForm/Website.edit/WebsitesEdit';
 export { LandingsPage } from './Landings/LandingsPage/LandingsPage';
 export { TemplatesPage } from './Templates/TemplatesPage/TemplatesPage';
-export { TemplatesCreate } from './Templates/TemplatesFrom/Templates.create/Templates.create';
-export { TemplatesEdit } from './Templates/TemplatesFrom/Templates.edit/Templates.edit';
+export { TemplatesCreate } from './Templates/TemplatesFrom/Templates.create';
+export { TemplatesContent } from './Templates/TemplatesFrom/Templates.content';
 export { SectionEdit } from './Templates/TemplatesFrom/Templates.sections/Section.edit/Section.edit';
+export { FieldsContent } from './Templates/TemplatesFrom/Template.fields/Fields.content';
 export { LegalsPage } from './Legals/LegalsPage/LegalsPage';
 export { LegalsCreate } from './Legals/LegalsFrom/Legals.create/Legals.create';
 export { LegalsEdit } from './Legals/LegalsFrom/Legals.edit/Legals.edit';

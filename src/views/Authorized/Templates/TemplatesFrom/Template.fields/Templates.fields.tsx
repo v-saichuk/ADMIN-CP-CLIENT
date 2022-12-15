@@ -1,27 +1,31 @@
 import { FC } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { SectionCreate } from './Section.create/Section.create';
+import { Link, useLocation } from 'react-router-dom';
 import { Button, Col, List, Row, Space } from 'antd';
 import { DeleteOutlined, FolderOutlined } from '@ant-design/icons';
 import { EmptyCustome } from '../../../../../components/EmptyCustome/EmptyCustome';
-import { SectionEdit } from './Section.edit/Section.edit';
-import { DeleteSection } from './Section.delete/SectionDelete';
 import { useAppSelector } from '../../../../../store/hooks/useRedux';
+import { FieldCreate } from './Field.create/Field.create';
 
-export const TemplatesSections: FC = () => {
-    const { DeleteConfirm } = DeleteSection();
+export const TemplatesFields: FC = () => {
+    const { pathname } = useLocation();
 
-    const { id: TEMPLATE_PAGE_ID } = useParams();
+    const TEMPLATE_ID = pathname.split('/')[2];
+    const SECTION_ID = pathname.split('/')[4];
+
     const Template = useAppSelector((state) => state.templates.TemplatesData).find(
-        (el) => el._id === TEMPLATE_PAGE_ID,
+        (template) => template._id === TEMPLATE_ID,
     );
+
+    const Section = Template?.sections.find((field) => field._id === SECTION_ID);
+
+    console.log('Field', Section?.fields);
 
     return (
         <Row gutter={[16, 24]}>
             <Col className="gutter-row" span={24}>
                 <div className="content_full_header">
-                    <span>SECTIONS</span>
-                    <SectionCreate />
+                    <span>FIELDS</span>
+                    <FieldCreate />
                 </div>
                 <Row gutter={[16, 16]}>
                     <Col span={24}>
@@ -35,7 +39,7 @@ export const TemplatesSections: FC = () => {
                                         hideOnSinglePage: true,
                                         showSizeChanger: false,
                                     }}
-                                    dataSource={Template?.sections}
+                                    dataSource={Section?.fields}
                                     renderItem={(section) => (
                                         <Col span={24} style={{ marginBottom: 5 }}>
                                             <Row
@@ -48,19 +52,17 @@ export const TemplatesSections: FC = () => {
                                                             fontSize: 20,
                                                         }}
                                                     />
-                                                    <Link
-                                                        to={`/template/${TEMPLATE_PAGE_ID}/section/${section._id}`}>
+                                                    {/* <Link to={`/template/section/${section._id}`}>
                                                         {section.title}
-                                                    </Link>
+                                                    </Link> */}
+                                                    Field info
                                                 </Row>
                                                 <Row gutter={3}>
                                                     <Space size="small">
-                                                        <SectionEdit sectionId={section._id} />
-                                                        <Button
-                                                            size="small"
-                                                            onClick={() =>
-                                                                DeleteConfirm(section._id)
-                                                            }>
+                                                        <Button size="small">
+                                                            <DeleteOutlined />
+                                                        </Button>
+                                                        <Button size="small">
                                                             <DeleteOutlined />
                                                         </Button>
                                                     </Space>

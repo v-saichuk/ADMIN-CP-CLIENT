@@ -4,7 +4,6 @@ import { ITemplates } from '../../types';
 
 interface IInitialState {
     TemplatesData: ITemplates[];
-    SectionsData: [];
     isLoading: boolean;
     isLoadingSection: boolean;
 }
@@ -21,23 +20,10 @@ export const getTemplates = createAsyncThunk(
     },
 );
 
-export const getSections = createAsyncThunk(
-    'templates/getSections',
-    async (_, { rejectWithValue }) => {
-        try {
-            const { data } = await axios.get('/api/sections');
-            return data;
-        } catch (e) {
-            return rejectWithValue(e);
-        }
-    },
-);
-
 const initialState: IInitialState = {
     isLoading: false,
     isLoadingSection: false,
     TemplatesData: [],
-    SectionsData: [],
 };
 
 const Templates = createSlice({
@@ -77,6 +63,35 @@ const Templates = createSlice({
                     )),
             );
         },
+        // SECTIONS
+        sectionCreate: (state, action) => {
+            state.TemplatesData.find(
+                (template) =>
+                    template._id === action.payload.templateId &&
+                    (template.sections = action.payload.sections),
+            );
+        },
+        sectionsUpdate: (state, action) => {
+            state.TemplatesData.find(
+                (template) =>
+                    template._id === action.payload.templateId &&
+                    template.sections.find(
+                        (section) =>
+                            section._id === action.payload.sectionId &&
+                            (section.title = action.payload.title),
+                    ),
+            );
+        },
+        sectionsDelete: (state, action) => {
+            state.TemplatesData.find(
+                (template) =>
+                    template._id === action.payload.templateId &&
+                    (template.sections = template.sections.filter(
+                        (section) => section._id !== action.payload.sectionId,
+                    )),
+            );
+        },
+        // ./SECTIONS
     },
     extraReducers: (build) => {
         build
@@ -89,20 +104,20 @@ const Templates = createSlice({
             })
             .addCase(getTemplates.rejected, (state, action) => {
                 state.isLoading = false;
-            })
-            .addCase(getSections.pending, (state) => {
-                state.isLoadingSection = true;
-            })
-            .addCase(getSections.fulfilled, (state, action) => {
-                state.SectionsData = action.payload;
-                state.isLoadingSection = false;
-            })
-            .addCase(getSections.rejected, (state, action) => {
-                state.isLoadingSection = false;
             });
     },
 });
 
 export default Templates.reducer;
 
-export const { create, remove, update, updateOne, duplicateGroup, removeGroup } = Templates.actions;
+export const {
+    create,
+    remove,
+    update,
+    updateOne,
+    duplicateGroup,
+    removeGroup,
+    sectionCreate,
+    sectionsUpdate,
+    sectionsDelete,
+} = Templates.actions;

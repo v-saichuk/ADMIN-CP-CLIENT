@@ -37,7 +37,7 @@ export const OffersPage: FC = () => {
     const OffersData = offers.map((offer) => ({
         key: offer._id,
         ...offer,
-        logo: <IconNoImage />,
+        logo: <IconNoImage x={250} y={50} />,
         name: (
             <>
                 <StarOutlined className="offer__star-icon" /> {offer.name}

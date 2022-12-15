@@ -1,28 +1,19 @@
 import { useState } from 'react';
-import axios from '../../../../../axios';
-import { useAppDispatch } from '../../../../../store/hooks/useRedux';
+import axios from '../../../../axios';
+import { useAppDispatch } from '../../../../store/hooks/useRedux';
 import { message, Modal } from 'antd';
-import * as Template from '../../../../../store/templates/templates.slice';
+import * as Template from '../../../../store/templates/templates.slice';
 
 import type { TableRowSelection } from 'antd/es/table/interface';
 import * as Icon from '@ant-design/icons';
+import { ITemplatesPage } from '../../../../types';
 
-interface DataType {
-    key: React.Key;
-    name: string;
-    language: React.ReactNode;
-    template_pack: string;
-    description: string;
-    screenshot: string;
-}
 interface IGroupUpdateProps {
     action: string;
     templateId: React.Key[];
 }
 
-const error = (mes: string) => {
-    message.error(mes);
-};
+const errorMessage = (msg: string) => message.error(msg);
 
 const key = 'updatable';
 
@@ -36,7 +27,6 @@ export const TemplatesGroupUpdate = () => {
         message.loading({ content: 'Loading...', key });
         try {
             const { data } = await axios.patch('/api/templates/group/update', props);
-            console.log('data', data);
             if (data.success) {
                 switch (props.action) {
                     case 'Duplicate':
@@ -53,7 +43,7 @@ export const TemplatesGroupUpdate = () => {
                 message.success({ content: 'Loaded!', key, duration: 2 });
             }
         } catch (e) {
-            message.error({ content: `Error! => ${e}`, key, duration: 2 });
+            message.error({ content: 'Error!', key, duration: 2 });
         }
     };
 
@@ -83,7 +73,7 @@ export const TemplatesGroupUpdate = () => {
         });
     };
 
-    const rowSelection: TableRowSelection<DataType> = {
+    const rowSelection: TableRowSelection<ITemplatesPage> = {
         selectedRowKeys,
         onChange: (selected) => setSelectedRowKeys(selected),
         selections: [
@@ -101,7 +91,7 @@ export const TemplatesGroupUpdate = () => {
                               action: 'Duplicate',
                               templateId: selectedRowKeys,
                           })
-                        : error('Failed to duplicate. No items selected');
+                        : errorMessage('Failed to duplicate. No items selected');
                 },
             },
             {
@@ -118,7 +108,7 @@ export const TemplatesGroupUpdate = () => {
                               action: 'Delete',
                               templateId: selectedRowKeys,
                           })
-                        : error('Failed to delete. No items selected');
+                        : errorMessage('Failed to delete. No items selected');
                 },
             },
         ],

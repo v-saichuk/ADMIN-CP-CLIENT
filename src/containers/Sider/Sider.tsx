@@ -66,8 +66,6 @@ export const Sider: FC = () => {
         },
     ];
 
-    console.log('pathname', pathname.split('/'));
-
     const ActivePage = MENU_ITEMS.find(
         (item) => pathname.split('/')[1] === item?.key?.toString().split('/')[1] && item,
     );

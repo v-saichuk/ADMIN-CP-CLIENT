@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const instance = axios.create({
-    baseURL: 'https://admin-panel.herokuapp.com', //http://localhost:4000
+    baseURL: 'http://localhost:8080', //http://localhost:4000 = https://admin-panel.herokuapp.com
 });
 
 instance.interceptors.request.use((config: any) => {

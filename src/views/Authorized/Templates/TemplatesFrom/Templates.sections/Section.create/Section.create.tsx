@@ -2,9 +2,16 @@ import { FC, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Button, Col, Form, Input, message, Modal, Row } from 'antd';
 import { useAppDispatch } from '../../../../../../store/hooks/useRedux';
+import * as Template from '../../../../../../store/templates/templates.slice';
 import axios from '../../../../../../axios';
 
 import { PlusOutlined } from '@ant-design/icons';
+
+interface ICreatedSectionProps {
+    title: string;
+}
+
+const key = 'updatable';
 
 export const SectionCreate: FC = () => {
     const { id: TEMPLATE_PAGE_ID } = useParams();
@@ -13,29 +20,35 @@ export const SectionCreate: FC = () => {
     const [isModal, setIsModal] = useState(false);
     const [isLoadingForm, setIsLoadingForm] = useState(false);
 
-    const handleCreateOfferOwner = async (props: any) => {
+    const handleCreateSection = async (props: ICreatedSectionProps) => {
         setIsLoadingForm(true);
+        message.loading({ content: 'Loading...', key });
         try {
-            const { data } = await axios.post('/api/sections', {
-                title: props.title,
-                template: TEMPLATE_PAGE_ID,
+            const { data } = await axios.post('/api/template/section/action', {
+                templateId: TEMPLATE_PAGE_ID,
+                ...props,
+                fields: [],
             });
 
-            console.log('data=>>>>', data);
-            // if (data.success) {
-            //     setIsLoadingForm(false);
-            //     // dispatch(offerOwner.create(data.offerOwner));
-            //     setIsModal(false);
-            //     form.resetFields();
-            //     message.success(data.message);
-            //     return;
-            // } else {
-            //     setIsLoadingForm(false);
-            //     message.error(data.message);
-            // }
-        } catch (e: any) {
+            if (data.success) {
+                setIsLoadingForm(false);
+                dispatch(
+                    Template.sectionCreate({
+                        templateId: TEMPLATE_PAGE_ID,
+                        sections: data.sections,
+                    }),
+                );
+                setIsModal(false);
+                form.resetFields();
+                message.success({ content: 'Section created!', key, duration: 2 });
+                return;
+            } else {
+                setIsLoadingForm(false);
+                message.error({ content: 'Error!', key, duration: 2 });
+            }
+        } catch (e) {
             setIsLoadingForm(false);
-            message.error(e.response.data[0].msg);
+            message.error({ content: 'Error!', key, duration: 2 });
         } finally {
             setIsLoadingForm(false);
         }
@@ -44,7 +57,7 @@ export const SectionCreate: FC = () => {
     return (
         <>
             <Button type="primary" onClick={() => setIsModal(true)} icon={<PlusOutlined />}>
-                Add
+                Add Section
             </Button>
 
             <Modal
@@ -58,7 +71,7 @@ export const SectionCreate: FC = () => {
                     name="basic"
                     form={form}
                     initialValues={{ remember: true }}
-                    onFinish={handleCreateOfferOwner}
+                    onFinish={handleCreateSection}
                     size="middle"
                     autoComplete="off">
                     <Row gutter={[16, 16]}>

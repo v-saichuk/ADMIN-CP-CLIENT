@@ -1,8 +1,8 @@
 import { FC, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from '../../../../../axios';
-import { useAppDispatch, useAppSelector } from '../../../../../store/hooks/useRedux';
-import * as Template from '../../../../../store/templates/templates.slice';
+import axios from '../../../../axios';
+import { useAppDispatch, useAppSelector } from '../../../../store/hooks/useRedux';
+import * as Template from '../../../../store/templates/templates.slice';
 import { Breadcrumb, Button, Col, Form, Input, Layout, message, Row, Select, Upload } from 'antd';
 import { Content } from 'antd/lib/layout/layout';
 import TextArea from 'antd/lib/input/TextArea';
@@ -19,10 +19,10 @@ export const TemplatesCreate: FC = () => {
     const fetchCreate = async (values: any) => {
         setLoading(true);
         try {
-            const { data } = await axios.post('/api/templates', values);
+            const { data } = await axios.post('/api/template', values);
             dispatch(Template.create(data.template));
             message.success(data.message);
-            navigation(`/templates/edit/${data.template._id}`);
+            navigation(`/template/${data.template._id}`);
             setLoading(false);
             return;
         } catch (e: any) {

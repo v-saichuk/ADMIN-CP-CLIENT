@@ -1,14 +1,14 @@
 import { FC, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from '../../../../../axios';
-import { useAppDispatch, useAppSelector } from '../../../../../store/hooks/useRedux';
+import axios from '../../../../axios';
+import { useAppDispatch, useAppSelector } from '../../../../store/hooks/useRedux';
 import { Button, Col, Form, Input, message, Row, Select, Upload } from 'antd';
-import * as Template from '../../../../../store/templates/templates.slice';
+import * as Template from '../../../../store/templates/templates.slice';
 import * as Icon from '@ant-design/icons';
 import TextArea from 'antd/lib/input/TextArea';
 import type { UploadFile } from 'antd/es/upload/interface';
 
-export const TemplatesBasic: FC = () => {
+export const TemplatesSettings: FC = () => {
     const dispatch = useAppDispatch();
     const { id: TEMPLATE_PAGE_ID } = useParams();
     const TEMPLATE_PAGE = useAppSelector((state) => state.templates.TemplatesData).find(
@@ -20,7 +20,7 @@ export const TemplatesBasic: FC = () => {
     const fetchUpdate = async (values: any) => {
         setLoading(true);
         try {
-            const { data } = await axios.patch(`/api/templates/${TEMPLATE_PAGE_ID}`, values);
+            const { data } = await axios.patch(`/api/template/${TEMPLATE_PAGE_ID}`, values);
             dispatch(Template.update(data.template));
             message.success(data.message);
             setLoading(false);

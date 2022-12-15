@@ -6,21 +6,30 @@ export const ROUT_PATH = {
     WEBSITES: '/',
     WEBSITES_CREATE: '/websites/create',
     WEBSITES_EDIT: '/websites/edit/:id',
+
     LANDINGS: '/landings',
+
     TEMPLATES: '/templates',
-    TEMPLATES_CREATE: '/templates/create',
-    TEMPLATES_SHOW: '/templates/:id',
-    SECTION: '/templates/:id/section/:id',
+    TEMPLATES_CREATE: '/template/create',
+    TEMPLATES_SECTION: '/template/:id',
+    TEMPLATES_FIELDS: '/template/:id/section/:id',
+
     LEGALS: '/legals',
     LEGALS_CREATE: '/legals/create',
     LEGALS_EDIT: '/legals/edit/:legalId',
+
     OFFER_OWNER: '/offer-owner',
+
     OFFERS: '/offers',
+
     USERS: '/users',
     USERS_EDIT_ID: '/users/edit/:userId',
     USERS_CREATE: '/users/create',
+
     MY_PROFILE: '/my-profile',
+
     SETTINGS: '/settings',
+
     ALL: '*',
 };
 
@@ -57,13 +66,13 @@ const ROUTE = [
     },
     {
         id: 7,
-        path: ROUT_PATH.TEMPLATES_SHOW,
-        element: <Page.TemplatesEdit />,
+        path: ROUT_PATH.TEMPLATES_SECTION,
+        element: <Page.TemplatesContent />,
     },
     {
         id: 8,
-        path: ROUT_PATH.SECTION,
-        element: <Page.SectionEdit />,
+        path: ROUT_PATH.TEMPLATES_FIELDS,
+        element: <Page.FieldsContent />,
     },
     {
         id: 9,

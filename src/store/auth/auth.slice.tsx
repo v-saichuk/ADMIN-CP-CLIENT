@@ -45,16 +45,12 @@ const Auth = createSlice({
         },
     },
     extraReducers: (builder) => {
-        builder.addCase(fetchAuth.pending, (state) => {
-            state.isLoading = true;
-        });
+        builder.addCase(fetchAuth.pending, (state) => {});
         builder.addCase(fetchAuth.fulfilled, (state, action) => {
-            state.isLoading = false;
             state.data = action.payload;
             state.isAuth = !!state.data ? true : false;
         });
         builder.addCase(fetchAuth.rejected, (state) => {
-            state.isLoading = false;
             state.isAuth = false;
         });
 

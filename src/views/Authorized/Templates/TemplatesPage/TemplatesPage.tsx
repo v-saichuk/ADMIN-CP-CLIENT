@@ -1,27 +1,22 @@
 import { FC } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from '../../../../axios';
 import { Table, Layout, Space, Button, message, Modal } from 'antd';
 import { useAppDispatch, useAppSelector } from '../../../../store/hooks/useRedux';
 import { Content } from 'antd/lib/layout/layout';
 import * as Templates from '../../../../store/templates/templates.slice';
-import { TemplatesGroupUpdate } from '../TemplatesFrom/Templates.group/Templates.group.update';
+import { TemplatesGroupUpdate } from '../TemplatesFrom/Templates.group.update';
+import { EmptyCustome } from '../../../../components/EmptyCustome/EmptyCustome';
 
+import { ITemplatesPage } from '../../../../types';
 import type { ColumnsType } from 'antd/es/table';
 import * as Icon from '@ant-design/icons';
+import { IconNoImage } from '../../../../assets/images/svg/svg';
 
 // STYLE
 import './TemplatesPage.scss';
-import { EmptyCustome } from '../../../../components/EmptyCustome/EmptyCustome';
 
-interface DataType {
-    key: React.Key;
-    name: string;
-    language: React.ReactNode;
-    template_pack: string;
-    description: string;
-    screenshot: string;
-}
+const key = 'updated';
 
 export const TemplatesPage: FC = () => {
     const navigate = useNavigate();
@@ -53,7 +48,7 @@ export const TemplatesPage: FC = () => {
 
     const Data = TemplatesData.map((template) => ({
         key: template._id,
-        name: template.name,
+        name: <Link to={`/template/${template._id}`}>{template.name}</Link>,
         language: (
             <div className="lang-table">
                 <span>{template.language.icon}</span>
@@ -62,24 +57,24 @@ export const TemplatesPage: FC = () => {
         ),
         template_pack: template.template_pack,
         description: template.description,
-        screenshot: template.screenshot,
+        screenshot: <IconNoImage x={220} y={50} />, // template.screenshot
     }));
 
     // DELETE
     const handleDelete = async (templateId: React.Key) => {
+        message.loading({ content: 'Loading...', key });
         try {
-            const { data } = await axios.delete(`/api/templates/${templateId}`);
+            const { data } = await axios.delete(`/api/template/${templateId}`);
             if (data.success) {
-                message.success(data.message);
                 dispatch(Templates.remove(templateId));
+                message.success({
+                    content: 'Loaded!',
+                    key,
+                    duration: 2,
+                });
             }
-        } catch (error) {
-            const {
-                response: {
-                    data: { message: msg },
-                },
-            }: any = error;
-            message.error(msg);
+        } catch (e) {
+            message.error({ content: 'Error!', key, duration: 2 });
         }
     };
 
@@ -98,11 +93,10 @@ export const TemplatesPage: FC = () => {
     };
     // ./DELETE
 
-    const columns: ColumnsType<DataType> = [
+    const columns: ColumnsType<ITemplatesPage> = [
         {
             title: 'Name',
             dataIndex: 'name',
-            // width: '10%',
             filters: filterName,
             filterSearch: true,
             ellipsis: true,
@@ -121,21 +115,18 @@ export const TemplatesPage: FC = () => {
         {
             title: 'Description',
             dataIndex: 'description',
-            // width: '20%',
             filters: filterDescription,
             filterSearch: true,
             ellipsis: true,
-            // onFilter: (value: string | any, template: any) => template.website.startsWith(value),
         },
         {
             title: 'Screenshot',
             dataIndex: 'screenshot',
-            // width: '20%',
+            className: 'offer__image',
         },
         {
             title: 'Template pack',
             dataIndex: 'template_pack',
-            // width: '20%',
             filters: filterTempatePack,
             filterSearch: true,
             ellipsis: true,
@@ -154,7 +145,7 @@ export const TemplatesPage: FC = () => {
                         <Button
                             type="text"
                             icon={<Icon.MenuOutlined />}
-                            onClick={() => navigate(`/templates/${template.key}`)}
+                            onClick={() => navigate(`/template/${template.key}`)}
                         />
                         <Button
                             type="text"
@@ -173,7 +164,7 @@ export const TemplatesPage: FC = () => {
                 <span>Templates</span>
                 <Button
                     type="primary"
-                    onClick={() => navigate('/templates/create')}
+                    onClick={() => navigate('/template/create')}
                     icon={<Icon.PlusOutlined />}>
                     Create
                 </Button>

@@ -13,6 +13,8 @@ import { getRoles } from './store/settings/usersRole.slice';
 import { getCountry } from './store/settings/language.slice';
 import { getUsers } from './store/users/users.slice';
 import { Preloader } from './components/Preloader/Preloader';
+import { ErrorBoundary } from 'react-error-boundary';
+import { AppError } from './components/AppError/AppError';
 
 export const App: FC = () => {
     const dispatch = useAppDispatch();
@@ -25,7 +27,6 @@ export const App: FC = () => {
             dispatch(getWebsites());
             dispatch(getTemplates());
             dispatch(getLegals());
-            dispatch(getWebsites());
             dispatch(getOfferOwner());
             dispatch(getOffers());
             dispatch(getRoles());
@@ -34,9 +35,13 @@ export const App: FC = () => {
         }
     }, [dispatch, isAuth]);
 
+    if (isLoading) {
+        return <Preloader />;
+    }
+
     return (
-        <BrowserRouter>
-            {isAuth ? isLoading ? <Preloader /> : <Layout /> : <NoAuthorized />}
-        </BrowserRouter>
+        <ErrorBoundary FallbackComponent={AppError}>
+            <BrowserRouter>{isAuth ? <Layout /> : <NoAuthorized />}</BrowserRouter>
+        </ErrorBoundary>
     );
 };

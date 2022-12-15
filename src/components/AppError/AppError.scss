@@ -1,0 +1,11 @@
+.app-error {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    height: 100vh;
+    flex-wrap: wrap;
+
+    &__content {
+        text-align: center;
+    }
+}

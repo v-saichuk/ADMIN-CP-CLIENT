@@ -21,6 +21,10 @@
     margin-bottom: 20px;
 }
 
+.content-layout-padding {
+    padding: 0 24px 24px;
+}
+
 .dot{
     display: block;
     width: 10px;
@@ -148,7 +152,10 @@ body {
 }
 
 .ant-layout-content {
-    border: 1px solid grey;
+
+    &>.ant-tabs {
+        height: 100%;
+    }
 }
 
 .ant-menu-item-divider {
@@ -239,3 +246,11 @@ body {
 }
 // ./Skeleton
 
+.content_full_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: inset 0px -1px 0px #56565f;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+}
