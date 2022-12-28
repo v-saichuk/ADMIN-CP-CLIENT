@@ -12,7 +12,7 @@ export const ROUT_PATH = {
     TEMPLATES: '/templates',
     TEMPLATES_CREATE: '/template/create',
     TEMPLATES_SECTION: '/template/:id',
-    TEMPLATES_FIELDS: '/template/:id/section/:id',
+    TEMPLATES_FIELDS: '/template/:id/:id',
 
     LEGALS: '/legals',
     LEGALS_CREATE: '/legals/create',

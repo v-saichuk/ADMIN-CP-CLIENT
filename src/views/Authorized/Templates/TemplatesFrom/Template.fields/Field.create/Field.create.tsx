@@ -1,58 +1,28 @@
 import { FC, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { Button, Col, Form, Input, message, Modal, Row } from 'antd';
+import { useLocation } from 'react-router-dom';
+import { Button, Form, Modal } from 'antd';
 import { useAppDispatch } from '../../../../../../store/hooks/useRedux';
-import * as Template from '../../../../../../store/templates/templates.slice';
-import axios from '../../../../../../axios';
+import { FieldText } from '../../../../../../components/Fields/Field.text/Field.text';
 
 import { PlusOutlined } from '@ant-design/icons';
-
-interface ICreatedSectionProps {
-    title: string;
-}
-
-const key = 'updatable';
+import { FieldRichText } from '../../../../../../components/Fields/Field.rich_text/Field.rich_text';
+import { FieldNumber } from '../../../../../../components/Fields/Field.number/Field.number';
+import { FieldImage } from '../../../../../../components/Fields/Field.image/Field.image';
+import { FieldLink } from '../../../../../../components/Fields/Field.link/Field.link';
+import { FieldVideo } from '../../../../../../components/Fields/Field.video/Field.video';
+import { FieldChip } from '../../../../../../components/Fields/Field.chip/Field.chip';
+import { FieldFaq } from '../../../../../../components/Fields/Field.faq/Field.faq';
+import { FieldComment } from '../../../../../../components/Fields/Field.comment/Field.comment';
+import { FieldCode } from '../../../../../../components/Fields/Field.code/Field.code';
+import { FieldList } from '../../../../../../components/Fields/Field.list/Field.list';
 
 export const FieldCreate: FC = () => {
-    const { id: TEMPLATE_PAGE_ID } = useParams();
-    const [form] = Form.useForm();
-    const dispatch = useAppDispatch();
+    const { pathname } = useLocation();
+    const url = pathname.split('/');
+    const templateId = url[2];
+    const sectionId = url[3];
+
     const [isModal, setIsModal] = useState(false);
-    const [isLoadingForm, setIsLoadingForm] = useState(false);
-
-    const handleCreateSection = async (props: ICreatedSectionProps) => {
-        setIsLoadingForm(true);
-        message.loading({ content: 'Loading...', key });
-        try {
-            const { data } = await axios.post('/api/template/section/action', {
-                templateId: TEMPLATE_PAGE_ID,
-                ...props,
-                fields: [],
-            });
-
-            if (data.success) {
-                setIsLoadingForm(false);
-                dispatch(
-                    Template.sectionCreate({
-                        templateId: TEMPLATE_PAGE_ID,
-                        sections: data.sections,
-                    }),
-                );
-                setIsModal(false);
-                form.resetFields();
-                message.success({ content: 'Section created!', key, duration: 2 });
-                return;
-            } else {
-                setIsLoadingForm(false);
-                message.error({ content: 'Error!', key, duration: 2 });
-            }
-        } catch (e) {
-            setIsLoadingForm(false);
-            message.error({ content: 'Error!', key, duration: 2 });
-        } finally {
-            setIsLoadingForm(false);
-        }
-    };
 
     return (
         <>
@@ -62,35 +32,67 @@ export const FieldCreate: FC = () => {
 
             <Modal
                 okText="Save"
-                title="New Filds"
+                title="New Fields"
                 visible={isModal}
-                onOk={() => form.submit()}
-                confirmLoading={isLoadingForm}
+                footer={null}
                 onCancel={() => setIsModal(false)}>
-                <Form
-                    name="basic"
-                    form={form}
-                    initialValues={{ remember: true }}
-                    onFinish={handleCreateSection}
-                    size="middle"
-                    autoComplete="off">
-                    <Row gutter={[16, 16]}>
-                        <Col span={24}>
-                            <Form.Item
-                                name="title"
-                                rules={[
-                                    { required: true, message: 'Please input title!' },
-                                    { min: 3, message: 'Minimum length 3 characters' },
-                                    {
-                                        type: 'string',
-                                        message: 'Section title cannot be a number',
-                                    },
-                                ]}>
-                                <Input placeholder="Title" size="middle" />
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                </Form>
+                <div className="field-form">
+                    <FieldText
+                        templateId={templateId}
+                        sectionId={sectionId}
+                        url={'/api/template/field/action'}
+                    />
+                    <FieldRichText
+                        templateId={templateId}
+                        sectionId={sectionId}
+                        url={'/api/template/field/action'}
+                    />
+                    <FieldNumber
+                        templateId={templateId}
+                        sectionId={sectionId}
+                        url={'/api/template/field/action'}
+                    />
+                    <FieldImage
+                        templateId={templateId}
+                        sectionId={sectionId}
+                        url={'/api/template/field/action'}
+                    />
+                    <FieldLink
+                        templateId={templateId}
+                        sectionId={sectionId}
+                        url={'/api/template/field/action'}
+                    />
+                    <FieldVideo
+                        templateId={templateId}
+                        sectionId={sectionId}
+                        url={'/api/template/field/action'}
+                    />
+                    <FieldList
+                        templateId={templateId}
+                        sectionId={sectionId}
+                        url={'/api/template/field/action'}
+                    />
+                    <FieldChip
+                        templateId={templateId}
+                        sectionId={sectionId}
+                        url={'/api/template/field/action'}
+                    />
+                    <FieldFaq
+                        templateId={templateId}
+                        sectionId={sectionId}
+                        url={'/api/template/field/action'}
+                    />
+                    <FieldComment
+                        templateId={templateId}
+                        sectionId={sectionId}
+                        url={'/api/template/field/action'}
+                    />
+                    <FieldCode
+                        templateId={templateId}
+                        sectionId={sectionId}
+                        url={'/api/template/field/action'}
+                    />
+                </div>
             </Modal>
         </>
     );

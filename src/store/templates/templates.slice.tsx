@@ -48,12 +48,7 @@ const Templates = createSlice({
         },
 
         duplicateGroup: (state, action) => {
-            action.payload.map(
-                (siteID: string) =>
-                    (state.TemplatesData = state.TemplatesData.map((legal) =>
-                        legal._id === siteID ? { ...legal, enabled: false } : legal,
-                    )),
-            );
+            state.TemplatesData = action.payload;
         },
         removeGroup: (state, action) => {
             action.payload.map(
@@ -63,6 +58,7 @@ const Templates = createSlice({
                     )),
             );
         },
+
         // SECTIONS
         sectionCreate: (state, action) => {
             state.TemplatesData.find(
@@ -92,6 +88,61 @@ const Templates = createSlice({
             );
         },
         // ./SECTIONS
+
+        // FIELD
+        fieldCreate: (state, action) => {
+            state.TemplatesData.find(
+                (template) =>
+                    template._id === action.payload.templateId &&
+                    template.sections.find(
+                        (section) =>
+                            section._id === action.payload.sectionId &&
+                            (section.fields = action.payload.fields),
+                    ),
+            );
+        },
+
+        fieldUpdate: (state, action) => {
+            switch (action.payload.fieldType) {
+                case 'text':
+                    console.log('Text = _ =');
+                    break;
+
+                case 'rich_text':
+                    console.log('Rich Text');
+                    break;
+
+                default:
+                    break;
+            }
+
+            state.TemplatesData.find(
+                (template) =>
+                    template._id === action.payload.templateId &&
+                    template.sections.find(
+                        (section) =>
+                            section._id === action.payload.sectionId &&
+                            (section.fields = section.fields.filter(
+                                (el) => el._id !== action.payload.fieldId,
+                            )),
+                    ),
+            );
+        },
+
+        fieldDelete: (state, action) => {
+            state.TemplatesData.find(
+                (template) =>
+                    template._id === action.payload.templateId &&
+                    template.sections.find(
+                        (section) =>
+                            section._id === action.payload.sectionId &&
+                            (section.fields = section.fields.filter(
+                                (el) => el._id !== action.payload.fieldId,
+                            )),
+                    ),
+            );
+        },
+        // ./FIELD
     },
     extraReducers: (build) => {
         build
@@ -120,4 +171,7 @@ export const {
     sectionCreate,
     sectionsUpdate,
     sectionsDelete,
+    fieldCreate,
+    fieldUpdate,
+    fieldDelete,
 } = Templates.actions;

@@ -21,7 +21,21 @@ export interface ITemplates {
 export interface ITemplateSections {
     _id: string;
     title: string;
-    fields: [];
+    fields: IFields[];
+}
+
+export interface IFields {
+    _id: string;
+    field_type: string;
+    field_name: string;
+    field_description: string;
+    content: object;
+}
+
+export interface IFieldCreateProps {
+    templateId: string;
+    sectionId: string;
+    url: string;
 }
 
 export interface ILegals {

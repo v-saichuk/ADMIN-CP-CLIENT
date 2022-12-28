@@ -86,7 +86,7 @@ export const SectionCreate: FC = () => {
                                         message: 'Section title cannot be a number',
                                     },
                                 ]}>
-                                <Input placeholder="Title" size="middle" />
+                                <Input placeholder="Title" autoFocus size="middle" />
                             </Form.Item>
                         </Col>
                     </Row>

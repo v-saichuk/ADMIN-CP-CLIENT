@@ -27,11 +27,12 @@ export const TemplatesGroupUpdate = () => {
         message.loading({ content: 'Loading...', key });
         try {
             const { data } = await axios.patch('/api/templates/group/update', props);
+
             if (data.success) {
                 switch (props.action) {
                     case 'Duplicate':
                         // TODO: Не оновлюеця стор, не додается нова дубльвана сторінка
-                        // dispatch(Legals.duplicateGroup(props.legalsId));
+                        dispatch(Template.duplicateGroup(data.templates));
                         break;
                     case 'Delete':
                         dispatch(Template.removeGroup(props.templateId));

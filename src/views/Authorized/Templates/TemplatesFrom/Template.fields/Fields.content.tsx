@@ -13,7 +13,7 @@ export const FieldsContent: FC = () => {
     const { pathname } = useLocation();
 
     const TEMPLATE_ID = pathname.split('/')[2];
-    const SECTION_ID = pathname.split('/')[4];
+    const SECTION_ID = pathname.split('/')[3];
 
     const template = useAppSelector((state) =>
         state.templates.TemplatesData.find((el) => el._id === TEMPLATE_ID),
@@ -48,7 +48,7 @@ export const FieldsContent: FC = () => {
                     activeKey={SECTION_ID}
                     type="card"
                     tabBarStyle={{ width: '200px' }}
-                    onChange={(id) => navigation(`/template/${TEMPLATE_ID}/section/${id}`)}>
+                    onChange={(id) => navigation(`/template/${TEMPLATE_ID}/${id}`)}>
                     {TABCONTENT?.map((el) => (
                         <TabPane
                             key={el.key}

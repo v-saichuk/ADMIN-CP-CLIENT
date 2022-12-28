@@ -254,3 +254,50 @@ body {
     margin-bottom: 10px;
     padding-bottom: 10px;
 }
+
+
+// FIELD CREATE
+.field-form{
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+}
+
+.field-create{
+    border: 1px solid #56565F;
+}
+
+.field-create__content{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 10px;
+    transition: 0.2s;
+
+    &:hover {
+        box-shadow: 0px 0px 5px 0px #F59337;
+        cursor: pointer;
+    }
+
+    &:hover .fields-create__title {
+        color: #F59337;
+    }
+}
+
+.fields-create__title{
+    text-transform: uppercase;
+    margin-top: 5px;
+    font-size: 12px;
+    transition: 0.2s;
+
+}
+// ./FIELD CREATE
+
+.fields-modal > .ant-modal-content > .ant-modal-body{
+    padding-top: 0;
+}
+
+.fields-tab > .ant-tabs-nav > .ant-tabs-nav-wrap {
+        padding: 0;
+}

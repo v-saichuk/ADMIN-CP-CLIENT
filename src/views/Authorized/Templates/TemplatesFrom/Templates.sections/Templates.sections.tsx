@@ -37,7 +37,10 @@ export const TemplatesSections: FC = () => {
                                     }}
                                     dataSource={Template?.sections}
                                     renderItem={(section) => (
-                                        <Col span={24} style={{ marginBottom: 5 }}>
+                                        <Col
+                                            key={section._id}
+                                            span={24}
+                                            style={{ marginBottom: 5 }}>
                                             <Row
                                                 className="settings_users_form__row"
                                                 justify="space-between">
@@ -49,7 +52,7 @@ export const TemplatesSections: FC = () => {
                                                         }}
                                                     />
                                                     <Link
-                                                        to={`/template/${TEMPLATE_PAGE_ID}/section/${section._id}`}>
+                                                        to={`/template/${TEMPLATE_PAGE_ID}/${section._id}`}>
                                                         {section.title}
                                                     </Link>
                                                 </Row>

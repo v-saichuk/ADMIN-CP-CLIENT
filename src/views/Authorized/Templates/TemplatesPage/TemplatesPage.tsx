@@ -81,7 +81,7 @@ export const TemplatesPage: FC = () => {
     const showModalDelete = (templateId: React.Key) => {
         Modal.confirm({
             title: 'Do you really want to delete?',
-            content: 'Once deleted, you will not be able to restore Legal',
+            content: 'Once deleted, you will not be able to restore template',
             icon: <Icon.ExclamationCircleOutlined />,
             okText: 'Yes',
             okType: 'danger',
