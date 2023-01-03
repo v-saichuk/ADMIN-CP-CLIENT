@@ -1,11 +1,11 @@
 import { FC } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Button, Col, List, Row, Space, Typography } from 'antd';
+import { Button, Col, List, Row, Space } from 'antd';
 import { EmptyCustome } from '../../../../../components/EmptyCustome/EmptyCustome';
 import { useAppSelector } from '../../../../../store/hooks/useRedux';
 import { FieldCreate } from './Field.create/Field.create';
 
-import { CloseOutlined, DeleteOutlined, ForkOutlined } from '@ant-design/icons';
+import { CloseOutlined } from '@ant-design/icons';
 import * as SVG from '../../../../../assets/images/svg/svg';
 import { FieldDelete } from './Field.delete/FieldDelete';
 import { FieldUpdate } from './Field.update/Field.update';
@@ -111,7 +111,6 @@ export const TemplatesFields: FC = () => {
                                     pagination={{
                                         defaultPageSize: 10,
                                         hideOnSinglePage: true,
-                                        showSizeChanger: false,
                                     }}
                                     dataSource={Section?.fields}
                                     renderItem={(field) => (
@@ -138,11 +137,7 @@ export const TemplatesFields: FC = () => {
                                                                 </span>
                                                             ),
                                                     )}
-                                                    {/* <Typography.Link
-                                                        onClick={() => console.log('Click')}>
-                                                        {field.field_name}
-                                                    </Typography.Link> */}
-                                                    <FieldUpdate field_name={field.field_name} />
+                                                    <FieldUpdate field={field} />
                                                     <span
                                                         style={{
                                                             marginLeft: 10,
@@ -160,7 +155,6 @@ export const TemplatesFields: FC = () => {
                                                         {field.field_description}
                                                     </span>
                                                 </Col>
-                                                {/* <Col>{field.field_description}</Col> */}
                                                 <Col>
                                                     <Space size="small">
                                                         <Button

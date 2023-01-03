@@ -78,15 +78,8 @@ export const SectionCreate: FC = () => {
                         <Col span={24}>
                             <Form.Item
                                 name="title"
-                                rules={[
-                                    { required: true, message: 'Please input title!' },
-                                    { min: 3, message: 'Minimum length 3 characters' },
-                                    {
-                                        type: 'string',
-                                        message: 'Section title cannot be a number',
-                                    },
-                                ]}>
-                                <Input placeholder="Title" autoFocus size="middle" />
+                                rules={[{ required: true, message: 'Please input name section!' }]}>
+                                <Input placeholder="Name section" autoFocus size="middle" />
                             </Form.Item>
                         </Col>
                     </Row>

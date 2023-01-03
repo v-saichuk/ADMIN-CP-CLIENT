@@ -1,12 +1,13 @@
 import { FC, useState } from 'react';
 import { useAppDispatch } from '../../../store/hooks/useRedux';
 import axios from '../../../axios';
-import { Col, Form, Input, message, Modal, Row } from 'antd';
+import { Button, Col, Form, Input, message, Modal, Row } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import * as Template from '../../../store/templates/templates.slice';
 
 import * as SVG from '../../../assets/images/svg/svg';
 import { IFieldCreateProps } from '../../../types/index';
+import { ArrowLeftOutlined } from '@ant-design/icons';
 
 interface IValue {
     name: string;
@@ -16,7 +17,12 @@ interface IValue {
 
 const key = 'update';
 
-export const FieldRichText: FC<IFieldCreateProps> = ({ templateId, sectionId, url }) => {
+export const FieldRichText: FC<IFieldCreateProps> = ({
+    templateId,
+    sectionId,
+    url,
+    handleModal,
+}) => {
     const [isModal, setIsModal] = useState(false);
     const [isLoadingForm, setIsLoadingForm] = useState(false);
 
@@ -50,6 +56,9 @@ export const FieldRichText: FC<IFieldCreateProps> = ({ templateId, sectionId, ur
                     fields: section?.fields,
                 }),
             );
+
+            form.resetFields();
+            setIsModal(false);
             message.success({ content: 'Updated!', key, duration: 2 });
         } catch (e) {
             setIsLoadingForm(false);
@@ -59,14 +68,24 @@ export const FieldRichText: FC<IFieldCreateProps> = ({ templateId, sectionId, ur
         }
     };
 
+    const onOpen = () => {
+        setIsModal(true);
+        handleModal(false);
+    };
+
     const onCancel = () => {
         form.resetFields();
         setIsModal(false);
     };
 
+    const onBack = () => {
+        setIsModal(false);
+        handleModal(true);
+    };
+
     return (
         <>
-            <div className="field-create" onClick={() => setIsModal(true)}>
+            <div className="field-create" onClick={onOpen}>
                 <div className="field-create__content">
                     <SVG.IconRichText x={40} y={40} />
                     <span className="fields-create__title">RICHTEXT</span>
@@ -75,7 +94,17 @@ export const FieldRichText: FC<IFieldCreateProps> = ({ templateId, sectionId, ur
 
             <Modal
                 okText="Save"
-                title="Text"
+                title={
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <Button
+                            type="primary"
+                            size="small"
+                            icon={<ArrowLeftOutlined />}
+                            onClick={onBack}
+                        />
+                        <span style={{ marginLeft: 10 }}>Rich Text</span>
+                    </div>
+                }
                 visible={isModal}
                 onOk={() => form.submit()}
                 confirmLoading={isLoadingForm}
@@ -112,9 +141,7 @@ export const FieldRichText: FC<IFieldCreateProps> = ({ templateId, sectionId, ur
                     <div style={{ marginBottom: 5 }}>Content</div>
                     <Row gutter={[16, 16]}>
                         <Col span={24}>
-                            <Form.Item
-                                name="rich_text"
-                                rules={[{ required: true, message: 'Please input rich text!' }]}>
+                            <Form.Item name="rich_text">
                                 <TextArea
                                     showCount
                                     style={{ height: 100 }}

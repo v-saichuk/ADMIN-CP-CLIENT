@@ -103,28 +103,13 @@ const Templates = createSlice({
         },
 
         fieldUpdate: (state, action) => {
-            switch (action.payload.fieldType) {
-                case 'text':
-                    console.log('Text = _ =');
-                    break;
-
-                case 'rich_text':
-                    console.log('Rich Text');
-                    break;
-
-                default:
-                    break;
-            }
-
             state.TemplatesData.find(
                 (template) =>
                     template._id === action.payload.templateId &&
                     template.sections.find(
                         (section) =>
                             section._id === action.payload.sectionId &&
-                            (section.fields = section.fields.filter(
-                                (el) => el._id !== action.payload.fieldId,
-                            )),
+                            (section.fields = action.payload.fields),
                     ),
             );
         },

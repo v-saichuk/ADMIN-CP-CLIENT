@@ -29,13 +29,34 @@ export interface IFields {
     field_type: string;
     field_name: string;
     field_description: string;
-    content: object;
+    content: {
+        text?: string;
+        rich_text?: string;
+        number?: string;
+        title?: string;
+        link?: string;
+        video_url?: string;
+        list?: string[];
+        question?: string;
+        reply?: string;
+        fullname?: string;
+        avatar_url?: string;
+        comment?: string;
+        code?: string;
+        chip: string[];
+        sizes: {
+            small?: string;
+            medium?: string;
+            large?: string;
+        };
+    };
 }
 
 export interface IFieldCreateProps {
     templateId: string;
     sectionId: string;
     url: string;
+    handleModal?: any;
 }
 
 export interface ILegals {

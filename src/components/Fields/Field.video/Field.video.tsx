@@ -1,5 +1,5 @@
 import { FC, useState } from 'react';
-import { Col, Form, Input, message, Modal, Row } from 'antd';
+import { Button, Col, Form, Input, message, Modal, Row } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import * as Template from '../../../store/templates/templates.slice';
 import { useAppDispatch } from '../../../store/hooks/useRedux';
@@ -7,6 +7,7 @@ import axios from '../../../axios';
 
 import * as SVG from '../../../assets/images/svg/svg';
 import { IFieldCreateProps } from '../../../types/index';
+import { ArrowLeftOutlined } from '@ant-design/icons';
 
 interface IValue {
     name: string;
@@ -17,7 +18,7 @@ interface IValue {
 
 const key = 'update';
 
-export const FieldVideo: FC<IFieldCreateProps> = ({ templateId, sectionId, url }) => {
+export const FieldVideo: FC<IFieldCreateProps> = ({ templateId, sectionId, url, handleModal }) => {
     const [isModal, setIsModal] = useState(false);
     const [isLoadingForm, setIsLoadingForm] = useState(false);
 
@@ -53,6 +54,8 @@ export const FieldVideo: FC<IFieldCreateProps> = ({ templateId, sectionId, url }
                 }),
             );
 
+            form.resetFields();
+            setIsModal(false);
             message.success({ content: 'Updated!', key, duration: 2 });
         } catch (e) {
             setIsLoadingForm(false);
@@ -62,14 +65,24 @@ export const FieldVideo: FC<IFieldCreateProps> = ({ templateId, sectionId, url }
         }
     };
 
+    const onOpen = () => {
+        setIsModal(true);
+        handleModal(false);
+    };
+
     const onCancel = () => {
         form.resetFields();
         setIsModal(false);
     };
 
+    const onBack = () => {
+        setIsModal(false);
+        handleModal(true);
+    };
+
     return (
         <>
-            <div className="field-create" onClick={() => setIsModal(true)}>
+            <div className="field-create" onClick={onOpen}>
                 <div className="field-create__content">
                     <SVG.IconVideo x={40} y={40} />
                     <span className="fields-create__title">VIDEO</span>
@@ -78,7 +91,17 @@ export const FieldVideo: FC<IFieldCreateProps> = ({ templateId, sectionId, url }
 
             <Modal
                 okText="Save"
-                title="Video"
+                title={
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <Button
+                            type="primary"
+                            size="small"
+                            icon={<ArrowLeftOutlined />}
+                            onClick={onBack}
+                        />
+                        <span style={{ marginLeft: 10 }}>Video</span>
+                    </div>
+                }
                 visible={isModal}
                 onOk={() => form.submit()}
                 confirmLoading={isLoadingForm}
@@ -115,16 +138,12 @@ export const FieldVideo: FC<IFieldCreateProps> = ({ templateId, sectionId, url }
                     <div style={{ marginBottom: 5 }}>Content</div>
                     <Row gutter={[16, 16]}>
                         <Col span={24}>
-                            <Form.Item
-                                name="title"
-                                rules={[{ required: true, message: 'Please input title!' }]}>
+                            <Form.Item name="title">
                                 <Input placeholder="Title" size="middle" />
                             </Form.Item>
                         </Col>
                         <Col span={24}>
-                            <Form.Item
-                                name="video_url"
-                                rules={[{ required: true, message: 'Please input url!' }]}>
+                            <Form.Item name="video_url">
                                 <Input placeholder="URL (video)" size="middle" />
                             </Form.Item>
                         </Col>

@@ -18,13 +18,13 @@ const key = 'updatable';
 
 export const SectionEdit: FC<ISectionId> = ({ sectionId }) => {
     const { id: TEMPLATE_PAGE_ID } = useParams();
-    const [form] = Form.useForm();
     const dispatch = useAppDispatch();
     const [isModal, setIsModal] = useState(false);
     const [isLoadingForm, setIsLoadingForm] = useState(false);
     const { TemplatesData } = useAppSelector((state) => state.templates);
     const template = TemplatesData.find((template) => template._id === TEMPLATE_PAGE_ID);
     const section = template?.sections.find((section) => section._id === sectionId);
+    const [form] = Form.useForm();
 
     const handleUpdateSection = async (props: IUpdatedSectionProps) => {
         setIsLoadingForm(true);
@@ -69,7 +69,7 @@ export const SectionEdit: FC<ISectionId> = ({ sectionId }) => {
 
             <Modal
                 okText="Save"
-                title="New Section"
+                title={`Edit Section "${section?.title}"`}
                 visible={isModal}
                 onOk={() => form.submit()}
                 confirmLoading={isLoadingForm}
@@ -86,15 +86,8 @@ export const SectionEdit: FC<ISectionId> = ({ sectionId }) => {
                             <Form.Item
                                 name="title"
                                 initialValue={section?.title}
-                                rules={[
-                                    { required: true, message: 'Please input title!' },
-                                    { min: 3, message: 'Minimum length 3 characters' },
-                                    {
-                                        type: 'string',
-                                        message: 'Section title cannot be a number',
-                                    },
-                                ]}>
-                                <Input placeholder="Title" size="middle" />
+                                rules={[{ required: true, message: 'Please input name section!' }]}>
+                                <Input placeholder="Name section" size="middle" />
                             </Form.Item>
                         </Col>
                     </Row>
