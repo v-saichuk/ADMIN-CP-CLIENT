@@ -1,25 +1,33 @@
 import { FC, useState } from 'react';
 import { Button, Col, Form, Input, message, Modal, Row } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
-import axios from '../../../axios';
 import * as Template from '../../../store/templates/templates.slice';
+import { useAppDispatch } from '../../../store/hooks/useRedux';
+import axios from '../../../axios';
 
 import * as SVG from '../../../assets/images/svg/svg';
+
 import { IFieldCreateProps } from '../../../types/index';
-import { useAppDispatch } from '../../../store/hooks/useRedux';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 
 interface IValue {
     name: string;
     description: string;
-    number: string;
+    question: string;
+    reply: string;
 }
 
 const key = 'update';
 
-export const FieldNumber: FC<IFieldCreateProps> = ({ templateId, sectionId, url, handleModal }) => {
+export const FieldFaqCreate: FC<IFieldCreateProps> = ({
+    templateId,
+    sectionId,
+    url,
+    handleModal,
+}) => {
     const [isModal, setIsModal] = useState(false);
     const [isLoadingForm, setIsLoadingForm] = useState(false);
+
     const dispatch = useAppDispatch();
 
     const [form] = Form.useForm();
@@ -32,12 +40,13 @@ export const FieldNumber: FC<IFieldCreateProps> = ({ templateId, sectionId, url,
                 templateId,
                 sectionId,
                 information: {
-                    field_type: 'Number',
+                    field_type: 'Question',
                     field_name: value.name,
                     field_description: value.description,
                 },
                 content: {
-                    number: value.number,
+                    question: !!value.question ? value.question : '',
+                    reply: !!value.reply ? value.reply : '',
                 },
             });
 
@@ -81,8 +90,8 @@ export const FieldNumber: FC<IFieldCreateProps> = ({ templateId, sectionId, url,
         <>
             <div className="field-create" onClick={onOpen}>
                 <div className="field-create__content">
-                    <SVG.IconNumber x={40} y={40} />
-                    <span className="fields-create__title">NUMBER</span>
+                    <SVG.IconQuestion x={40} y={40} />
+                    <span className="fields-create__title">FAQ</span>
                 </div>
             </div>
 
@@ -96,7 +105,7 @@ export const FieldNumber: FC<IFieldCreateProps> = ({ templateId, sectionId, url,
                             icon={<ArrowLeftOutlined />}
                             onClick={onBack}
                         />
-                        <span style={{ marginLeft: 10 }}>Number</span>
+                        <span style={{ marginLeft: 10 }}>FAQ</span>
                     </div>
                 }
                 visible={isModal}
@@ -130,13 +139,18 @@ export const FieldNumber: FC<IFieldCreateProps> = ({ templateId, sectionId, url,
                             </Form.Item>
                         </Col>
                     </Row>
-                    <hr style={{ border: '1px solid #303030' }} />
+                    <hr style={{ border: '0.1px solid #303030' }} />
 
                     <div style={{ marginBottom: 5 }}>Content</div>
                     <Row gutter={[16, 16]}>
                         <Col span={24}>
-                            <Form.Item name="number">
-                                <Input type="number" placeholder="Number" size="middle" />
+                            <Form.Item name="question">
+                                <Input placeholder="Question" size="middle" />
+                            </Form.Item>
+                        </Col>
+                        <Col span={24}>
+                            <Form.Item name="reply">
+                                <TextArea style={{ height: 100 }} showCount placeholder="Reply" />
                             </Form.Item>
                         </Col>
                     </Row>

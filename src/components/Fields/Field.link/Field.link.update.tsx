@@ -116,7 +116,7 @@ export const FieldLinkUpdate: FC<IProps> = ({ field, templateId, sectionId, url 
                             </Form.Item>
                         </Col>
                     </Row>
-                    <hr style={{ border: '1px solid #303030' }} />
+                    <hr style={{ border: '0.1px solid #303030' }} />
 
                     <div style={{ marginBottom: 5 }}>Content</div>
                     <Row gutter={[16, 16]}>
@@ -126,8 +126,8 @@ export const FieldLinkUpdate: FC<IProps> = ({ field, templateId, sectionId, url 
                             </Form.Item>
                         </Col>
                         <Col span={24}>
-                            <Form.Item name="link" initialValue={field.content.link}>
-                                <Input placeholder="Link" size="middle" />
+                            <Form.Item name="link" initialValue={field.content.link?.slice(8)}>
+                                <Input addonBefore="https://" placeholder="Link" size="middle" />
                             </Form.Item>
                         </Col>
                     </Row>

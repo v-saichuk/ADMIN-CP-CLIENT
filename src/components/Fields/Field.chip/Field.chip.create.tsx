@@ -20,7 +20,12 @@ interface IValue {
 
 const key = 'update';
 
-export const FieldChip: FC<IFieldCreateProps> = ({ templateId, sectionId, url, handleModal }) => {
+export const FieldChipCreate: FC<IFieldCreateProps> = ({
+    templateId,
+    sectionId,
+    url,
+    handleModal,
+}) => {
     const [isModal, setIsModal] = useState(false);
     const [isLoadingForm, setIsLoadingForm] = useState(false);
 
@@ -95,7 +100,7 @@ export const FieldChip: FC<IFieldCreateProps> = ({ templateId, sectionId, url, h
                     field_description: value.description,
                 },
                 content: {
-                    chip: tags,
+                    chip: !!tags ? tags : [],
                 },
             });
 
@@ -103,8 +108,8 @@ export const FieldChip: FC<IFieldCreateProps> = ({ templateId, sectionId, url, h
 
             dispatch(
                 Template.fieldCreate({
-                    templateId: templateId,
-                    sectionId: sectionId,
+                    templateId,
+                    sectionId,
                     fields: section?.fields,
                 }),
             );
@@ -188,7 +193,7 @@ export const FieldChip: FC<IFieldCreateProps> = ({ templateId, sectionId, url, h
                             </Form.Item>
                         </Col>
                     </Row>
-                    <hr style={{ border: '1px solid #303030' }} />
+                    <hr style={{ border: '0.1px solid #303030' }} />
 
                     <div style={{ marginBottom: 5 }}>Content</div>
                     <Row gutter={[16, 16]}>

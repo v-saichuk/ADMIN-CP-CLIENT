@@ -1,27 +1,28 @@
 import { FC, useState } from 'react';
+import { useAppDispatch } from '../../../store/hooks/useRedux';
+import axios from '../../../axios';
 import { Button, Col, Form, Input, message, Modal, Row } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
-import axios from '../../../axios';
-import { useAppDispatch } from '../../../store/hooks/useRedux';
 import * as Template from '../../../store/templates/templates.slice';
-import { IFieldCreateProps } from '../../../types/index';
 
 import * as SVG from '../../../assets/images/svg/svg';
+import { IFieldCreateProps } from '../../../types/index';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 
 interface IValue {
     name: string;
     description: string;
-    title: string;
-    link: string;
-    small: string;
-    medium: string;
-    large: string;
+    rich_text: string;
 }
 
 const key = 'update';
 
-export const FieldImage: FC<IFieldCreateProps> = ({ templateId, sectionId, url, handleModal }) => {
+export const FieldRichTextCreate: FC<IFieldCreateProps> = ({
+    templateId,
+    sectionId,
+    url,
+    handleModal,
+}) => {
     const [isModal, setIsModal] = useState(false);
     const [isLoadingForm, setIsLoadingForm] = useState(false);
 
@@ -37,18 +38,12 @@ export const FieldImage: FC<IFieldCreateProps> = ({ templateId, sectionId, url, 
                 templateId,
                 sectionId,
                 information: {
-                    field_type: 'Image',
+                    field_type: 'RichText',
                     field_name: value.name,
                     field_description: value.description,
                 },
                 content: {
-                    title: value.title,
-                    link: value.link,
-                    sizes: {
-                        small: value.small,
-                        medium: value.medium,
-                        large: value.large,
-                    },
+                    rich_text: !!value.rich_text ? value.rich_text : '',
                 },
             });
 
@@ -92,8 +87,8 @@ export const FieldImage: FC<IFieldCreateProps> = ({ templateId, sectionId, url, 
         <>
             <div className="field-create" onClick={onOpen}>
                 <div className="field-create__content">
-                    <SVG.IconImage x={40} y={40} />
-                    <span className="fields-create__title">IMAGE</span>
+                    <SVG.IconRichText x={40} y={40} />
+                    <span className="fields-create__title">RICHTEXT</span>
                 </div>
             </div>
 
@@ -107,7 +102,7 @@ export const FieldImage: FC<IFieldCreateProps> = ({ templateId, sectionId, url, 
                             icon={<ArrowLeftOutlined />}
                             onClick={onBack}
                         />
-                        <span style={{ marginLeft: 10 }}>Image</span>
+                        <span style={{ marginLeft: 10 }}>Rich Text</span>
                     </div>
                 }
                 visible={isModal}
@@ -141,36 +136,17 @@ export const FieldImage: FC<IFieldCreateProps> = ({ templateId, sectionId, url, 
                             </Form.Item>
                         </Col>
                     </Row>
-                    <hr style={{ border: '1px solid #303030' }} />
+                    <hr style={{ border: '0.1px solid #303030' }} />
 
                     <div style={{ marginBottom: 5 }}>Content</div>
                     <Row gutter={[16, 16]}>
                         <Col span={24}>
-                            <Form.Item name="title">
-                                <Input placeholder="Title" size="middle" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={24}>
-                            <Form.Item name="link">
-                                <Input placeholder="Link URL" size="middle" />
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                    <div style={{ marginBottom: 5, marginTop: 10 }}>Image sizes</div>
-                    <Row gutter={[16, 16]}>
-                        <Col span={24}>
-                            <Form.Item name="small">
-                                <Input placeholder="SRC (small)" size="middle" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={24}>
-                            <Form.Item name="medium">
-                                <Input placeholder="SRC (medium)" size="middle" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={24}>
-                            <Form.Item name="large">
-                                <Input placeholder="SRC (large)" size="middle" />
+                            <Form.Item name="rich_text">
+                                <TextArea
+                                    showCount
+                                    style={{ height: 200 }}
+                                    placeholder="Rich Text"
+                                />
                             </Form.Item>
                         </Col>
                     </Row>

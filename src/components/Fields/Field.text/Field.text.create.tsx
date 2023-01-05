@@ -3,6 +3,7 @@ import { Button, Col, Form, Input, message, Modal, Row } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import axios from '../../../axios';
 import { useAppDispatch } from '../../../store/hooks/useRedux';
+
 import * as Template from '../../../store/templates/templates.slice';
 
 import * as SVG from '../../../assets/images/svg/svg';
@@ -10,17 +11,15 @@ import * as SVG from '../../../assets/images/svg/svg';
 import { IFieldCreateProps } from '../../../types/index';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 
-const key = 'update';
-
 interface IValue {
     name: string;
     description: string;
-    fullname: string;
-    avatar_url: string;
-    comment: string;
+    text: string;
 }
 
-export const FieldComment: FC<IFieldCreateProps> = ({
+const key = 'update';
+
+export const FieldTextCreate: FC<IFieldCreateProps> = ({
     templateId,
     sectionId,
     url,
@@ -41,14 +40,12 @@ export const FieldComment: FC<IFieldCreateProps> = ({
                 templateId,
                 sectionId,
                 information: {
-                    field_type: 'Comment',
+                    field_type: 'Text',
                     field_name: value.name,
                     field_description: value.description,
                 },
                 content: {
-                    fullname: value.fullname,
-                    avatar_url: value.avatar_url,
-                    comment: value.comment,
+                    text: !!value.text ? value.text : '',
                 },
             });
 
@@ -92,8 +89,8 @@ export const FieldComment: FC<IFieldCreateProps> = ({
         <>
             <div className="field-create" onClick={onOpen}>
                 <div className="field-create__content">
-                    <SVG.IconComment x={40} y={40} />
-                    <span className="fields-create__title">COMMENT</span>
+                    <SVG.IconText x={40} y={40} />
+                    <span className="fields-create__title">TEXT</span>
                 </div>
             </div>
 
@@ -107,7 +104,7 @@ export const FieldComment: FC<IFieldCreateProps> = ({
                             icon={<ArrowLeftOutlined />}
                             onClick={onBack}
                         />
-                        <span style={{ marginLeft: 10 }}>Comment</span>
+                        <span style={{ marginLeft: 10 }}>Text</span>
                     </div>
                 }
                 visible={isModal}
@@ -141,23 +138,13 @@ export const FieldComment: FC<IFieldCreateProps> = ({
                             </Form.Item>
                         </Col>
                     </Row>
-                    <hr style={{ border: '1px solid #303030' }} />
+                    <hr style={{ border: '0.1px solid #303030' }} />
 
                     <div style={{ marginBottom: 5 }}>Content</div>
                     <Row gutter={[16, 16]}>
-                        <Col span={12}>
-                            <Form.Item name="fullname">
-                                <Input placeholder="Full Name" size="middle" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item name="avatar_url">
-                                <Input placeholder="Avatar" size="middle" />
-                            </Form.Item>
-                        </Col>
                         <Col span={24}>
-                            <Form.Item name="comment">
-                                <TextArea showCount style={{ height: 100 }} placeholder="Comment" />
+                            <Form.Item name="text">
+                                <Input placeholder="Text" size="middle" />
                             </Form.Item>
                         </Col>
                     </Row>

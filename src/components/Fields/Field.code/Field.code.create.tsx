@@ -1,23 +1,23 @@
 import { FC, useState } from 'react';
+import { Button, Col, Form, Input, message, Modal, Row } from 'antd';
 import { useAppDispatch } from '../../../store/hooks/useRedux';
 import axios from '../../../axios';
-import { Button, Col, Form, Input, message, Modal, Row } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import * as Template from '../../../store/templates/templates.slice';
 
-import * as SVG from '../../../assets/images/svg/svg';
 import { IFieldCreateProps } from '../../../types/index';
+import * as SVG from '../../../assets/images/svg/svg';
 import { ArrowLeftOutlined } from '@ant-design/icons';
+
+const key = 'update';
 
 interface IValue {
     name: string;
     description: string;
-    rich_text: string;
+    code: string;
 }
 
-const key = 'update';
-
-export const FieldRichText: FC<IFieldCreateProps> = ({
+export const FieldCodeCreate: FC<IFieldCreateProps> = ({
     templateId,
     sectionId,
     url,
@@ -27,7 +27,6 @@ export const FieldRichText: FC<IFieldCreateProps> = ({
     const [isLoadingForm, setIsLoadingForm] = useState(false);
 
     const dispatch = useAppDispatch();
-
     const [form] = Form.useForm();
 
     const handleCreateFields = async (value: IValue) => {
@@ -38,12 +37,12 @@ export const FieldRichText: FC<IFieldCreateProps> = ({
                 templateId,
                 sectionId,
                 information: {
-                    field_type: 'RichText',
+                    field_type: 'Code',
                     field_name: value.name,
                     field_description: value.description,
                 },
                 content: {
-                    rich_text: value.rich_text,
+                    code: !!value.code ? value.code : '',
                 },
             });
 
@@ -87,8 +86,8 @@ export const FieldRichText: FC<IFieldCreateProps> = ({
         <>
             <div className="field-create" onClick={onOpen}>
                 <div className="field-create__content">
-                    <SVG.IconRichText x={40} y={40} />
-                    <span className="fields-create__title">RICHTEXT</span>
+                    <SVG.IconCode x={40} y={40} />
+                    <span className="fields-create__title">CODE</span>
                 </div>
             </div>
 
@@ -102,7 +101,7 @@ export const FieldRichText: FC<IFieldCreateProps> = ({
                             icon={<ArrowLeftOutlined />}
                             onClick={onBack}
                         />
-                        <span style={{ marginLeft: 10 }}>Rich Text</span>
+                        <span style={{ marginLeft: 10 }}>Code</span>
                     </div>
                 }
                 visible={isModal}
@@ -136,17 +135,13 @@ export const FieldRichText: FC<IFieldCreateProps> = ({
                             </Form.Item>
                         </Col>
                     </Row>
-                    <hr style={{ border: '1px solid #303030' }} />
+                    <hr style={{ border: '0.1px solid #303030' }} />
 
                     <div style={{ marginBottom: 5 }}>Content</div>
                     <Row gutter={[16, 16]}>
                         <Col span={24}>
-                            <Form.Item name="rich_text">
-                                <TextArea
-                                    showCount
-                                    style={{ height: 100 }}
-                                    placeholder="Rich Text"
-                                />
+                            <Form.Item name="code">
+                                <TextArea showCount style={{ height: 300 }} placeholder="Code" />
                             </Form.Item>
                         </Col>
                     </Row>

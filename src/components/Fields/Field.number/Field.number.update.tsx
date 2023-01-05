@@ -1,5 +1,5 @@
 import { FC, useState } from 'react';
-import { Col, Form, Input, message, Modal, Row, Typography } from 'antd';
+import { Col, Form, Input, InputNumber, message, Modal, Row, Typography } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import axios from '../../../axios';
 import * as Template from '../../../store/templates/templates.slice';
@@ -114,13 +114,17 @@ export const FieldNumberUpdate: FC<IProps> = ({ field, templateId, sectionId, ur
                             </Form.Item>
                         </Col>
                     </Row>
-                    <hr style={{ border: '1px solid #303030' }} />
+                    <hr style={{ border: '0.1px solid #303030' }} />
 
                     <div style={{ marginBottom: 5 }}>Content</div>
                     <Row gutter={[16, 16]}>
                         <Col span={24}>
                             <Form.Item name="number" initialValue={field.content.number}>
-                                <Input type="number" placeholder="Number" size="middle" />
+                                <InputNumber
+                                    placeholder="Number"
+                                    size="middle"
+                                    style={{ width: '100%' }}
+                                />
                             </Form.Item>
                         </Col>
                     </Row>

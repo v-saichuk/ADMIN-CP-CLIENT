@@ -49,12 +49,12 @@ export const FieldImageUpdate: FC<IProps> = ({ field, templateId, sectionId, url
                     field_description: value.description,
                 },
                 content: {
-                    title: value.title,
-                    link: value.link,
+                    title: !!value.title ? value.title : '',
+                    link: !!value.link ? `https://${value.link}` : '',
                     sizes: {
-                        small: value.small,
-                        medium: value.medium,
-                        large: value.large,
+                        small: !!value.small ? `https://${value.small}` : '',
+                        medium: !!value.medium ? `https://${value.medium}` : '',
+                        large: !!value.large ? `https://${value.large}` : '',
                     },
                 },
             });
@@ -125,7 +125,7 @@ export const FieldImageUpdate: FC<IProps> = ({ field, templateId, sectionId, url
                             </Form.Item>
                         </Col>
                     </Row>
-                    <hr style={{ border: '1px solid #303030' }} />
+                    <hr style={{ border: '0.1px solid #303030' }} />
 
                     <div style={{ marginBottom: 5 }}>Content</div>
                     <Row gutter={[16, 16]}>
@@ -135,26 +135,48 @@ export const FieldImageUpdate: FC<IProps> = ({ field, templateId, sectionId, url
                             </Form.Item>
                         </Col>
                         <Col span={24}>
-                            <Form.Item name="link" initialValue={field.content.link}>
-                                <Input placeholder="Link URL" size="middle" />
+                            <Form.Item name="link" initialValue={field.content.link?.slice(8)}>
+                                <Input
+                                    addonBefore="https://"
+                                    placeholder="Link URL"
+                                    size="middle"
+                                />
                             </Form.Item>
                         </Col>
                     </Row>
                     <div style={{ marginBottom: 5, marginTop: 10 }}>Image sizes</div>
                     <Row gutter={[16, 16]}>
                         <Col span={24}>
-                            <Form.Item name="small" initialValue={field.content.sizes.small}>
-                                <Input placeholder="SRC (small)" size="middle" />
+                            <Form.Item
+                                name="small"
+                                initialValue={field.content.sizes.small?.slice(8)}>
+                                <Input
+                                    addonBefore="https://"
+                                    placeholder="SRC (small)"
+                                    size="middle"
+                                />
                             </Form.Item>
                         </Col>
                         <Col span={24}>
-                            <Form.Item name="medium" initialValue={field.content.sizes.medium}>
-                                <Input placeholder="SRC (medium)" size="middle" />
+                            <Form.Item
+                                name="medium"
+                                initialValue={field.content.sizes.medium?.slice(8)}>
+                                <Input
+                                    addonBefore="https://"
+                                    placeholder="SRC (medium)"
+                                    size="middle"
+                                />
                             </Form.Item>
                         </Col>
                         <Col span={24}>
-                            <Form.Item name="large" initialValue={field.content.sizes.large}>
-                                <Input placeholder="SRC (large)" size="middle" />
+                            <Form.Item
+                                name="large"
+                                initialValue={field.content.sizes.large?.slice(8)}>
+                                <Input
+                                    addonBefore="https://"
+                                    placeholder="SRC (large)"
+                                    size="middle"
+                                />
                             </Form.Item>
                         </Col>
                     </Row>

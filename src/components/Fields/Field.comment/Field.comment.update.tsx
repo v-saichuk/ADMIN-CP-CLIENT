@@ -119,7 +119,7 @@ export const FieldCommentUpdate: FC<IProps> = ({ field, templateId, sectionId, u
                             </Form.Item>
                         </Col>
                     </Row>
-                    <hr style={{ border: '1px solid #303030' }} />
+                    <hr style={{ border: '0.1px solid #303030' }} />
 
                     <div style={{ marginBottom: 5 }}>Content</div>
                     <Row gutter={[16, 16]}>
@@ -129,8 +129,10 @@ export const FieldCommentUpdate: FC<IProps> = ({ field, templateId, sectionId, u
                             </Form.Item>
                         </Col>
                         <Col span={12}>
-                            <Form.Item name="avatar_url" initialValue={field.content.avatar_url}>
-                                <Input placeholder="Avatar" size="middle" />
+                            <Form.Item
+                                name="avatar_url"
+                                initialValue={field.content.avatar_url?.slice(8)}>
+                                <Input addonBefore="https://" placeholder="Avatar" size="middle" />
                             </Form.Item>
                         </Col>
                         <Col span={24}>

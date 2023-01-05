@@ -1,25 +1,29 @@
 import { FC, useState } from 'react';
 import { Button, Col, Form, Input, message, Modal, Row } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
-import axios from '../../../axios';
-import { useAppDispatch } from '../../../store/hooks/useRedux';
-
 import * as Template from '../../../store/templates/templates.slice';
+import { useAppDispatch } from '../../../store/hooks/useRedux';
+import axios from '../../../axios';
 
 import * as SVG from '../../../assets/images/svg/svg';
-
 import { IFieldCreateProps } from '../../../types/index';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 
 interface IValue {
     name: string;
     description: string;
-    text: string;
+    title: string;
+    video_url: string;
 }
 
 const key = 'update';
 
-export const FieldText: FC<IFieldCreateProps> = ({ templateId, sectionId, url, handleModal }) => {
+export const FieldVideoCreate: FC<IFieldCreateProps> = ({
+    templateId,
+    sectionId,
+    url,
+    handleModal,
+}) => {
     const [isModal, setIsModal] = useState(false);
     const [isLoadingForm, setIsLoadingForm] = useState(false);
 
@@ -35,12 +39,13 @@ export const FieldText: FC<IFieldCreateProps> = ({ templateId, sectionId, url, h
                 templateId,
                 sectionId,
                 information: {
-                    field_type: 'Text',
+                    field_type: 'Video',
                     field_name: value.name,
                     field_description: value.description,
                 },
                 content: {
-                    text: value.text,
+                    title: !!value.title ? value.title : '',
+                    video_url: !!value.video_url ? `https://${value.video_url}` : '',
                 },
             });
 
@@ -84,8 +89,8 @@ export const FieldText: FC<IFieldCreateProps> = ({ templateId, sectionId, url, h
         <>
             <div className="field-create" onClick={onOpen}>
                 <div className="field-create__content">
-                    <SVG.IconText x={40} y={40} />
-                    <span className="fields-create__title">TEXT</span>
+                    <SVG.IconVideo x={40} y={40} />
+                    <span className="fields-create__title">VIDEO</span>
                 </div>
             </div>
 
@@ -99,7 +104,7 @@ export const FieldText: FC<IFieldCreateProps> = ({ templateId, sectionId, url, h
                             icon={<ArrowLeftOutlined />}
                             onClick={onBack}
                         />
-                        <span style={{ marginLeft: 10 }}>Text</span>
+                        <span style={{ marginLeft: 10 }}>Video</span>
                     </div>
                 }
                 visible={isModal}
@@ -133,13 +138,22 @@ export const FieldText: FC<IFieldCreateProps> = ({ templateId, sectionId, url, h
                             </Form.Item>
                         </Col>
                     </Row>
-                    <hr style={{ border: '1px solid #303030' }} />
+                    <hr style={{ border: '0.1px solid #303030' }} />
 
                     <div style={{ marginBottom: 5 }}>Content</div>
                     <Row gutter={[16, 16]}>
                         <Col span={24}>
-                            <Form.Item name="text">
-                                <Input placeholder="Text" size="middle" />
+                            <Form.Item name="title">
+                                <Input placeholder="Title" size="middle" />
+                            </Form.Item>
+                        </Col>
+                        <Col span={24}>
+                            <Form.Item name="video_url">
+                                <Input
+                                    addonBefore="https://"
+                                    placeholder="URL (video)"
+                                    size="middle"
+                                />
                             </Form.Item>
                         </Col>
                     </Row>

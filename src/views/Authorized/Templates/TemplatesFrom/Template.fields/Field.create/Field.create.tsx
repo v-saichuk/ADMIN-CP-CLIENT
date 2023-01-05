@@ -26,67 +26,67 @@ export const FieldCreate: FC = () => {
                 footer={null}
                 onCancel={() => setIsModal(false)}>
                 <div className="field-form">
-                    <F.FieldText
+                    <F.FieldTextCreate
                         templateId={templateId}
                         sectionId={sectionId}
                         url={'/api/template/field/action'}
                         handleModal={setIsModal}
                     />
-                    <F.FieldRichText
+                    <F.FieldRichTextCreate
                         templateId={templateId}
                         sectionId={sectionId}
                         url={'/api/template/field/action'}
                         handleModal={setIsModal}
                     />
-                    <F.FieldNumber
+                    <F.FieldNumberCreate
                         templateId={templateId}
                         sectionId={sectionId}
                         url={'/api/template/field/action'}
                         handleModal={setIsModal}
                     />
-                    <F.FieldImage
+                    <F.FieldImageCreate
                         templateId={templateId}
                         sectionId={sectionId}
                         url={'/api/template/field/action'}
                         handleModal={setIsModal}
                     />
-                    <F.FieldLink
+                    <F.FieldLinkCreate
                         templateId={templateId}
                         sectionId={sectionId}
                         url={'/api/template/field/action'}
                         handleModal={setIsModal}
                     />
-                    <F.FieldVideo
+                    <F.FieldVideoCreate
                         templateId={templateId}
                         sectionId={sectionId}
                         url={'/api/template/field/action'}
                         handleModal={setIsModal}
                     />
-                    <F.FieldList
+                    <F.FieldListCreate
                         templateId={templateId}
                         sectionId={sectionId}
                         url={'/api/template/field/action'}
                         handleModal={setIsModal}
                     />
-                    <F.FieldChip
+                    <F.FieldChipCreate
                         templateId={templateId}
                         sectionId={sectionId}
                         url={'/api/template/field/action'}
                         handleModal={setIsModal}
                     />
-                    <F.FieldFaq
+                    <F.FieldFaqCreate
                         templateId={templateId}
                         sectionId={sectionId}
                         url={'/api/template/field/action'}
                         handleModal={setIsModal}
                     />
-                    <F.FieldComment
+                    <F.FieldCommentCreate
                         templateId={templateId}
                         sectionId={sectionId}
                         url={'/api/template/field/action'}
                         handleModal={setIsModal}
                     />
-                    <F.FieldCode
+                    <F.FieldCodeCreate
                         templateId={templateId}
                         sectionId={sectionId}
                         url={'/api/template/field/action'}

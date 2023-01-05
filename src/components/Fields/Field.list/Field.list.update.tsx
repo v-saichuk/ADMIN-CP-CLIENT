@@ -118,7 +118,7 @@ export const FieldListUpdate: FC<IProps> = ({ field, templateId, sectionId, url 
                             </Form.Item>
                         </Col>
                     </Row>
-                    <hr style={{ border: '1px solid #303030' }} />
+                    <hr style={{ border: '0.1px solid #303030' }} />
 
                     <div>Content</div>
                     <Row gutter={[16, 16]}>

@@ -128,6 +128,20 @@ const Templates = createSlice({
             );
         },
         // ./FIELD
+
+        // DRAG & DROP
+        dragAndDrop: (state, action) => {
+            state.TemplatesData.find(
+                (template) =>
+                    template._id === action.payload.templateId &&
+                    template.sections.find(
+                        (section) =>
+                            section._id === action.payload.sectionId &&
+                            (section.fields = action.payload.fields),
+                    ),
+            );
+        },
+        // ./DRAG & DROP
     },
     extraReducers: (build) => {
         build
@@ -159,4 +173,5 @@ export const {
     fieldCreate,
     fieldUpdate,
     fieldDelete,
+    dragAndDrop,
 } = Templates.actions;

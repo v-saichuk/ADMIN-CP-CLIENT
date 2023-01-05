@@ -1,25 +1,32 @@
 import { FC, useState } from 'react';
-import { Button, Col, Form, Input, message, Modal, Row } from 'antd';
+import { Button, Col, Form, Input, message, Modal, Row, Select } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
-import * as Template from '../../../store/templates/templates.slice';
-import { useAppDispatch } from '../../../store/hooks/useRedux';
 import axios from '../../../axios';
+import { useAppDispatch } from '../../../store/hooks/useRedux';
+import * as Template from '../../../store/templates/templates.slice';
+import { IFieldCreateProps } from '../../../types/index';
 
 import * as SVG from '../../../assets/images/svg/svg';
-
-import { IFieldCreateProps } from '../../../types/index';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 
 interface IValue {
     name: string;
     description: string;
-    question: string;
-    reply: string;
+    title: string;
+    link: string;
+    small: string;
+    medium: string;
+    large: string;
 }
 
 const key = 'update';
 
-export const FieldFaq: FC<IFieldCreateProps> = ({ templateId, sectionId, url, handleModal }) => {
+export const FieldImageCreate: FC<IFieldCreateProps> = ({
+    templateId,
+    sectionId,
+    url,
+    handleModal,
+}) => {
     const [isModal, setIsModal] = useState(false);
     const [isLoadingForm, setIsLoadingForm] = useState(false);
 
@@ -29,19 +36,25 @@ export const FieldFaq: FC<IFieldCreateProps> = ({ templateId, sectionId, url, ha
 
     const handleCreateFields = async (value: IValue) => {
         setIsLoadingForm(true);
+        console.log('value=>', value);
         message.loading({ content: 'Loading...', key });
         try {
             const { data } = await axios.post(url, {
                 templateId,
                 sectionId,
                 information: {
-                    field_type: 'Question',
+                    field_type: 'Image',
                     field_name: value.name,
                     field_description: value.description,
                 },
                 content: {
-                    question: value.question,
-                    reply: value.reply,
+                    title: !!value.title ? value.title : '',
+                    link: !!value.link ? `https://${value.link}` : '',
+                    sizes: {
+                        small: !!value.small ? `https://${value.small}` : '',
+                        medium: !!value.medium ? `https://${value.medium}` : '',
+                        large: !!value.large ? `https://${value.large}` : '',
+                    },
                 },
             });
 
@@ -85,8 +98,8 @@ export const FieldFaq: FC<IFieldCreateProps> = ({ templateId, sectionId, url, ha
         <>
             <div className="field-create" onClick={onOpen}>
                 <div className="field-create__content">
-                    <SVG.IconQuestion x={40} y={40} />
-                    <span className="fields-create__title">FAQ</span>
+                    <SVG.IconImage x={40} y={40} />
+                    <span className="fields-create__title">IMAGE</span>
                 </div>
             </div>
 
@@ -100,7 +113,7 @@ export const FieldFaq: FC<IFieldCreateProps> = ({ templateId, sectionId, url, ha
                             icon={<ArrowLeftOutlined />}
                             onClick={onBack}
                         />
-                        <span style={{ marginLeft: 10 }}>FAQ</span>
+                        <span style={{ marginLeft: 10 }}>Image</span>
                     </div>
                 }
                 visible={isModal}
@@ -134,18 +147,52 @@ export const FieldFaq: FC<IFieldCreateProps> = ({ templateId, sectionId, url, ha
                             </Form.Item>
                         </Col>
                     </Row>
-                    <hr style={{ border: '1px solid #303030' }} />
+                    <hr style={{ border: '0.1px solid #303030' }} />
 
                     <div style={{ marginBottom: 5 }}>Content</div>
                     <Row gutter={[16, 16]}>
                         <Col span={24}>
-                            <Form.Item name="question">
-                                <Input placeholder="Question" size="middle" />
+                            <Form.Item name="title">
+                                <Input placeholder="Title (alt)" size="middle" />
                             </Form.Item>
                         </Col>
                         <Col span={24}>
-                            <Form.Item name="reply">
-                                <TextArea style={{ height: 100 }} showCount placeholder="Reply" />
+                            <Form.Item name="link">
+                                <Input
+                                    addonBefore="https://"
+                                    placeholder="Link URL"
+                                    size="middle"
+                                />
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                    <div style={{ marginBottom: 5, marginTop: 10 }}>Image sizes</div>
+                    <Row gutter={[16, 16]}>
+                        <Col span={24}>
+                            <Form.Item name="small">
+                                <Input
+                                    addonBefore="https://"
+                                    placeholder="SRC (small)"
+                                    size="middle"
+                                />
+                            </Form.Item>
+                        </Col>
+                        <Col span={24}>
+                            <Form.Item name="medium">
+                                <Input
+                                    addonBefore="https://"
+                                    placeholder="SRC (medium)"
+                                    size="middle"
+                                />
+                            </Form.Item>
+                        </Col>
+                        <Col span={24}>
+                            <Form.Item name="large">
+                                <Input
+                                    addonBefore="https://"
+                                    placeholder="SRC (large)"
+                                    size="middle"
+                                />
                             </Form.Item>
                         </Col>
                     </Row>

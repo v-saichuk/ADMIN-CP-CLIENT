@@ -1,27 +1,33 @@
 import { FC, useState } from 'react';
 import { Button, Col, Form, Input, message, Modal, Row } from 'antd';
-import TextArea from 'antd/lib/input/TextArea';
-import * as Template from '../../../store/templates/templates.slice';
 import axios from '../../../axios';
+import TextArea from 'antd/lib/input/TextArea';
 
 import * as SVG from '../../../assets/images/svg/svg';
+import { ArrowLeftOutlined, CloseOutlined, PlusOutlined } from '@ant-design/icons';
+
+import * as Template from '../../../store/templates/templates.slice';
 
 import { IFieldCreateProps } from '../../../types/index';
 import { useAppDispatch } from '../../../store/hooks/useRedux';
-import { ArrowLeftOutlined } from '@ant-design/icons';
 
 interface IValue {
     name: string;
     description: string;
-    title: string;
-    link: string;
+    list: string[];
 }
 
 const key = 'update';
 
-export const FieldLink: FC<IFieldCreateProps> = ({ templateId, sectionId, url, handleModal }) => {
+export const FieldListCreate: FC<IFieldCreateProps> = ({
+    templateId,
+    sectionId,
+    url,
+    handleModal,
+}) => {
     const [isModal, setIsModal] = useState(false);
     const [isLoadingForm, setIsLoadingForm] = useState(false);
+
     const dispatch = useAppDispatch();
 
     const [form] = Form.useForm();
@@ -34,13 +40,12 @@ export const FieldLink: FC<IFieldCreateProps> = ({ templateId, sectionId, url, h
                 templateId,
                 sectionId,
                 information: {
-                    field_type: 'Link',
+                    field_type: 'List',
                     field_name: value.name,
                     field_description: value.description,
                 },
                 content: {
-                    title: value.title,
-                    link: value.link,
+                    list: !!value.list ? value.list : '',
                 },
             });
 
@@ -84,8 +89,8 @@ export const FieldLink: FC<IFieldCreateProps> = ({ templateId, sectionId, url, h
         <>
             <div className="field-create" onClick={onOpen}>
                 <div className="field-create__content">
-                    <SVG.IconLink x={40} y={40} />
-                    <span className="fields-create__title">LINK</span>
+                    <SVG.IconList x={40} y={40} />
+                    <span className="fields-create__title">LIST</span>
                 </div>
             </div>
 
@@ -99,7 +104,7 @@ export const FieldLink: FC<IFieldCreateProps> = ({ templateId, sectionId, url, h
                             icon={<ArrowLeftOutlined />}
                             onClick={onBack}
                         />
-                        <span style={{ marginLeft: 10 }}>Link</span>
+                        <span style={{ marginLeft: 10 }}>List</span>
                     </div>
                 }
                 visible={isModal}
@@ -133,19 +138,54 @@ export const FieldLink: FC<IFieldCreateProps> = ({ templateId, sectionId, url, h
                             </Form.Item>
                         </Col>
                     </Row>
-                    <hr style={{ border: '1px solid #303030' }} />
+                    <hr style={{ border: '0.1px solid #303030' }} />
 
-                    <div style={{ marginBottom: 5 }}>Content</div>
+                    <div>Content</div>
                     <Row gutter={[16, 16]}>
                         <Col span={24}>
-                            <Form.Item name="title">
-                                <Input placeholder="Title" size="middle" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={24}>
-                            <Form.Item name="link">
-                                <Input placeholder="Link" size="middle" />
-                            </Form.Item>
+                            <Form.List name="list">
+                                {(fields, { add, remove }) => (
+                                    <>
+                                        {fields.map(({ key, name, ...restField }) => (
+                                            <Row
+                                                key={key}
+                                                align="middle"
+                                                justify="center"
+                                                style={{ marginTop: 5 }}>
+                                                <Col span={1}>🟢</Col>
+                                                <Col span={22}>
+                                                    <Form.Item
+                                                        {...restField}
+                                                        name={[name, 'item']}
+                                                        rules={[
+                                                            {
+                                                                required: true,
+                                                                message: 'Missing text',
+                                                            },
+                                                        ]}>
+                                                        <Input placeholder="Title" />
+                                                    </Form.Item>
+                                                </Col>
+                                                <Col span={1}>
+                                                    <CloseOutlined
+                                                        onClick={() => remove(name)}
+                                                        style={{ marginLeft: 5 }}
+                                                    />
+                                                </Col>
+                                            </Row>
+                                        ))}
+                                        <Form.Item style={{ marginTop: 10 }}>
+                                            <Button
+                                                type="dashed"
+                                                onClick={() => add()}
+                                                block
+                                                icon={<PlusOutlined />}>
+                                                Add field
+                                            </Button>
+                                        </Form.Item>
+                                    </>
+                                )}
+                            </Form.List>
                         </Col>
                     </Row>
                 </Form>

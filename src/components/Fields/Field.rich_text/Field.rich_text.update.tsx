@@ -115,7 +115,7 @@ export const FieldRichTextUpdate: FC<IProps> = ({ field, templateId, sectionId, 
                             </Form.Item>
                         </Col>
                     </Row>
-                    <hr style={{ border: '1px solid #303030' }} />
+                    <hr style={{ border: '0.1px solid #303030' }} />
 
                     <div style={{ marginBottom: 5 }}>Content</div>
                     <Row gutter={[16, 16]}>
@@ -123,7 +123,7 @@ export const FieldRichTextUpdate: FC<IProps> = ({ field, templateId, sectionId, 
                             <Form.Item name="rich_text" initialValue={field.content.rich_text}>
                                 <TextArea
                                     showCount
-                                    style={{ height: 100 }}
+                                    style={{ height: 200 }}
                                     placeholder="Rich Text"
                                 />
                             </Form.Item>

@@ -1,27 +1,32 @@
 import { FC, useState } from 'react';
-import { Button, Col, Form, Input, message, Modal, Row } from 'antd';
-import { useAppDispatch } from '../../../store/hooks/useRedux';
-import axios from '../../../axios';
+import { Button, Col, Form, Input, InputNumber, message, Modal, Row } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
+import axios from '../../../axios';
 import * as Template from '../../../store/templates/templates.slice';
 
-import { IFieldCreateProps } from '../../../types/index';
 import * as SVG from '../../../assets/images/svg/svg';
+import { IFieldCreateProps } from '../../../types/index';
+import { useAppDispatch } from '../../../store/hooks/useRedux';
 import { ArrowLeftOutlined } from '@ant-design/icons';
-
-const key = 'update';
 
 interface IValue {
     name: string;
     description: string;
-    code: string;
+    number: string;
 }
 
-export const FieldCode: FC<IFieldCreateProps> = ({ templateId, sectionId, url, handleModal }) => {
+const key = 'update';
+
+export const FieldNumberCreate: FC<IFieldCreateProps> = ({
+    templateId,
+    sectionId,
+    url,
+    handleModal,
+}) => {
     const [isModal, setIsModal] = useState(false);
     const [isLoadingForm, setIsLoadingForm] = useState(false);
-
     const dispatch = useAppDispatch();
+
     const [form] = Form.useForm();
 
     const handleCreateFields = async (value: IValue) => {
@@ -32,12 +37,12 @@ export const FieldCode: FC<IFieldCreateProps> = ({ templateId, sectionId, url, h
                 templateId,
                 sectionId,
                 information: {
-                    field_type: 'Code',
+                    field_type: 'Number',
                     field_name: value.name,
                     field_description: value.description,
                 },
                 content: {
-                    code: value.code,
+                    number: !!value.number ? value.number : '',
                 },
             });
 
@@ -81,8 +86,8 @@ export const FieldCode: FC<IFieldCreateProps> = ({ templateId, sectionId, url, h
         <>
             <div className="field-create" onClick={onOpen}>
                 <div className="field-create__content">
-                    <SVG.IconCode x={40} y={40} />
-                    <span className="fields-create__title">CODE</span>
+                    <SVG.IconNumber x={40} y={40} />
+                    <span className="fields-create__title">NUMBER</span>
                 </div>
             </div>
 
@@ -96,7 +101,7 @@ export const FieldCode: FC<IFieldCreateProps> = ({ templateId, sectionId, url, h
                             icon={<ArrowLeftOutlined />}
                             onClick={onBack}
                         />
-                        <span style={{ marginLeft: 10 }}>Code</span>
+                        <span style={{ marginLeft: 10 }}>Number</span>
                     </div>
                 }
                 visible={isModal}
@@ -130,13 +135,17 @@ export const FieldCode: FC<IFieldCreateProps> = ({ templateId, sectionId, url, h
                             </Form.Item>
                         </Col>
                     </Row>
-                    <hr style={{ border: '1px solid #303030' }} />
+                    <hr style={{ border: '0.1px solid #303030' }} />
 
                     <div style={{ marginBottom: 5 }}>Content</div>
                     <Row gutter={[16, 16]}>
                         <Col span={24}>
-                            <Form.Item name="code">
-                                <TextArea showCount style={{ height: 300 }} placeholder="Code" />
+                            <Form.Item name="number">
+                                <InputNumber
+                                    placeholder="Number"
+                                    size="middle"
+                                    style={{ width: '100%' }}
+                                />
                             </Form.Item>
                         </Col>
                     </Row>
