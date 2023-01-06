@@ -8,6 +8,7 @@ export const ROUT_PATH = {
     WEBSITES_EDIT: '/websites/edit/:id',
 
     LANDINGS: '/landings',
+    LANDING_CREATE: '/landing/create',
 
     TEMPLATES: '/templates',
     TEMPLATES_CREATE: '/template/create',
@@ -56,76 +57,81 @@ const ROUTE = [
     },
     {
         id: 5,
+        path: ROUT_PATH.LANDING_CREATE, // ====
+        element: <Page.LandingCreate />,
+    },
+    {
+        id: 6,
         path: ROUT_PATH.TEMPLATES,
         element: <Page.TemplatesPage />,
     },
     {
-        id: 6,
+        id: 7,
         path: ROUT_PATH.TEMPLATES_CREATE,
         element: <Page.TemplatesCreate />,
     },
     {
-        id: 7,
+        id: 8,
         path: ROUT_PATH.TEMPLATES_SECTION,
         element: <Page.TemplatesContent />,
     },
     {
-        id: 8,
+        id: 9,
         path: ROUT_PATH.TEMPLATES_FIELDS,
         element: <Page.FieldsContent />,
     },
     {
-        id: 9,
+        id: 10,
         path: ROUT_PATH.LEGALS,
         element: <Page.LegalsPage />,
     },
     {
-        id: 10,
+        id: 11,
         path: ROUT_PATH.LEGALS_CREATE,
         element: <Page.LegalsCreate />,
     },
     {
-        id: 11,
+        id: 12,
         path: ROUT_PATH.LEGALS_EDIT,
         element: <Page.LegalsEdit />,
     },
     {
-        id: 12,
+        id: 13,
         path: ROUT_PATH.OFFER_OWNER,
         element: <Page.OfferOwnerPage />,
     },
     {
-        id: 13,
+        id: 14,
         path: ROUT_PATH.OFFERS,
         element: <Page.OffersPage />,
     },
     {
-        id: 14,
+        id: 15,
         path: ROUT_PATH.USERS,
         element: <Page.UsersPage />,
     },
     {
-        id: 15,
+        id: 16,
         path: ROUT_PATH.USERS_EDIT_ID,
         element: <Page.UsersEdit />,
     },
     {
-        id: 16,
+        id: 17,
         path: ROUT_PATH.USERS_CREATE,
         element: <Page.UserCreate />,
     },
     {
-        id: 17,
+        id: 18,
         path: ROUT_PATH.MY_PROFILE,
         element: <Page.MyProfilePage />,
     },
     {
-        id: 18,
+        id: 19,
         path: ROUT_PATH.SETTINGS,
         element: <Page.SettingsPage />,
     },
     {
-        id: 19,
+        id: 20,
         path: ROUT_PATH.ALL,
         element: <Page.NotFoundPage />,
     },

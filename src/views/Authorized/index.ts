@@ -1,15 +1,21 @@
 export { WebsitesPage } from './Websites/WebsitesPage/WebsitesPage';
 export { WebsitesCreate } from './Websites/WebsitesForm/Websites.create/WebsitesCreate';
 export { WebsitesEdit } from './Websites/WebsitesForm/Website.edit/WebsitesEdit';
+
 export { LandingsPage } from './Landings/LandingsPage/LandingsPage';
+export { LandingCreate } from './Landings/LandingsFrom/Landing.create';
+
 export { TemplatesPage } from './Templates/TemplatesPage/TemplatesPage';
 export { TemplatesCreate } from './Templates/TemplatesFrom/Templates.create';
 export { TemplatesContent } from './Templates/TemplatesFrom/Templates.content';
+
 export { SectionEdit } from './Templates/TemplatesFrom/Templates.sections/Section.edit/Section.edit';
 export { FieldsContent } from './Templates/TemplatesFrom/Template.fields/Fields.content';
+
 export { LegalsPage } from './Legals/LegalsPage/LegalsPage';
 export { LegalsCreate } from './Legals/LegalsFrom/Legals.create/Legals.create';
 export { LegalsEdit } from './Legals/LegalsFrom/Legals.edit/Legals.edit';
+
 export { OfferOwnerPage } from './OfferOwner/OfferOwnerPage/OfferOwnerPage';
 export { OffersPage } from './Offers/OffersPage/OffersPage';
 export { ProjectsPage } from './Projects/ProjectsPage/ProjectsPage';

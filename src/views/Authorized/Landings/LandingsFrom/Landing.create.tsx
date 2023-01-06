@@ -1,33 +1,50 @@
 import { FC, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../../../../../store/hooks/useRedux';
-import axios from '../../../../../axios';
-import * as Legals from '../../../../../store/legals/legalas.slice';
-import { Badge, Breadcrumb, Button, Col, Form, Input, Layout, message, Row, Select } from 'antd';
+import axios from '../../../../axios';
+import { useAppDispatch, useAppSelector } from '../../../../store/hooks/useRedux';
+import * as Template from '../../../../store/templates/templates.slice';
 import { Content } from 'antd/lib/layout/layout';
+import { Breadcrumb, Button, Col, Form, Input, Layout, message, Row, Select } from 'antd';
+import TextArea from 'antd/lib/input/TextArea';
+import { Counters } from '../../../../components/Counters/Counters';
+
 import * as Icon from '@ant-design/icons';
 
-export const LegalsCreate: FC = () => {
+interface IValueForm {
+    name: string;
+    country: string[];
+    language: string;
+    website: string;
+    offer: string;
+    template_pack: string;
+    status: boolean;
+    note: string;
+}
+
+export const LandingCreate: FC = () => {
     const dispatch = useAppDispatch();
     const navigation = useNavigate();
+
+    const { websites } = useAppSelector((state) => state.websites);
     const { lang } = useAppSelector((state) => state.language);
     const { offers } = useAppSelector((state) => state.offers);
-    const { offerOwner } = useAppSelector((state) => state.offerOwner);
-    const { websites } = useAppSelector((state) => state.websites);
+    const { TemplatesData } = useAppSelector((state) => state.templates);
+    const COUNTERS = Counters();
+
     const [isLoading, setLoading] = useState(false);
 
-    const fetchCreate = async (values: any) => {
+    const fetchCreate = async (values: IValueForm) => {
         setLoading(true);
         try {
-            const { data } = await axios.post('/api/legals', values);
-            dispatch(Legals.create(data.legal));
+            const { data } = await axios.post('/api/landing', values);
+            console.log('data =>>>', data);
+            // dispatch(Template.create(data.template));
             message.success(data.message);
-            navigation(`/legals/edit/${data.legal._id}`);
+            // navigation(`/template/${data.template._id}`);
             setLoading(false);
             return;
         } catch (e: any) {
             setLoading(false);
-            console.log('ERROR CREATE WEBSITES =>', e);
             e.response.data.map((el: any) => message.error(el.msg));
             return;
         }
@@ -41,9 +58,9 @@ export const LegalsCreate: FC = () => {
                         icon={<Icon.LeftOutlined />}
                         type={'primary'}
                         style={{ marginRight: 10 }}
-                        onClick={() => navigation('/legals')}
+                        onClick={() => navigation('/landings')}
                     />
-                    Legals
+                    Landing
                 </Breadcrumb.Item>
                 <Breadcrumb.Item>Create</Breadcrumb.Item>
             </Breadcrumb>
@@ -56,10 +73,10 @@ export const LegalsCreate: FC = () => {
                     autoComplete="off">
                     <Row gutter={[16, 24]}>
                         <Col className="gutter-row" span={24}>
-                            <div style={{ marginBottom: 10 }}>Legal page information</div>
+                            <div style={{ marginBottom: 10 }}>Template page information</div>
                             <Row gutter={[16, 16]}>
                                 {/* Name */}
-                                <Col className="gutter-row" span={24} md={{ span: 12 }}>
+                                <Col className="gutter-row" span={24} md={{ span: 24 }}>
                                     <Form.Item
                                         name="name"
                                         hasFeedback
@@ -79,6 +96,48 @@ export const LegalsCreate: FC = () => {
                                     </Form.Item>
                                 </Col>
 
+                                {/* Country */}
+                                <Col className="gutter-row" span={24} md={{ span: 12 }}>
+                                    <Form.Item
+                                        name="country"
+                                        hasFeedback
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message: 'Please select Country!',
+                                            },
+                                        ]}>
+                                        <Select
+                                            showSearch
+                                            placeholder="Select Country"
+                                            optionFilterProp="children"
+                                            optionLabelProp="label"
+                                            mode="multiple"
+                                            filterOption={(input, option: any) =>
+                                                option.children.props.children[1]
+                                                    .toLowerCase()
+                                                    .includes(input.toLowerCase())
+                                            }>
+                                            {COUNTERS.map((cou, ind) => (
+                                                <Select.Option
+                                                    key={ind}
+                                                    value={cou.flag + ' ' + cou.title}
+                                                    label={
+                                                        <div className="lang-table">
+                                                            <span>{cou.flag}</span>
+                                                            {cou.title}
+                                                        </div>
+                                                    }>
+                                                    <div className="lang-table">
+                                                        <span>{cou.flag}</span>
+                                                        {cou.title}
+                                                    </div>
+                                                </Select.Option>
+                                            ))}
+                                        </Select>
+                                    </Form.Item>
+                                </Col>
+
                                 {/* Language */}
                                 <Col className="gutter-row" span={24} md={{ span: 12 }}>
                                     <Form.Item
@@ -92,7 +151,7 @@ export const LegalsCreate: FC = () => {
                                         ]}>
                                         <Select
                                             showSearch
-                                            placeholder="Select language"
+                                            placeholder="Select Language"
                                             optionFilterProp="children"
                                             optionLabelProp="label"
                                             filterOption={(input, option: any) =>
@@ -123,6 +182,37 @@ export const LegalsCreate: FC = () => {
                                     </Form.Item>
                                 </Col>
 
+                                {/* Website */}
+                                <Col className="gutter-row" span={24} md={{ span: 12 }}>
+                                    <Form.Item
+                                        name="website"
+                                        hasFeedback
+                                        rules={[
+                                            {
+                                                type: 'string',
+                                                required: true,
+                                                message: 'Please select Website!',
+                                            },
+                                        ]}>
+                                        <Select
+                                            style={{ width: '100%' }}
+                                            showSearch
+                                            placeholder="Select Website"
+                                            optionFilterProp="children"
+                                            filterOption={(input, option) =>
+                                                (option!.children as unknown as string)
+                                                    .toLowerCase()
+                                                    .includes(input.toLowerCase())
+                                            }>
+                                            {websites.map((site) => (
+                                                <Select.Option key={site._id} value={site._id}>
+                                                    {site.url}
+                                                </Select.Option>
+                                            ))}
+                                        </Select>
+                                    </Form.Item>
+                                </Col>
+
                                 {/* Offer */}
                                 <Col className="gutter-row" span={24} md={{ span: 12 }}>
                                     <Form.Item
@@ -136,7 +226,7 @@ export const LegalsCreate: FC = () => {
                                         ]}>
                                         <Select
                                             showSearch
-                                            placeholder="Select offer"
+                                            placeholder="Select Offer"
                                             optionFilterProp="children"
                                             optionLabelProp="label"
                                             filterOption={(input, option: any) =>
@@ -168,79 +258,49 @@ export const LegalsCreate: FC = () => {
                                     </Form.Item>
                                 </Col>
 
-                                {/* Offer Owner */}
+                                {/* Template Pack */}
                                 <Col className="gutter-row" span={24} md={{ span: 12 }}>
                                     <Form.Item
-                                        name="offerOwner"
+                                        name="template_pack"
                                         hasFeedback
                                         rules={[
                                             {
                                                 required: true,
-                                                message: 'Please select Offer Owner!',
+                                                message: 'Please select Language!',
                                             },
                                         ]}>
                                         <Select
                                             showSearch
-                                            placeholder="Select offer owner"
+                                            placeholder="Select Template Pack"
                                             optionFilterProp="children"
                                             optionLabelProp="label"
                                             filterOption={(input, option: any) =>
-                                                option.children.props.text
+                                                option.children.props.children[1]
                                                     .toLowerCase()
                                                     .includes(input.toLowerCase())
                                             }>
-                                            {offerOwner.map((owner) => (
+                                            {TemplatesData.map((template) => (
                                                 <Select.Option
-                                                    key={owner._id}
-                                                    value={owner._id}
+                                                    key={template._id}
+                                                    value={template._id}
                                                     label={
-                                                        <Badge
-                                                            color={owner.color}
-                                                            text={owner.name}
-                                                        />
+                                                        <div className="lang-table">
+                                                            {template.template_pack}
+                                                        </div>
                                                     }>
-                                                    <Badge color={owner.color} text={owner.name} />
+                                                    <div className="lang-table">
+                                                        {template.template_pack}
+                                                    </div>
                                                 </Select.Option>
                                             ))}
                                         </Select>
                                     </Form.Item>
                                 </Col>
 
-                                {/* Website */}
+                                {/* Statuts */}
                                 <Col className="gutter-row" span={24} md={{ span: 12 }}>
                                     <Form.Item
-                                        name="website"
-                                        hasFeedback
-                                        rules={[
-                                            {
-                                                type: 'string',
-                                                required: true,
-                                                message: 'Please select Website!',
-                                            },
-                                        ]}>
-                                        <Select
-                                            style={{ width: '100%' }}
-                                            showSearch
-                                            placeholder="Select website"
-                                            optionFilterProp="children"
-                                            filterOption={(input, option) =>
-                                                (option!.children as unknown as string)
-                                                    .toLowerCase()
-                                                    .includes(input.toLowerCase())
-                                            }>
-                                            {websites.map((site) => (
-                                                <Select.Option key={site._id} value={site._id}>
-                                                    {site.url}
-                                                </Select.Option>
-                                            ))}
-                                        </Select>
-                                    </Form.Item>
-                                </Col>
-
-                                {/* Status */}
-                                <Col className="gutter-row" span={24} md={{ span: 12 }}>
-                                    <Form.Item
-                                        name="enabled"
+                                        name="status"
                                         hasFeedback
                                         rules={[
                                             {
@@ -248,7 +308,7 @@ export const LegalsCreate: FC = () => {
                                                 message: 'Please select Status!',
                                             },
                                         ]}>
-                                        <Select placeholder="Select status">
+                                        <Select placeholder="Select Status">
                                             <Select.Option value={true}>
                                                 <Icon.CheckOutlined style={{ color: '#66d986' }} />{' '}
                                                 Active
@@ -260,12 +320,19 @@ export const LegalsCreate: FC = () => {
                                         </Select>
                                     </Form.Item>
                                 </Col>
+
+                                {/* Note */}
+                                <Col className="gutter-row" span={24} md={{ span: 24 }}>
+                                    <Form.Item name="note" hasFeedback>
+                                        <TextArea allowClear placeholder="Note" />
+                                    </Form.Item>
+                                </Col>
                             </Row>
                         </Col>
                         <Col className="gutter-row" span={24} md={{ span: 12 }}>
                             <Button
                                 htmlType="submit"
-                                icon={<Icon.SaveOutlined />}
+                                icon={<Icon.SafetyCertificateOutlined />}
                                 loading={isLoading}
                                 type="primary">
                                 Save
