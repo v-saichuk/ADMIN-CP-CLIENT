@@ -1,51 +1,39 @@
 import { FC, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import axios from '../../../../axios';
 import { useAppDispatch, useAppSelector } from '../../../../store/hooks/useRedux';
+import { Button, Col, Form, Input, message, Row, Select } from 'antd';
 import * as Landing from '../../../../store/landings/landings.slice';
-import { Content } from 'antd/lib/layout/layout';
-import { Breadcrumb, Button, Col, Form, Input, Layout, message, Row, Select } from 'antd';
+import * as Icon from '@ant-design/icons';
 import TextArea from 'antd/lib/input/TextArea';
 import { Countrys } from '../../../../components/Countrys/Countrys';
 
-import * as Icon from '@ant-design/icons';
-
 const key = 'updatable';
 
-interface IValueForm {
-    name: string;
-    country: string[];
-    language: string;
-    website: string;
-    offer: string;
-    template_pack: string;
-    status: boolean;
-    note: string;
-}
-
-export const LandingCreate: FC = () => {
+export const LandingSettings: FC = () => {
     const dispatch = useAppDispatch();
-    const navigation = useNavigate();
-
+    const { id: LANDING_PAGE_ID } = useParams();
+    const LANDING = useAppSelector((state) =>
+        state.landings.landingsData.find((landing) => landing._id === LANDING_PAGE_ID),
+    );
     const { websites } = useAppSelector((state) => state.websites);
+    const COUNTRYS = Countrys();
     const { lang } = useAppSelector((state) => state.language);
     const { offers } = useAppSelector((state) => state.offers);
     const { TemplatesData } = useAppSelector((state) => state.templates);
-    const COUNTRYS = Countrys();
 
     const [isLoading, setLoading] = useState(false);
 
-    const fetchCreate = async (values: IValueForm) => {
+    const fetchUpdate = async (values: any) => {
         setLoading(true);
         message.loading({ content: 'Loading...', key });
         try {
-            const { data } = await axios.post('/api/landing', values);
+            const { data } = await axios.patch(`/api/landing/${LANDING_PAGE_ID}`, values);
 
-            dispatch(Landing.create(data.data));
-
-            message.success({ content: 'Created!', key, duration: 2 });
+            dispatch(Landing.update(data.data));
             setLoading(false);
-            navigation(`/landing/${data.data._id}`);
+            message.success({ content: 'Updated!', key, duration: 2 });
+
             return;
         } catch (e) {
             setLoading(false);
@@ -54,36 +42,28 @@ export const LandingCreate: FC = () => {
         }
     };
 
+    if (!LANDING) {
+        return <h1>Error. NO LANDING PAGE</h1>;
+    }
+
     return (
-        <Layout style={{ padding: '0 24px 24px' }}>
-            <Breadcrumb className="Breadcrumb-custome">
-                <Breadcrumb.Item>
-                    <Button
-                        icon={<Icon.LeftOutlined />}
-                        type={'primary'}
-                        style={{ marginRight: 10 }}
-                        onClick={() => navigation('/landings')}
-                    />
-                    Landing
-                </Breadcrumb.Item>
-                <Breadcrumb.Item>Create</Breadcrumb.Item>
-            </Breadcrumb>
-            <Content className="site-layout-background main_content offer__content">
+        <Row gutter={[16, 24]}>
+            <Col span={24} style={{ height: 'calc(100vh - 240px)', overflow: 'scroll' }}>
                 <Form
                     name="basic"
                     initialValues={{ remember: true }}
-                    onFinish={fetchCreate}
+                    onFinish={fetchUpdate}
                     size="middle"
                     autoComplete="off">
                     <Row gutter={[16, 24]}>
                         <Col className="gutter-row" span={24}>
-                            <div style={{ marginBottom: 10 }}>Template page information</div>
+                            <div className="content_full_header">SETTINGS</div>
                             <Row gutter={[16, 16]}>
                                 {/* Name */}
                                 <Col className="gutter-row" span={24} md={{ span: 24 }}>
                                     <Form.Item
                                         name="name"
-                                        hasFeedback
+                                        initialValue={LANDING.name}
                                         rules={[
                                             {
                                                 type: 'string',
@@ -104,7 +84,7 @@ export const LandingCreate: FC = () => {
                                 <Col className="gutter-row" span={24} md={{ span: 12 }}>
                                     <Form.Item
                                         name="country"
-                                        hasFeedback
+                                        initialValue={LANDING.country}
                                         rules={[
                                             {
                                                 required: true,
@@ -146,7 +126,7 @@ export const LandingCreate: FC = () => {
                                 <Col className="gutter-row" span={24} md={{ span: 12 }}>
                                     <Form.Item
                                         name="language"
-                                        hasFeedback
+                                        initialValue={LANDING.language._id}
                                         rules={[
                                             {
                                                 required: true,
@@ -190,7 +170,7 @@ export const LandingCreate: FC = () => {
                                 <Col className="gutter-row" span={24} md={{ span: 12 }}>
                                     <Form.Item
                                         name="website"
-                                        hasFeedback
+                                        initialValue={LANDING.website._id}
                                         rules={[
                                             {
                                                 type: 'string',
@@ -221,7 +201,7 @@ export const LandingCreate: FC = () => {
                                 <Col className="gutter-row" span={24} md={{ span: 12 }}>
                                     <Form.Item
                                         name="offer"
-                                        hasFeedback
+                                        initialValue={LANDING.offer._id}
                                         rules={[
                                             {
                                                 required: true,
@@ -266,7 +246,7 @@ export const LandingCreate: FC = () => {
                                 <Col className="gutter-row" span={24} md={{ span: 12 }}>
                                     <Form.Item
                                         name="template_pack"
-                                        hasFeedback
+                                        initialValue={LANDING.template_pack}
                                         rules={[
                                             {
                                                 required: true,
@@ -275,6 +255,7 @@ export const LandingCreate: FC = () => {
                                         ]}>
                                         <Select
                                             showSearch
+                                            disabled
                                             placeholder="Select Template Pack"
                                             optionFilterProp="children"
                                             optionLabelProp="label"
@@ -305,7 +286,7 @@ export const LandingCreate: FC = () => {
                                 <Col className="gutter-row" span={24} md={{ span: 12 }}>
                                     <Form.Item
                                         name="status"
-                                        hasFeedback
+                                        initialValue={LANDING.status}
                                         rules={[
                                             {
                                                 required: true,
@@ -327,8 +308,12 @@ export const LandingCreate: FC = () => {
 
                                 {/* Note */}
                                 <Col className="gutter-row" span={24} md={{ span: 24 }}>
-                                    <Form.Item name="note" hasFeedback>
-                                        <TextArea allowClear placeholder="Note" />
+                                    <Form.Item name="note" initialValue={LANDING.note}>
+                                        <TextArea
+                                            allowClear
+                                            autoSize={{ minRows: 5 }}
+                                            placeholder="Note"
+                                        />
                                     </Form.Item>
                                 </Col>
                             </Row>
@@ -344,7 +329,7 @@ export const LandingCreate: FC = () => {
                         </Col>
                     </Row>
                 </Form>
-            </Content>
-        </Layout>
+            </Col>
+        </Row>
     );
 };

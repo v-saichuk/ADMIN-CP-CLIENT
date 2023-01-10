@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { useLocation } from 'react-router-dom';
 import * as F from '../../../../../../components/Fields/Fields.update';
-import * as Template from '../../../../../../store/templates/templates.slice';
+import * as Landing from '../../../../../../store/landings/landings.slice';
 
 import { IFields } from '../../../../../../types';
 
@@ -9,18 +9,18 @@ interface IProps {
     field: IFields;
 }
 
-export const FieldUpdate: FC<IProps> = ({ field }) => {
+export const LandingFieldUpdate: FC<IProps> = ({ field }) => {
     const { pathname } = useLocation();
     const url = pathname.split('/');
-    const TEMPLATE_ID = url[2];
+    const LANDING_ID = url[2];
     const SECTION_ID = url[3];
 
     const params = {
         field,
-        main_id: TEMPLATE_ID,
+        main_id: LANDING_ID,
         section_id: SECTION_ID,
-        request_url: '/api/template/field/update',
-        fieldUpdate: Template.fieldUpdate,
+        request_url: '/api/landing/field/update',
+        fieldUpdate: Landing.fieldUpdate,
     };
 
     switch (field.field_type) {

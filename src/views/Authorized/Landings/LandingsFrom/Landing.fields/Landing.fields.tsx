@@ -1,13 +1,13 @@
 import { FC, useEffect, useState } from 'react';
-import axios from '../../../../../axios';
 import { useLocation } from 'react-router-dom';
 import { Col, List, Pagination, Row, Space } from 'antd';
 import { EmptyCustome } from '../../../../../components/EmptyCustome/EmptyCustome';
 import { useAppDispatch, useAppSelector } from '../../../../../store/hooks/useRedux';
+import axios from '../../../../../axios';
 
-import { FieldCreate } from './Field.create/Field.create';
-import { FieldDelete } from './Field.delete/FieldDelete';
-import { FieldUpdate } from './Field.update/Field.update';
+import { LandingFieldCreate } from './Landing.field.create/Landing.field.create';
+import { LandingFieldUpdate } from './Landing.field.update/Landing.field.update';
+import { LandingFieldDelete } from './Landing.field.delete/Landing.field.delete';
 
 import { dragAndDrop } from '../../../../../store/templates/templates.slice';
 
@@ -85,18 +85,18 @@ const ICON: IIcon[] = [
     },
 ];
 
-export const TemplatesFields: FC = () => {
+export const LandingFields: FC = () => {
     const dispatch = useAppDispatch();
     const { pathname } = useLocation();
 
-    const TEMPLATE_ID = pathname.split('/')[2];
+    const LANDING_ID = pathname.split('/')[2];
     const SECTION_ID = pathname.split('/')[3];
 
-    const Template = useAppSelector((state) => state.templates.TemplatesData).find(
-        (template) => template._id === TEMPLATE_ID,
+    const Landing = useAppSelector((state) => state.landings.landingsData).find(
+        (landing) => landing._id === LANDING_ID,
     );
 
-    const Section = Template?.sections.find((field) => field._id === SECTION_ID);
+    const Section = Landing?.sections.find((section) => section._id === SECTION_ID);
 
     const [useFields, setFields] = useState(Section?.fields);
 
@@ -106,14 +106,15 @@ export const TemplatesFields: FC = () => {
 
     const savePosition = async () => {
         try {
-            await axios.patch('/api/template/field/position', {
-                template_id: TEMPLATE_ID,
+            await axios.patch('/api/landing/field/position', {
+                landing_id: LANDING_ID,
                 section_id: SECTION_ID,
                 fields: useFields,
             });
+
             dispatch(
                 dragAndDrop({
-                    template_id: TEMPLATE_ID,
+                    landing_id: LANDING_ID,
                     section_id: SECTION_ID,
                     fields: useFields,
                 }),
@@ -128,7 +129,7 @@ export const TemplatesFields: FC = () => {
             <Col className="gutter-row" span={24} style={{ height: 'calc(100vh - 245px)' }}>
                 <div className="content_full_header">
                     <span>FIELDS</span>
-                    <FieldCreate />
+                    <LandingFieldCreate />
                 </div>
                 <Row gutter={[16, 16]} style={{ overflow: 'scroll', height: '100%' }}>
                     <Col span={24}>
@@ -192,7 +193,7 @@ export const TemplatesFields: FC = () => {
                                                                             </span>
                                                                         ),
                                                                 )}
-                                                                <FieldUpdate field={field} />
+                                                                <LandingFieldUpdate field={field} />
                                                                 <span
                                                                     style={{
                                                                         marginLeft: 10,
@@ -218,8 +219,8 @@ export const TemplatesFields: FC = () => {
                                                             </Col>
                                                             <Col>
                                                                 <Space size="small">
-                                                                    <FieldDelete
-                                                                        templateId={TEMPLATE_ID}
+                                                                    <LandingFieldDelete
+                                                                        landingId={LANDING_ID}
                                                                         sectionId={SECTION_ID}
                                                                         fieldId={field._id}
                                                                     />

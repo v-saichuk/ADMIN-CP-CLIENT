@@ -1,10 +1,33 @@
-import { ReactNode } from 'react';
-
 export interface IWebsites {
     _id: string;
     url: string;
     offers: IOffers[];
     enabled: boolean;
+    notes: string;
+}
+
+export interface ILandings {
+    _id: string;
+    name: string;
+    country: string[];
+    language: ILanguage;
+    website: IWebsites;
+    offer: IOffers;
+    template_pack: string;
+    status: boolean;
+    note: string;
+    sections: ITemplateSections[];
+}
+
+export interface ILandingsPage {
+    key: React.Key;
+    name: JSX.Element;
+    country: JSX.Element[];
+    language: JSX.Element;
+    website: string;
+    offer: JSX.Element;
+    template_pack: string;
+    status: JSX.Element;
     notes: string;
 }
 
@@ -53,10 +76,11 @@ export interface IFields {
 }
 
 export interface IFieldCreateProps {
-    templateId: string;
-    sectionId: string;
-    url: string;
-    handleModal?: any;
+    main_id: string;
+    section_id: string;
+    request_url: string;
+    handleModal: any;
+    fieldCreate: any;
 }
 
 export interface ILegals {

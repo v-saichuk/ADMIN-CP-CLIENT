@@ -1,18 +1,19 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from '../../axios';
-import { ITemplates } from '../../types';
+import { ILandings } from '../../types';
 
 interface IInitialState {
-    TemplatesData: ITemplates[];
+    landingsData: ILandings[];
     isLoading: boolean;
     isLoadingSection: boolean;
 }
 
-export const getTemplates = createAsyncThunk(
-    'templates/getTemplates',
+export const getLandings = createAsyncThunk(
+    'templates/getLandings',
     async (_, { rejectWithValue }) => {
         try {
-            const { data } = await axios.get('/api/templates');
+            const { data } = await axios.get('/api/landings');
+            console.log('data landings =>', data);
             return data;
         } catch (e) {
             return rejectWithValue(e);
@@ -23,54 +24,62 @@ export const getTemplates = createAsyncThunk(
 const initialState: IInitialState = {
     isLoading: false,
     isLoadingSection: false,
-    TemplatesData: [],
+    landingsData: [],
 };
 
-const Templates = createSlice({
+const Landings = createSlice({
     name: 'templates',
     initialState,
     reducers: {
         create: (state, action) => {
-            state.TemplatesData.unshift(action.payload);
+            state.landingsData.unshift(action.payload);
         },
+
         update: (state, action) => {
-            state.TemplatesData = state.TemplatesData.map((el) =>
-                el._id === action.payload._id ? { ...el, ...action.payload } : el,
+            state.landingsData = state.landingsData.map((landing) =>
+                landing._id === action.payload._id ? { ...landing, ...action.payload } : landing,
             );
         },
+
         updateOne: (state, action) => {
-            state.TemplatesData = state.TemplatesData.map((el) =>
-                el._id === action.payload.id ? { ...el, enabled: action.payload.enabled } : el,
+            state.landingsData = state.landingsData.map((landing) =>
+                landing._id === action.payload.id
+                    ? { ...landing, status: action.payload.status }
+                    : landing,
             );
         },
+
         remove: (state, action) => {
-            state.TemplatesData = state.TemplatesData.filter((el) => el._id !== action.payload);
+            state.landingsData = state.landingsData.filter(
+                (landing) => landing._id !== action.payload,
+            );
         },
 
         duplicateGroup: (state, action) => {
-            state.TemplatesData = action.payload;
+            state.landingsData = action.payload;
         },
+
         removeGroup: (state, action) => {
             action.payload.map(
-                (siteID: string) =>
-                    (state.TemplatesData = state.TemplatesData.filter(
-                        (legal) => legal._id !== siteID,
+                (id: string) =>
+                    (state.landingsData = state.landingsData.filter(
+                        (landing) => landing._id !== id,
                     )),
             );
         },
 
         // SECTIONS
         sectionCreate: (state, action) => {
-            state.TemplatesData.find(
-                (template) =>
-                    template._id === action.payload.templateId &&
-                    (template.sections = action.payload.sections),
+            state.landingsData.find(
+                (landing) =>
+                    landing._id === action.payload.landingId &&
+                    (landing.sections = action.payload.sections),
             );
         },
         sectionsUpdate: (state, action) => {
-            state.TemplatesData.find(
+            state.landingsData.find(
                 (template) =>
-                    template._id === action.payload.templateId &&
+                    template._id === action.payload.landingId &&
                     template.sections.find(
                         (section) =>
                             section._id === action.payload.sectionId &&
@@ -79,10 +88,10 @@ const Templates = createSlice({
             );
         },
         sectionsDelete: (state, action) => {
-            state.TemplatesData.find(
-                (template) =>
-                    template._id === action.payload.templateId &&
-                    (template.sections = template.sections.filter(
+            state.landingsData.find(
+                (landing) =>
+                    landing._id === action.payload.landingId &&
+                    (landing.sections = landing.sections.filter(
                         (section) => section._id !== action.payload.sectionId,
                     )),
             );
@@ -91,11 +100,11 @@ const Templates = createSlice({
 
         // FIELD
         fieldCreate: (state, action) => {
-            const template_id = action.payload.main_id;
-            state.TemplatesData.find(
-                (template) =>
-                    template._id === template_id &&
-                    template.sections.find(
+            const landing_id = action.payload.main_id;
+            state.landingsData.find(
+                (landing) =>
+                    landing._id === landing_id &&
+                    landing.sections.find(
                         (section) =>
                             section._id === action.payload.section_id &&
                             (section.fields = action.payload.fields),
@@ -104,11 +113,11 @@ const Templates = createSlice({
         },
 
         fieldUpdate: (state, action) => {
-            const TEMPLATE_ID = action.payload.main_id;
-            state.TemplatesData.find(
-                (template) =>
-                    template._id === TEMPLATE_ID &&
-                    template.sections.find(
+            const LANDING_ID = action.payload.main_id;
+            state.landingsData.find(
+                (landing) =>
+                    landing._id === LANDING_ID &&
+                    landing.sections.find(
                         (section) =>
                             section._id === action.payload.section_id &&
                             (section.fields = action.payload.fields),
@@ -117,10 +126,10 @@ const Templates = createSlice({
         },
 
         fieldDelete: (state, action) => {
-            state.TemplatesData.find(
-                (template) =>
-                    template._id === action.payload.templateId &&
-                    template.sections.find(
+            state.landingsData.find(
+                (landing) =>
+                    landing._id === action.payload.landingId &&
+                    landing.sections.find(
                         (section) =>
                             section._id === action.payload.sectionId &&
                             (section.fields = section.fields.filter(
@@ -133,10 +142,10 @@ const Templates = createSlice({
 
         // DRAG & DROP
         dragAndDrop: (state, action) => {
-            state.TemplatesData.find(
-                (template) =>
-                    template._id === action.payload.template_id &&
-                    template.sections.find(
+            state.landingsData.find(
+                (landing) =>
+                    landing._id === action.payload.landing_id &&
+                    landing.sections.find(
                         (section) =>
                             section._id === action.payload.section_id &&
                             (section.fields = action.payload.fields),
@@ -147,33 +156,37 @@ const Templates = createSlice({
     },
     extraReducers: (build) => {
         build
-            .addCase(getTemplates.pending, (state) => {
+            .addCase(getLandings.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(getTemplates.fulfilled, (state, action) => {
-                state.TemplatesData = action.payload;
+            .addCase(getLandings.fulfilled, (state, action) => {
+                state.landingsData = action.payload;
                 state.isLoading = false;
             })
-            .addCase(getTemplates.rejected, (state, action) => {
+            .addCase(getLandings.rejected, (state, action) => {
                 state.isLoading = false;
             });
     },
 });
 
-export default Templates.reducer;
+export default Landings.reducer;
 
 export const {
     create,
-    remove,
     update,
     updateOne,
+    remove,
+
     duplicateGroup,
     removeGroup,
+
     sectionCreate,
     sectionsUpdate,
     sectionsDelete,
+
     fieldCreate,
     fieldUpdate,
     fieldDelete,
+
     dragAndDrop,
-} = Templates.actions;
+} = Landings.actions;

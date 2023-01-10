@@ -1,9 +1,9 @@
 import { FC, useState } from 'react';
-import { Button, Col, Form, Input, message, Modal, Row, Select } from 'antd';
+import { Button, Col, Form, Input, message, Modal, Row } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import axios from '../../../axios';
 import { useAppDispatch } from '../../../store/hooks/useRedux';
-import * as Template from '../../../store/templates/templates.slice';
+
 import { IFieldCreateProps } from '../../../types/index';
 
 import * as SVG from '../../../assets/images/svg/svg';
@@ -22,9 +22,10 @@ interface IValue {
 const key = 'update';
 
 export const FieldImageCreate: FC<IFieldCreateProps> = ({
-    templateId,
-    sectionId,
-    url,
+    main_id,
+    section_id,
+    request_url,
+    fieldCreate,
     handleModal,
 }) => {
     const [isModal, setIsModal] = useState(false);
@@ -39,9 +40,9 @@ export const FieldImageCreate: FC<IFieldCreateProps> = ({
         console.log('value=>', value);
         message.loading({ content: 'Loading...', key });
         try {
-            const { data } = await axios.post(url, {
-                templateId,
-                sectionId,
+            const { data } = await axios.post(request_url, {
+                main_id,
+                section_id,
                 information: {
                     field_type: 'Image',
                     field_name: value.name,
@@ -58,12 +59,12 @@ export const FieldImageCreate: FC<IFieldCreateProps> = ({
                 },
             });
 
-            const section = data.sections.find((section: any) => section._id === sectionId);
+            const section = data.sections.find((section: any) => section._id === section_id);
 
             dispatch(
-                Template.fieldCreate({
-                    templateId: templateId,
-                    sectionId: sectionId,
+                fieldCreate({
+                    main_id,
+                    section_id,
                     fields: section?.fields,
                 }),
             );

@@ -4,6 +4,8 @@ export { WebsitesEdit } from './Websites/WebsitesForm/Website.edit/WebsitesEdit'
 
 export { LandingsPage } from './Landings/LandingsPage/LandingsPage';
 export { LandingCreate } from './Landings/LandingsFrom/Landing.create';
+export { LandingContent } from './Landings/LandingsFrom/Landing.content';
+export { LandingFieldsContent } from './Landings/LandingsFrom/Landing.fields/Landing.fields.content';
 
 export { TemplatesPage } from './Templates/TemplatesPage/TemplatesPage';
 export { TemplatesCreate } from './Templates/TemplatesFrom/Templates.create';

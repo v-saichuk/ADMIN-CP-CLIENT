@@ -1,4 +1,4 @@
-export const Counters = () => [
+export const Countrys = () => [
     {
         flag: '🇦🇫',
         title: 'Afghanistan',

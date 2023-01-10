@@ -15,6 +15,7 @@ import { getUsers } from './store/users/users.slice';
 import { Preloader } from './components/Preloader/Preloader';
 import { ErrorBoundary } from 'react-error-boundary';
 import { AppError } from './components/AppError/AppError';
+import { getLandings } from './store/landings/landings.slice';
 
 export const App: FC = () => {
     const dispatch = useAppDispatch();
@@ -25,6 +26,7 @@ export const App: FC = () => {
 
         if (isAuth) {
             dispatch(getWebsites());
+            dispatch(getLandings());
             dispatch(getTemplates());
             dispatch(getLegals());
             dispatch(getOfferOwner());

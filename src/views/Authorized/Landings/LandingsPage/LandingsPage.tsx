@@ -1,17 +1,19 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from '../../../../axios';
-import { Table, Layout, Space, Button, message, Modal } from 'antd';
+import { Table, Layout, Space, Button, message, Modal, Tag, Tooltip, Switch } from 'antd';
 import { useAppDispatch, useAppSelector } from '../../../../store/hooks/useRedux';
 import { Content } from 'antd/lib/layout/layout';
+import * as Landing from '../../../../store/landings/landings.slice';
 import * as Templates from '../../../../store/templates/templates.slice';
-// import { TemplatesGroupUpdate } from '../../TemplatesFrom/Templates.group.update';
+import { LandingGroupUpdate } from '../LandingsFrom/Landing.group.update';
 import { EmptyCustome } from '../../../../components/EmptyCustome/EmptyCustome';
+import { Countrys } from '../../../../components/Countrys/Countrys';
 
-import { ITemplatesPage } from '../../../../types';
+import { ILandingsPage } from '../../../../types';
 import type { ColumnsType } from 'antd/es/table';
+
 import * as Icon from '@ant-design/icons';
-import { IconNoImage } from '../../../../assets/images/svg/svg';
 
 // STYLE
 import './LandingsPage.scss';
@@ -21,10 +23,15 @@ const key = 'updated';
 export const LandingsPage: FC = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const { TemplatesData } = useAppSelector((state) => state.templates);
-    const { lang } = useAppSelector((state) => state.language);
 
-    const filterName = TemplatesData.map((el) => ({
+    const { landingsData } = useAppSelector((state) => state.landings);
+    const { websites } = useAppSelector((state) => state.websites);
+    const { lang } = useAppSelector((state) => state.language);
+    const { offers } = useAppSelector((state) => state.offers);
+    const { TemplatesData } = useAppSelector((state) => state.templates);
+    const COUNTRYS = Countrys();
+
+    const filterName = landingsData.map((el) => ({
         text: el.name,
         value: el._id,
     }));
@@ -36,9 +43,19 @@ export const LandingsPage: FC = () => {
             value: el.title,
         }));
 
-    const filterDescription = TemplatesData.map((el) => ({
-        text: el.description,
-        value: el.description,
+    const filterCountry = COUNTRYS.map((el) => ({
+        text: el.flag + ' ' + el.title,
+        value: el.flag,
+    }));
+
+    const filterWebsite = websites.map((el) => ({
+        text: el.url,
+        value: el.url,
+    }));
+
+    const filterOffer = offers.map((el) => ({
+        text: el.name,
+        value: el._id,
     }));
 
     const filterTempatePack = TemplatesData.map((el) => ({
@@ -46,27 +63,42 @@ export const LandingsPage: FC = () => {
         value: el.template_pack,
     }));
 
-    const Data = TemplatesData.map((template) => ({
-        key: template._id,
-        name: <Link to={`/template/${template._id}`}>{template.name}</Link>,
+    const Data = landingsData.map((landing) => ({
+        key: landing._id,
+        name: <Link to={`/landing/${landing._id}`}>{landing.name}</Link>,
+        country: landing.country.map((el, ind) => (
+            <Tooltip key={ind} placement="top" title={el}>
+                <Tag className="flag_tag">{el.split(' ')[0]}</Tag>
+            </Tooltip>
+        )),
         language: (
             <div className="lang-table">
-                <span>{template.language.icon}</span>
-                {template.language.title}
+                <span>{landing.language.icon}</span>
+                {landing.language.title}
             </div>
         ),
-        template_pack: template.template_pack,
-        description: template.description,
-        screenshot: <IconNoImage x={220} y={50} />, // template.screenshot
+        website: landing.website.url,
+        offer: (
+            <Tag key={landing.offer._id}>
+                <Icon.StarOutlined /> {landing.offer.name}
+            </Tag>
+        ),
+        template_pack: landing.template_pack,
+        status: landing.status ? (
+            <Tag color="#87d068">Active</Tag>
+        ) : (
+            <Tag color="#f50">Deactive</Tag>
+        ),
+        notes: landing.note,
     }));
 
     // DELETE
-    const handleDelete = async (templateId: React.Key) => {
+    const handleDelete = async (landingId: React.Key) => {
         message.loading({ content: 'Loading...', key });
         try {
-            const { data } = await axios.delete(`/api/template/${templateId}`);
+            const { data } = await axios.delete(`/api/landing/${landingId}`);
             if (data.success) {
-                dispatch(Templates.remove(templateId));
+                dispatch(Templates.remove(landingId));
                 message.success({
                     content: 'Loaded!',
                     key,
@@ -78,22 +110,41 @@ export const LandingsPage: FC = () => {
         }
     };
 
-    const showModalDelete = (templateId: React.Key) => {
+    const showModalDelete = (landingId: React.Key) => {
         Modal.confirm({
             title: 'Do you really want to delete?',
-            content: 'Once deleted, you will not be able to restore template',
+            content: 'Once deleted, you will not be able to restore landing page',
             icon: <Icon.ExclamationCircleOutlined />,
             okText: 'Yes',
             okType: 'danger',
             cancelText: 'No',
             onOk() {
-                handleDelete(templateId);
+                handleDelete(landingId);
             },
         });
     };
     // ./DELETE
 
-    const columns: ColumnsType<ITemplatesPage> = [
+    // UPDATE_ONE
+    const fetchUpdateOne = async (landing: any) => {
+        try {
+            await axios.patch(`/api/landing/status/${landing.id}`, {
+                status: landing.status,
+            });
+
+            dispatch(
+                Landing.updateOne({
+                    id: landing.id,
+                    status: landing.status,
+                }),
+            );
+        } catch (error) {
+            console.log('ERROR SWITCH LANDING =>', error);
+        }
+    };
+    // ./UPDATE_ONE
+
+    const columns: ColumnsType<ILandingsPage> = [
         {
             title: 'Name',
             dataIndex: 'name',
@@ -102,19 +153,20 @@ export const LandingsPage: FC = () => {
             ellipsis: true,
             onFilter: (value: string | any, template: any) => template.key.startsWith(value),
         },
+
         {
             title: 'Country',
             dataIndex: 'country',
-            width: '10%',
-            // filters: filterLanguage,
-            // filterSearch: true,
-            // onFilter: (value: string | any, template: any) =>
-            //     template.language.props.children[1].startsWith(value),
+            filters: filterCountry,
+            filterSearch: true,
+            onFilter: (value: string | any, landing: any) =>
+                landing.country
+                    .map((el: any) => el.props.title.split(' ')[0] === value)
+                    .includes(true),
         },
         {
             title: 'Language',
             dataIndex: 'language',
-            width: '10%',
             filters: filterLanguage,
             filterSearch: true,
             onFilter: (value: string | any, template: any) =>
@@ -123,20 +175,18 @@ export const LandingsPage: FC = () => {
         {
             title: 'Website',
             dataIndex: 'website',
-            width: '10%',
-            // filters: filterLanguage,
-            // filterSearch: true,
-            // onFilter: (value: string | any, template: any) =>
-            //     template.language.props.children[1].startsWith(value),
+            filters: filterWebsite,
+            filterSearch: true,
+            ellipsis: true,
+            onFilter: (value: string | any, legals: any) => legals.website.startsWith(value),
         },
         {
             title: 'Offer',
             dataIndex: 'offer',
-            width: '10%',
-            // filters: filterLanguage,
-            // filterSearch: true,
-            // onFilter: (value: string | any, template: any) =>
-            //     template.language.props.children[1].startsWith(value),
+            ellipsis: true,
+            filters: filterOffer,
+            filterSearch: true,
+            onFilter: (value: string | any, legals: any) => legals.offer.key.startsWith(value),
         },
 
         {
@@ -151,22 +201,28 @@ export const LandingsPage: FC = () => {
         {
             title: 'Status',
             dataIndex: 'status',
-            width: '10%',
-            // filters: filterLanguage,
-            // filterSearch: true,
-            // onFilter: (value: string | any, template: any) =>
-            //     template.language.props.children[1].startsWith(value),
+            width: '8%',
+            filters: [
+                {
+                    text: (
+                        <>
+                            <Icon.CheckOutlined style={{ color: '#66d986' }} /> Active
+                        </>
+                    ),
+                    value: 'Active',
+                },
+                {
+                    text: (
+                        <>
+                            <Icon.CloseOutlined style={{ color: '#f25b5b' }} /> Deactive
+                        </>
+                    ),
+                    value: 'Deactive',
+                },
+            ],
+            onFilter: (value: string | any, landing: any) =>
+                landing.status.props.children.startsWith(value),
         },
-        {
-            title: 'Notes',
-            dataIndex: 'notes',
-            width: '10%',
-            // filters: filterLanguage,
-            // filterSearch: true,
-            // onFilter: (value: string | any, template: any) =>
-            //     template.language.props.children[1].startsWith(value),
-        },
-
         {
             title: 'Action',
             key: 'action',
@@ -175,6 +231,17 @@ export const LandingsPage: FC = () => {
             render: (_, template) => {
                 return (
                     <Space size="small">
+                        <Switch
+                            size="small"
+                            checkedChildren={<Icon.CheckOutlined />}
+                            unCheckedChildren={<Icon.CloseOutlined />}
+                            defaultChecked={
+                                template.status.props.children === 'Active' ? true : false
+                            }
+                            onChange={(checked) =>
+                                fetchUpdateOne({ id: template.key, status: checked })
+                            }
+                        />
                         <Button
                             type="text"
                             icon={<Icon.MenuOutlined />}
@@ -205,9 +272,14 @@ export const LandingsPage: FC = () => {
             <Content className="site-layout-background main_content offer__content">
                 <EmptyCustome>
                     <Table
-                        // rowSelection={TemplatesGroupUpdate()}
+                        rowSelection={LandingGroupUpdate()}
                         columns={columns}
                         dataSource={Data}
+                        expandable={{
+                            expandedRowRender: (record) => (
+                                <p style={{ margin: 0 }}>{record.notes}</p>
+                            ),
+                        }}
                         pagination={{
                             defaultPageSize: 8,
                             hideOnSinglePage: true,

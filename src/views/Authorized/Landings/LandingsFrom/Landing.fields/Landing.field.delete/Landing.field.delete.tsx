@@ -1,29 +1,29 @@
+import { FC } from 'react';
 import axios from '../../../../../../axios';
 import { Button, message, Modal } from 'antd';
 
 import { CloseOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { useAppDispatch } from '../../../../../../store/hooks/useRedux';
-import * as TemplateField from '../../../../../../store/templates/templates.slice';
-import { FC } from 'react';
+import * as LandingField from '../../../../../../store/landings/landings.slice';
 
 const key = 'delete';
 
 interface IProps {
-    templateId: string;
+    landingId: string;
     sectionId: string;
     fieldId: string;
 }
 
-export const FieldDelete: FC<IProps> = (props) => {
+export const LandingFieldDelete: FC<IProps> = (props) => {
     const dispatch = useAppDispatch();
 
     const handleDelete = async () => {
         message.loading({ content: 'Loading...', key });
         try {
-            const { data } = await axios.patch('/api/template/field/delete/', { ...props });
+            const { data } = await axios.patch('/api/landing/field/delete/', { ...props });
 
             if (data.success) {
-                dispatch(TemplateField.fieldDelete({ ...props }));
+                dispatch(LandingField.fieldDelete({ ...props }));
                 message.success({
                     content: 'Field deleted!',
                     key,

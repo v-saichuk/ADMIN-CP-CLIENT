@@ -1,31 +1,37 @@
+import { FC } from 'react';
 import axios from '../../../../../../axios';
 import { Button, message, Modal } from 'antd';
-
-import { CloseOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { useAppDispatch } from '../../../../../../store/hooks/useRedux';
-import * as TemplateField from '../../../../../../store/templates/templates.slice';
-import { FC } from 'react';
+import { sectionsDelete } from '../../../../../../store/templates/templates.slice';
+
+import { DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+
+interface IProps {
+    landing_id: string | undefined;
+    section_id: string;
+}
 
 const key = 'delete';
 
-interface IProps {
-    templateId: string;
-    sectionId: string;
-    fieldId: string;
-}
-
-export const FieldDelete: FC<IProps> = (props) => {
+export const LandingSectionDelete: FC<IProps> = ({ landing_id, section_id }) => {
     const dispatch = useAppDispatch();
 
     const handleDelete = async () => {
         message.loading({ content: 'Loading...', key });
         try {
-            const { data } = await axios.patch('/api/template/field/delete/', { ...props });
-
+            const { data } = await axios.patch('/api/landing/section/delete', {
+                landingId: landing_id,
+                sectionId: section_id,
+            });
             if (data.success) {
-                dispatch(TemplateField.fieldDelete({ ...props }));
+                dispatch(
+                    sectionsDelete({
+                        landingId: landing_id,
+                        sectionId: section_id,
+                    }),
+                );
                 message.success({
-                    content: 'Field deleted!',
+                    content: 'Secition deleted!',
                     key,
                     duration: 2,
                 });
@@ -38,7 +44,7 @@ export const FieldDelete: FC<IProps> = (props) => {
     const DeleteConfirm = () => {
         Modal.confirm({
             title: 'Do you really want to delete?',
-            content: "Once deleted, you can't restore",
+            content: 'Deleting a section will also delete all of its contents.',
             icon: <ExclamationCircleOutlined />,
             okText: 'Yes',
             okType: 'danger',
@@ -52,7 +58,7 @@ export const FieldDelete: FC<IProps> = (props) => {
 
     return (
         <Button size="small" onClick={() => DeleteConfirm()}>
-            <CloseOutlined />
+            <DeleteOutlined />
         </Button>
     );
 };

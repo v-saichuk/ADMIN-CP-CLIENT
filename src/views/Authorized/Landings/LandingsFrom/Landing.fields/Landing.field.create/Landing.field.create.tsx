@@ -1,25 +1,26 @@
 import { FC, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Button, Modal } from 'antd';
+
+import * as Landing from '../../../../../../store/landings/landings.slice';
 import * as F from '../../../../../../components/Fields/Fields.create';
-import * as Template from '../../../../../../store/templates/templates.slice';
 
 import { PlusOutlined } from '@ant-design/icons';
 
-export const FieldCreate: FC = () => {
+export const LandingFieldCreate: FC = () => {
     const { pathname } = useLocation();
     const url = pathname.split('/');
-    const TEMPLATE_ID = url[2];
+    const LANDING_ID = url[2];
     const SECTION_ID = url[3];
 
     const [isModal, setIsModal] = useState(false);
 
     const params = {
-        main_id: TEMPLATE_ID,
+        main_id: LANDING_ID,
         section_id: SECTION_ID,
-        request_url: '/api/template/field/action',
+        request_url: '/api/landing/field/action',
         handleModal: setIsModal,
-        fieldCreate: Template.fieldCreate,
+        fieldCreate: Landing.fieldCreate,
     };
 
     return (

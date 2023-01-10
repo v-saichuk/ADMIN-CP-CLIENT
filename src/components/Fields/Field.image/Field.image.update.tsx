@@ -3,16 +3,16 @@ import { Col, Form, Input, message, Modal, Row, Typography } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import axios from '../../../axios';
 import { useAppDispatch } from '../../../store/hooks/useRedux';
-import * as Template from '../../../store/templates/templates.slice';
 
 import { IFields } from '../../../types';
 import { FirstUppercase } from '../../../utils/helpers/uppercase';
 
 interface IProps {
     field: IFields;
-    sectionId: string;
-    templateId: string;
-    url: string;
+    main_id: string;
+    section_id: string;
+    request_url: string;
+    fieldUpdate: any;
 }
 
 interface IValue {
@@ -27,7 +27,13 @@ interface IValue {
 
 const key = 'update';
 
-export const FieldImageUpdate: FC<IProps> = ({ field, templateId, sectionId, url }) => {
+export const FieldImageUpdate: FC<IProps> = ({
+    field,
+    main_id,
+    section_id,
+    request_url,
+    fieldUpdate,
+}) => {
     const [isModal, setIsModal] = useState(false);
     const [isLoadingForm, setIsLoadingForm] = useState(false);
 
@@ -39,9 +45,9 @@ export const FieldImageUpdate: FC<IProps> = ({ field, templateId, sectionId, url
         setIsLoadingForm(true);
         message.loading({ content: 'Loading...', key });
         try {
-            const { data } = await axios.patch(url, {
-                templateId,
-                sectionId,
+            const { data } = await axios.patch(request_url, {
+                main_id,
+                section_id,
                 fieldId: field._id,
                 information: {
                     field_type: 'Image',
@@ -60,9 +66,9 @@ export const FieldImageUpdate: FC<IProps> = ({ field, templateId, sectionId, url
             });
 
             dispatch(
-                Template.fieldUpdate({
-                    templateId: templateId,
-                    sectionId: sectionId,
+                fieldUpdate({
+                    main_id,
+                    section_id,
                     fields: data.fields,
                 }),
             );

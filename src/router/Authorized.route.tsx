@@ -9,6 +9,8 @@ export const ROUT_PATH = {
 
     LANDINGS: '/landings',
     LANDING_CREATE: '/landing/create',
+    LANDING_CONTENT: '/landing/:id',
+    LANDING_FIELDS: '/landing/:id/:id',
 
     TEMPLATES: '/templates',
     TEMPLATES_CREATE: '/template/create',
@@ -36,102 +38,90 @@ export const ROUT_PATH = {
 
 const ROUTE = [
     {
-        id: 1,
         path: ROUT_PATH.WEBSITES,
         element: <Page.WebsitesPage />,
     },
     {
-        id: 2,
         path: ROUT_PATH.WEBSITES_CREATE,
         element: <Page.WebsitesCreate />,
     },
     {
-        id: 3,
         path: ROUT_PATH.WEBSITES_EDIT,
         element: <Page.WebsitesEdit />,
     },
     {
-        id: 4,
         path: ROUT_PATH.LANDINGS,
         element: <Page.LandingsPage />,
     },
     {
-        id: 5,
-        path: ROUT_PATH.LANDING_CREATE, // ====
+        path: ROUT_PATH.LANDING_CREATE,
         element: <Page.LandingCreate />,
     },
     {
-        id: 6,
+        path: ROUT_PATH.LANDING_CONTENT,
+        element: <Page.LandingContent />,
+    },
+    {
+        path: ROUT_PATH.LANDING_FIELDS,
+        element: <Page.LandingFieldsContent />,
+    },
+    {
         path: ROUT_PATH.TEMPLATES,
         element: <Page.TemplatesPage />,
     },
     {
-        id: 7,
         path: ROUT_PATH.TEMPLATES_CREATE,
         element: <Page.TemplatesCreate />,
     },
     {
-        id: 8,
         path: ROUT_PATH.TEMPLATES_SECTION,
         element: <Page.TemplatesContent />,
     },
     {
-        id: 9,
         path: ROUT_PATH.TEMPLATES_FIELDS,
         element: <Page.FieldsContent />,
     },
     {
-        id: 10,
         path: ROUT_PATH.LEGALS,
         element: <Page.LegalsPage />,
     },
     {
-        id: 11,
         path: ROUT_PATH.LEGALS_CREATE,
         element: <Page.LegalsCreate />,
     },
     {
-        id: 12,
         path: ROUT_PATH.LEGALS_EDIT,
         element: <Page.LegalsEdit />,
     },
     {
-        id: 13,
         path: ROUT_PATH.OFFER_OWNER,
         element: <Page.OfferOwnerPage />,
     },
     {
-        id: 14,
         path: ROUT_PATH.OFFERS,
         element: <Page.OffersPage />,
     },
     {
-        id: 15,
         path: ROUT_PATH.USERS,
         element: <Page.UsersPage />,
     },
     {
-        id: 16,
         path: ROUT_PATH.USERS_EDIT_ID,
         element: <Page.UsersEdit />,
     },
     {
-        id: 17,
         path: ROUT_PATH.USERS_CREATE,
         element: <Page.UserCreate />,
     },
     {
-        id: 18,
         path: ROUT_PATH.MY_PROFILE,
         element: <Page.MyProfilePage />,
     },
     {
-        id: 19,
         path: ROUT_PATH.SETTINGS,
         element: <Page.SettingsPage />,
     },
     {
-        id: 20,
         path: ROUT_PATH.ALL,
         element: <Page.NotFoundPage />,
     },
@@ -139,8 +129,8 @@ const ROUTE = [
 
 export const Authorized: FC = () => (
     <Routes>
-        {ROUTE.map((el) => (
-            <Route key={el.id} {...el} />
+        {ROUTE.map((path, index) => (
+            <Route key={index} {...path} />
         ))}
     </Routes>
 );
